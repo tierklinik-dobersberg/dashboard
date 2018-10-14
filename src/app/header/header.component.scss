@@ -1,0 +1,30 @@
+:host {
+    background-color: #1080d0;
+    line-height: 50px;
+    width: 100%;
+    display: block;
+}
+
+span.logo {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 20px;
+    display: inline-block; 
+}
+
+button {
+    color: white;
+    position: relative;
+    top: -2px;
+}
+
+.navigation {
+    height: 100%;
+    display: inline-block;
+    margin-left: 20px;
+    
+    button.active {
+        border-bottom: 2px solid white;
+    }
+}
