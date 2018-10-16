@@ -36,6 +36,11 @@ export class DoorComponent implements OnInit, OnDestroy {
     return !!this._currentConfig.currentOverwrite;
   }
   
+
+  get state(): DoorState {
+    return this._currentState;
+  }
+  
   get currentState(): string {
     if (!this._currentState) {
       return 'loading';
@@ -117,7 +122,7 @@ export class DoorComponent implements OnInit, OnDestroy {
   }
   
   private _setupPoller() {
-    interval(10000)
+    interval(5000)
       .pipe(
         startWith(0),
         combineLatest(this._triggerUpdate),

@@ -1,6 +1,7 @@
 <mat-card>
   <button class="config" [matMenuTriggerFor]="menu" mat-icon-button><mat-icon>settings</mat-icon></button>
   <mat-card-header>
+    <div mat-card-avatar><mat-icon>{{ state === 'lock' ? 'no_meeting_room' : 'meeting_room'}}</mat-icon></div>
     <mat-card-title>
       <b>Eingangstür</b>
     </mat-card-title>
@@ -10,9 +11,9 @@
   </mat-card-header>
 
   <mat-card-actions>
-    <button mat-button (click)="setState('unlock')">Entsperren</button>
-    <button mat-button (click)="setState('lock')">Sperren</button>
-    <button style="float: right" mat-button (click)="setState('open')">Kurzzeitig Öffnen</button>
+    <button mat-button (click)="setState('unlock')" [disabled]="state === 'open'">Entsperren</button>
+    <button mat-button (click)="setState('lock')" [disabled]="state === 'open'">Sperren</button>
+    <button style="float: right" mat-button (click)="setState('open')" [disabled]="state !== 'lock'">Öffnen</button>
   </mat-card-actions>
   
 </mat-card>
@@ -25,7 +26,7 @@
     <h2 mat-dialog-title>Zurücksetzen</h2>
     <mat-dialog-content>
       Das Zurücksetzen der Tür verschließt diese und konfiguriert sie
-      anschließen nach den derzeitigen Öffnungszeiten
+      anschließend nach den Öffnungszeiten
       <br>
     </mat-dialog-content>
     <mat-dialog-actions>
