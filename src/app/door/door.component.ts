@@ -78,7 +78,7 @@ export class DoorComponent implements OnInit, OnDestroy {
         .subscribe(() => this._triggerUpdate.next(null));
       return;
     }
-    this._dialog.open(SelectTimeOffsetComponent)
+    this._dialog.open(SelectTimeOffsetComponent, {data: state})
       .afterClosed()
       .subscribe((result: number) => {
         if (result === undefined) {

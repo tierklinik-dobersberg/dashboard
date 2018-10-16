@@ -1,5 +1,10 @@
 <mat-card>
   <button class="config" [matMenuTriggerFor]="menu" mat-icon-button><mat-icon>settings</mat-icon></button>
+
+  <mat-menu #menu="matMenu">
+    <span mat-menu-item (click)="reset()">Reset</span>
+  </mat-menu>
+  
   <mat-card-header>
     <div mat-card-avatar><mat-icon>{{ state === 'lock' ? 'no_meeting_room' : 'meeting_room'}}</mat-icon></div>
     <mat-card-title>
@@ -17,10 +22,6 @@
   </mat-card-actions>
   
 </mat-card>
-
-<mat-menu #menu="matMenu">
-  <span mat-menu-item (click)="reset()">Reset</span>
-</mat-menu>
 
 <ng-template #confirm>
     <h2 mat-dialog-title>Zurücksetzen</h2>

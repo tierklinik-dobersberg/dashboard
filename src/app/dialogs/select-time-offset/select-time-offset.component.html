@@ -1,5 +1,6 @@
-<h2 mat-dialog-title>Bitte Dauer wählen</h2>
+<h2 mat-dialog-title>Dauer</h2>
 <mat-dialog-content>
+  <p>Die Tür wird für die angegebende Dauer <b>{{ desiredState }}</b></p>
   <mat-form-field>
     <mat-select placeholder="Dauer" [(ngModel)]="_duration">
       <mat-option [value]="0">Nur jetzt</mat-option>
