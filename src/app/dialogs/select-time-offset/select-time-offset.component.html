@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Bitte Dauer wählen</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-select placeholder="Dauer" [(ngModel)]="_duration">
+      <mat-option [value]="0">Nur jetzt</mat-option>
+      <mat-option [value]="5">5 Min</mat-option>
+      <mat-option [value]="15">15 Min</mat-option>
+      <mat-option [value]="30">30 Min</mat-option>
+      <mat-option [value]="45">45 Min</mat-option>
+      <mat-option [value]="60">1 Stunde</mat-option>
+      <mat-option [value]="90">1.5 Stunden</mat-option>
+      <mat-option [value]="120">2 Stunden</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="_cancel()">Abbrechen</button>
+  <button mat-button (click)="_save()">OK</button>
+</mat-dialog-actions>

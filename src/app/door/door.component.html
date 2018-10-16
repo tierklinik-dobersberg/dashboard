@@ -1,3 +1,35 @@
-<p>
-  door works!
-</p>
+<mat-card>
+  <button class="config" [matMenuTriggerFor]="menu" mat-icon-button><mat-icon>settings</mat-icon></button>
+  <mat-card-header>
+    <mat-card-title>
+      <b>Eingangstür</b>
+    </mat-card-title>
+    <mat-card-subtitle>
+      <u><b>{{currentState}}</b></u> {{isAutomatic ? '(manuell)' : ''}} - bis <u>{{validUntil | date:'medium':undefined:'de-DE'}}</u>
+    </mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-actions>
+    <button mat-button (click)="setState('unlock')">Entsperren</button>
+    <button mat-button (click)="setState('lock')">Sperren</button>
+    <button style="float: right" mat-button (click)="setState('open')">Kurzzeitig Öffnen</button>
+  </mat-card-actions>
+  
+</mat-card>
+
+<mat-menu #menu="matMenu">
+  <span mat-menu-item (click)="reset()">Reset</span>
+</mat-menu>
+
+<ng-template #confirm>
+    <h2 mat-dialog-title>Zurücksetzen</h2>
+    <mat-dialog-content>
+      Das Zurücksetzen der Tür verschließt diese und konfiguriert sie
+      anschließen nach den derzeitigen Öffnungszeiten
+      <br>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button mat-button (click)="_abortReset()">Abbrechen</button>
+      <button mat-button (click)="_confirmReset()">OK</button>
+    </mat-dialog-actions> 
+</ng-template>

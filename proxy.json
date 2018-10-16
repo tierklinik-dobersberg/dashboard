@@ -1,7 +1,10 @@
 {
-    "/api": {
+    "/api/door": {
         "target": "http://localhost:8081/",
         "secure": false,
-        "changeOrigin": true
+        "changeOrigin": true,
+        "pathRewrite": {
+          "^/api/door": ""
+        }
     }
 }

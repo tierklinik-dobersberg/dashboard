@@ -1,0 +1,27 @@
+:host {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 20px;
+}
+
+mat-card {
+    width: 80%;
+
+    mat-card-title {
+        font-size: 120%;
+    }
+}
+
+button {
+    text-transform: uppercase;
+    color: #1080d0;
+    font-weight: lighter;
+}
+
+.reset-button {
+    float: right;
+}
+
+.config {
+    float: right;
+}
