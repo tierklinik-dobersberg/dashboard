@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Neue Öffnungszeit für {{weekday}}</h2>
+<mat-dialog-content>
+  <form form="ngForm">
+    <span>Von</span>
+    <div class="time-frame">
+        <mat-form-field class="time">
+          <input matInput type="number" name="fromHour" required [(ngModel)]="_fromHour" placeholder="Stunden" [max]="_toHour < 23 ? _toHour : 23" min="0">
+        </mat-form-field>
+        <mat-form-field class="time">
+          <input matInput type="number" name="fromMinute" required [(ngModel)]="_fromMinute" placeholder="Minuten" [max]="_toMinute < 59 ? _toMinute : 59" min="0">
+        </mat-form-field>
+    </div>
+    <span>Bis</span>
+    <div class="time-frame">
+        <mat-form-field class="time">
+          <input matInput type="number" name="toHour" required [(ngModel)]="_toHour" placeholder="Stunden" [min]="_fromHour" [max]="23">
+        </mat-form-field>
+      
+        <mat-form-field class="time">
+          <input matInput type="number" name="toMinute" required [(ngModel)]="_toMinute" placeholder="Minuten" [min]="_fromMinute" [max]="59">
+        </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="_abort()">Abbrechen</button>
+  <button mat-button (click)="_save()">OK</button>
+</mat-dialog-actions>

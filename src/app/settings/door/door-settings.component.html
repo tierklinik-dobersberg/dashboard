@@ -1,0 +1,13 @@
+<div class="day-quick-links">
+  <button mat-button *ngFor="let day of days" (click)="_scrollTo(day.key)">{{day.label}}</button>
+</div>
+
+<div class="door-config-wrapper">
+  <cl-day-config *ngFor="let day of days" #dayConfig
+    [day]="day.key"
+    [label]="day.label"
+    [config]="_config?.openingHours[day.key]"
+    (changed)="_loadConfig()"></cl-day-config>
+</div>
+
+<button class="scroll-up-button" mat-mini-fab *ngIf="scrollTop > 0" (click)="_scrollUp()"><mat-icon>arrow_upward</mat-icon></button>

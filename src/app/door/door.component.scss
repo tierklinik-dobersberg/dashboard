@@ -6,10 +6,6 @@
 
 mat-card {
     width: 80%;
-
-    mat-card-title {
-        font-size: 120%;
-    }
 }
 
 button {
@@ -24,4 +20,12 @@ button {
 
 .config {
     float: right;
+}
+
+.mat-card-avatar {
+    text-align: center;
+
+    mat-icon {
+        vertical-align: middle;
+    }
 }

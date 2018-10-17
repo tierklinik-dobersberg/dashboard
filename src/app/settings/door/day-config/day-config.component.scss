@@ -1,0 +1,19 @@
+:host {
+    display: block;
+    flex-grow: 0;
+}
+
+.day-time-frame {
+    display: flex;
+    width: 100%;
+    align-items: baseline;
+    
+    span {
+        flex-grow: 1;
+        font-weight: lighter;
+    }
+
+    button {
+        flex: 0 0 auto;
+    }
+}

@@ -1,0 +1,16 @@
+span {
+    width: 100%;
+    display: block;
+    margin-bottom: 9px;
+    margin-right: 0px;
+    padding-right: 0px;
+}
+
+.time-frame {
+    display: flex;
+    justify-content: space-evenly;
+    
+    .time {
+        flex-grow: 1;
+    }
+}

@@ -7,9 +7,7 @@
   
   <mat-card-header>
     <div mat-card-avatar><mat-icon>{{ state === 'lock' ? 'no_meeting_room' : 'meeting_room'}}</mat-icon></div>
-    <mat-card-title>
-      <b>Eingangstür</b>
-    </mat-card-title>
+    <mat-card-title>Eingangstür</mat-card-title>
     <mat-card-subtitle>
       <u><b>{{currentState}}</b></u> {{isAutomatic ? '(manuell)' : ''}} - bis <u>{{validUntil | date:'medium':undefined:'de-DE'}}</u>
     </mat-card-subtitle>

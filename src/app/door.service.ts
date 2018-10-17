@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 /**
@@ -40,7 +40,7 @@ export interface TimeFrame {
     to: Time;
 }
 
-export interface UnlockSchedule {
+export interface OpeningHours {
     monday: TimeFrame[];
     tuesday: TimeFrame[];
     wednesday: TimeFrame[];
@@ -83,9 +83,9 @@ export interface SchedulerConfig {
 
   // The default schedules to unlock the door based
   // on a per week-day basis
-  unlockSchedules: UnlockSchedule;
+  openingHours: OpeningHours;
   
-  // If set, the current configuration for `unlockSchedules` is ignored
+  // If set, the current configuration for `openingHours` is ignored
   // and the door state is set according to the following {@link TimeFrame}
   // configuration. Once the time-frame passed, the configuration will reset
   // the overwrite to null and continue to use the default schedules
@@ -126,5 +126,39 @@ export class DoorService {
 
   open(): Observable<void> {
     return this._http.post<void>('/api/door/open', undefined);
+  }
+
+  addTimeFrame(day: number | keyof OpeningHours, start: Time, end: Time): Observable<void> {
+    if (typeof day === 'number') {
+      day = this._getKeyFromDay(day);
+    }
+    
+    return this._http.post<void>(`/api/door/config/${day}`, {from: start, to: end});
+  }
+  
+  deleteTimeFrame(day: number | keyof OpeningHours, start: Time, end: Time): Observable<void> {
+    if (typeof day === 'number') {
+      day = this._getKeyFromDay(day);
+    }
+    
+    return this._http.request<void>('DELETE', `/api/door/config/${day}`, {
+      body: {from: start, to: end},
+      responseType: 'json',
+      observe: 'body'
+    });
+  }
+  
+  private _getKeyFromDay(day: number): keyof OpeningHours {
+    let keys: (keyof OpeningHours)[] = [
+      'sunday',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday'
+    ];
+    
+    return keys[day];
   }
 }

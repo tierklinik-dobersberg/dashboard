@@ -6,3 +6,15 @@ body { margin: 0; font-family: 'Roboto', sans-serif; }
 .mat-dialog-actions {
     float: right;
 }
+
+.mat-card {
+    .mat-card-title {
+        font-size: 120%;
+    }
+}
+
+.mat-button {
+    color: #1080d0;
+    text-transform: uppercase;
+    font-weight: lighter;
+}

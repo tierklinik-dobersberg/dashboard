@@ -1,0 +1,26 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{label}}</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-list role="list">
+      <mat-list-item *ngFor="let frame of config" role="listitem">
+        <div class="day-time-frame">
+          <span>{{frame.from[0]|number:'2.0-0'}}:{{frame.from[1]|number:'2.0-0'}} - {{frame.to[0]|number:'2.0-0'}}:{{frame.to[1]|number:'2.0-0'}}</span>
+          <button mat-icon-button (click)="_deleteTimeFrame(frame)"><mat-icon>delete</mat-icon></button>
+        </div>
+      </mat-list-item>
+
+      <mat-list-item *ngIf="!config || config.length === 0" role="listitem">
+        <div class="day-time-frame">
+          <span>Geschlossen</span>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <button mat-button (click)="_addTimeFrame()">Neu Öffnungszeit</button>
+  </mat-card-actions>
+</mat-card>
