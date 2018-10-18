@@ -1,22 +1,21 @@
 import { Component, OnInit, ViewChildren, QueryList, Output, EventEmitter, ElementRef, Renderer2, OnDestroy, AfterViewInit } from '@angular/core';
-import { DoorService, SchedulerConfig, OpeningHours } from '../../door.service';
-import { map } from 'rxjs/operators';
+import { OpeningHoursConfig, OpeningHoursService, WeekDay} from '../../openinghours.service';
 import { DayConfigComponent } from './day-config/day-config.component';
 
 export interface Day {
-  key: keyof OpeningHours;
+  key: WeekDay;
   label: string;
 }
 
 @Component({
-  selector: 'cl-door-settings',
-  templateUrl: './door-settings.component.html',
-  styleUrls: ['./door-settings.component.scss']
+  selector: 'cl-openinghours-settings',
+  templateUrl: './openinghours.component.html',
+  styleUrls: ['./openinghours.component.scss']
 })
-export class DoorSettingsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class OpeningHoursSettingsComponent implements OnInit, OnDestroy, AfterViewInit {
   private _scrollSubscription: () => void = () => {};
 
-  _config: SchedulerConfig | null = null;
+  _config: OpeningHoursConfig | null = null;
 
   @ViewChildren('dayConfig')
   _dayConfigs: QueryList<DayConfigComponent>;
@@ -30,6 +29,10 @@ export class DoorSettingsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get scrollTop(): number {
     if (!this._elementRef) {
+      return 0;
+    }
+    
+    if (!this._elementRef.nativeElement.parentElement) {
       return 0;
     }
     
@@ -60,11 +63,11 @@ export class DoorSettingsComponent implements OnInit, OnDestroy, AfterViewInit {
     },
   ]
   
-  constructor(private _door: DoorService,
+  constructor(private _hours: OpeningHoursService,
               private _elementRef: ElementRef,
               private _renderer: Renderer2) { }
 
-  _scrollTo(day: keyof OpeningHours) {
+  _scrollTo(day: WeekDay) {
     if (!this._dayConfigs) {
       return;
     }
@@ -72,7 +75,6 @@ export class DoorSettingsComponent implements OnInit, OnDestroy, AfterViewInit {
     const comp = this._dayConfigs.find(config => config.day === day);
 
     if (!!comp) {
-      console.log(`Scrolling to ${day} at position: ${comp.elementRef.nativeElement.offsetTop}`);
       this.scrollTo.next(comp.elementRef.nativeElement.offsetTop);
       
       (this._elementRef.nativeElement as HTMLElement).parentElement
@@ -99,9 +101,7 @@ export class DoorSettingsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this._scrollSubscription = this._renderer.listen(this._elementRef.nativeElement.parentElement, 'scroll', (event) => {
-      console.log(event);
-    });
+    this._scrollSubscription = this._renderer.listen(this._elementRef.nativeElement.parentElement, 'scroll', (event) => {});
   }
 
   ngOnDestroy() {
@@ -109,12 +109,8 @@ export class DoorSettingsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   
   _loadConfig() {
-    this._door.getCurrentState()
-      .pipe(
-        map(state => state.config)
-      )
+    this._hours.getConfig()
       .subscribe(config => {
-        console.log('Received data', config);
         this._config = config;
       });
   }

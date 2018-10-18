@@ -1,0 +1,44 @@
+
+<mat-toolbar>
+  <mat-toolbar-row>
+    <div class="button-toolbar">
+      <button class="create-button" mat-button color="primary" (click)="_createUser()">Neuer Benutzer</button>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div class="user-list-wrapper">
+  <table mat-table [dataSource]="_users" [class.handset]="_handset" class="mat-elevation-z2">
+  
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="role">
+      <th mat-header-cell *matHeaderCellDef> Rolle </th>
+      <td mat-cell *matCellDef="let user"> {{user.role | role}} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef> Benutzertyp </th>
+      <td mat-cell *matCellDef="let user"> {{user.type | usertype}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="enabled">
+      <th mat-header-cell *matHeaderCellDef> Aktiv </th>
+      <td mat-cell *matCellDef="let user"> <mat-checkbox [checked]="user.enabled" (change)="_toggleUser(user, $event)"></mat-checkbox> </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef style="width: 80px; text-align: right;"></th>
+      <td mat-cell *matCellDef="let user">
+        <button mat-icon-button color="primary" (click)="_editUser(user)"><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button color="primary" (click)="_deleteUser(user)"><mat-icon>delete</mat-icon></button>
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="['name', 'role', 'type', 'enabled', 'action']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['name', 'role', 'type', 'enabled',  'action'];"></tr>
+  </table>
+</div>

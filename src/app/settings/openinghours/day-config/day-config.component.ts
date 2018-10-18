@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef } from '@angular/core';
-import { TimeFrame, OpeningHours, DoorService } from '../../../door.service';
+import { OpeningHoursService, WeekDay, TimeFrame } from '../../../openinghours.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TimeFrameDialogComponent } from '..//time-frame-dialog/time-frame-dialog.component';
 
@@ -10,12 +10,12 @@ import { TimeFrameDialogComponent } from '..//time-frame-dialog/time-frame-dialo
 })
 export class DayConfigComponent implements OnInit {
 
-  constructor(private _door: DoorService,
+  constructor(private _hours: OpeningHoursService,
               private _dialog: MatDialog,
               public readonly elementRef: ElementRef) { }
   
   @Input()
-  day: keyof OpeningHours | null = null;
+  day: WeekDay | null = null;
 
   @Input()
   label: string;
@@ -27,7 +27,7 @@ export class DayConfigComponent implements OnInit {
   readonly changed: EventEmitter<void> = new EventEmitter();
   
   _deleteTimeFrame(frame: TimeFrame): void {
-    this._door.deleteTimeFrame(this.day, frame.from, frame.to)
+    this._hours.deleteTimeFrame(this.day, frame.start, frame.end)
       .subscribe(() => this.changed.next());
   }
   
@@ -39,7 +39,7 @@ export class DayConfigComponent implements OnInit {
           return;
         }
         
-        this._door.addTimeFrame(this.day, res.from, res.to)
+        this._hours.addTimeFrame(this.day, res.start, res.end)
           .subscribe(() => this.changed.next());
       });
   }

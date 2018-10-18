@@ -85,8 +85,7 @@ export class DoorComponent implements OnInit, OnDestroy {
           return;
         }
         
-        let until = new Date();
-        until.setMinutes(until.getMinutes() + result);
+        let until = new Date(new Date().getTime() + (result * 60 * 1000));
         this._door.setState(state, until)
           .subscribe(() => this._triggerUpdate.next(null));
       });

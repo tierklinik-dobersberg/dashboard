@@ -8,6 +8,12 @@ mat-card {
     width: 80%;
 }
 
+:host-context(.handset) {
+    mat-card {
+        width: 90%;
+    }
+}
+
 button {
     text-transform: uppercase;
     color: #1080d0;

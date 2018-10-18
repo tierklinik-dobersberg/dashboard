@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>{{ !!_userToEdit ? 'Benutzer editieren' : 'Neuer Bentuzer' }}</h2>
+<mat-dialog-content>
+  <form #form="ngForm">
+    <mat-form-field>
+      <input matInput [disabled]="!!_userToEdit" name="username" required [(ngModel)]="_username" placeholder="Name">
+    </mat-form-field>
+    <mat-form-field *ngIf="!_userToEdit">
+      <input matInput type="password" autocomplete="off" name="new-password" required [(ngModel)]="_password" placeholder="Passwort">
+    </mat-form-field>
+    <mat-form-field  *ngIf="!_userToEdit">
+      <input matInput type="password" autocomplete="off" [pattern]="_password" name="confirm-new-password" required [(ngModel)]="_confirmPassword" placeholder="Passwort wiederholden">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput type="number" name="hours-per-week" required [(ngModel)]="_hoursPerWeek" placeholder="Stunden pro Woche">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select required placeholder="Benutzertyp" name="type" [(ngModel)]="_type">
+        <mat-option value="doctor">Tierarzt</mat-option>
+        <mat-option value="assistent">Pfleger</mat-option>
+        <mat-option value="other">Benutzer</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-checkbox [(ngModel)]="_isAdmin" name="role">Administrator</mat-checkbox>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="_abort()">Abbrechen</button>
+  <button mat-button [disabled]="!form.valid" (click)="_save()">{{!!_userToEdit ? 'Speichern' : 'Erstellen'}}</button>
+</mat-dialog-actions>

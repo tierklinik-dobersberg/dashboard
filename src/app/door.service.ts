@@ -113,7 +113,7 @@ export class DoorService {
   }
 
   setState(state: DoorState, until: Date): Observable<void> {
-    return this._http.put<void>(`/api/door/set/${state}`, [ until.getHours(), until.getMinutes() ], {
+    return this._http.put<void>(`/api/door/set/${state}`, until.getTime(), {
       headers: {
         'accept': 'application/json'
       }

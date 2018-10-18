@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Time } from '../../../openinghours.service';
 
 @Component({
   selector: 'cl-time-frame-dialog',
@@ -24,8 +25,8 @@ export class TimeFrameDialogComponent implements OnInit {
   
   _save() {
     this._dialogRef.close({
-      from: [this._fromHour, this._fromMinute],
-      to: [this._toHour, this._toMinute],
+      start: new Time(this._fromHour * 60 + this._fromMinute),
+      end: new Time(this._toHour * 60 + this._toMinute)
     });
   }
 }

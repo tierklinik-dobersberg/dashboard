@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -13,8 +13,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule  } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { LayoutModule } from '@angular/cdk/layout';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
@@ -25,9 +29,16 @@ import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import { SelectTimeOffsetComponent } from './dialogs/select-time-offset/select-time-offset.component';
 import { SettingsOverviewComponent } from './settings/overview/overview.component';
-import { DoorSettingsComponent } from './settings/door/door.component';
-import { DayConfigComponent } from './settings/door/day-config/day-config.component';
-import { TimeFrameDialogComponent } from './settings/door/time-frame-dialog/time-frame-dialog.component';
+import { OpeningHoursSettingsComponent } from './settings/openinghours/openinghours.component';
+import { DayConfigComponent } from './settings/openinghours/day-config/day-config.component';
+import { TimeFrameDialogComponent } from './settings/openinghours/time-frame-dialog/time-frame-dialog.component';
+import { UsersComponent } from './settings/users/users.component';
+import { CreateUserDialogComponent } from './settings/users/create-user-dialog/create-user-dialog.component';
+import { RolePipe } from './settings/users/role.pipe';
+import { UsertypePipe } from './settings/users/usertype.pipe';
+import { ConfirmationComponent } from './dialogs/confirmation/confirmation.component';
+import { RostaComponent } from './settings/rosta/rosta.component';
+import { OpeningHourDirective } from './settings/rosta/opening-hour.directive';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -39,13 +50,21 @@ registerLocaleData(localeDe, 'de');
     DoorComponent,
     SelectTimeOffsetComponent,
     SettingsOverviewComponent,
-    DoorSettingsComponent,
+    OpeningHoursSettingsComponent,
     DayConfigComponent,
-    TimeFrameDialogComponent
+    TimeFrameDialogComponent,
+    UsersComponent,
+    CreateUserDialogComponent,
+    RolePipe,
+    UsertypePipe,
+    ConfirmationComponent,
+    RostaComponent,
+    OpeningHourDirective
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     CommonModule,
@@ -54,11 +73,15 @@ registerLocaleData(localeDe, 'de');
     HttpClientModule,
     MatDialogModule,
     MatSelectModule,
+    LayoutModule,
     MatListModule,
     MatIconModule,
     MatDatepickerModule,
+    MatCheckboxModule,
     MatInputModule,
     MatMenuModule,
+    MatTableModule,
+    MatToolbarModule,
     MatFormFieldModule,
     MatTabsModule
   ],
@@ -66,7 +89,9 @@ registerLocaleData(localeDe, 'de');
   bootstrap: [AppComponent],
   entryComponents: [
     SelectTimeOffsetComponent,
-    TimeFrameDialogComponent
+    TimeFrameDialogComponent,
+    CreateUserDialogComponent,
+    ConfirmationComponent
   ]
 })
 export class AppModule { }

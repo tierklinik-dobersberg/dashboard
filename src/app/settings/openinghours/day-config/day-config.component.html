@@ -7,7 +7,7 @@
     <mat-list role="list">
       <mat-list-item *ngFor="let frame of config" role="listitem">
         <div class="day-time-frame">
-          <span>{{frame.from[0]|number:'2.0-0'}}:{{frame.from[1]|number:'2.0-0'}} - {{frame.to[0]|number:'2.0-0'}}:{{frame.to[1]|number:'2.0-0'}}</span>
+          <span>{{frame.start}} - {{frame.end}}</span>
           <button mat-icon-button (click)="_deleteTimeFrame(frame)"><mat-icon>delete</mat-icon></button>
         </div>
       </mat-list-item>

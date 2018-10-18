@@ -1,0 +1,22 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
+
+.button-toolbar {
+    text-align: right;
+}
+
+table {
+    width: 80%;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+:host-context(.handset) {
+    table {
+        width: 95%;
+    }
+}

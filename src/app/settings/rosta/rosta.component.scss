@@ -1,0 +1,75 @@
+mat-toolbar {
+    span {
+        &.kw {
+            color: gray;
+        }
+        margin-left: 20px;
+        vertical-align: bottom;
+    }
+}
+
+.calendar {
+    //display: flex;
+    height: calc(100% - 64px);
+    overflow: hidden;
+    column-count: 7;
+    column-gap: 0px;
+
+    .day {
+        //flex-grow: 1;
+        height: 100%;
+        text-align: center;
+        border-right: 1px solid rgba(0,0,0,.12);
+
+        .day-container {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            display: block;
+        
+            .opening-hour {
+                position: absolute;
+                display: block;
+                left: 0px;
+                right: 0px;
+                background-color: #f5f5f5;
+                
+                span.start-time, span.end-time {
+                    font-size: 11px;
+                    font-weight: lighter;
+                    position: absolute;
+                    left: 0px;
+                    right: 0px;
+                    text-align: center;
+                }
+
+                span.start-time {
+                    top: 0px;
+                }
+                
+                span.end-time {
+                    bottom: 0px;
+                }
+            }
+        }
+        
+        span.day-header {
+            font-weight: lighter;
+            display: block;
+            width: 100%; 
+            padding-top: 10px;
+            padding-bottom: 10px;
+            background-color: #f5f5f5;
+            font-size: 90%;
+            border-top: 1px solid rgba(0,0,0,.12);
+            border-right: 1px solid rgba(0,0,0,.12);
+            
+
+            span.date {
+                display: block;
+                font-size: 80%;
+            }
+        }
+
+    }
+}
