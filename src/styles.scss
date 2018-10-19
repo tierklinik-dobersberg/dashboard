@@ -14,10 +14,12 @@ body { margin: 0; font-family: 'Roboto', sans-serif; }
     }
 }
 
-.mat-button {
-    color: #1080d0;
-    text-transform: uppercase;
-    font-weight: lighter;
+mat-card, cl-openinghours-settings {
+    .mat-button {
+        color: #1080d0;
+        text-transform: uppercase;
+        font-weight: lighter;
+    }
 }
 
 mat-tab-group {
