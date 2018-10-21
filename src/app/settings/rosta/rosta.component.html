@@ -1,9 +1,9 @@
 <mat-toolbar>
   <mat-toolbar-row>Kalenderwoche <span class="kw">{{_currentWeek}} / {{_currentYear}}</span>
     <div class="toolbar-buttons">
-      <button mat-button>{{_currentTimeSpan}}</button>
-      <button mat-icon-button (click)="_prevWeek()"><mat-icon>keyboard_arrow_left</mat-icon></button>
-      <button mat-icon-button (click)="_nextWeek();"><mat-icon>keyboard_arrow_right</mat-icon></button>
+      <button mat-button (click)="openTodaysWeek()">{{_currentTimeSpan}}</button>
+      <button mat-icon-button (click)="_openPrevWeek()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+      <button mat-icon-button (click)="_openNextWeek();"><mat-icon>keyboard_arrow_right</mat-icon></button>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>
@@ -16,7 +16,7 @@
     </span>
 
     <div class="day-container" #weekDayContainer>
-      <div class="opening-hour" *ngFor="let frame of _openingHours[day.weekDay]; trackBy: _trackFrame"
+      <div class="opening-hour" *ngFor="let frame of day.sections; trackBy: _trackFrame"
           clOpeningHour [frame]="frame" [weekday]="day.weekDay" [weekdayNumber]="day.weekDayNumber">
           <span class="start-time">{{frame.start}}</span>
           <span class="end-time">{{frame.end}}</span>

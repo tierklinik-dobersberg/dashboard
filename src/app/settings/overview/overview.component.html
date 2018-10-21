@@ -2,12 +2,11 @@
     <mat-tab label="Öffnungszeiten">
       <cl-openinghours-settings (scrollTo)="_scrollTo($event)"></cl-openinghours-settings>
     </mat-tab>
-    
     <mat-tab label="Benutzer">
-      <cl-user-settings></cl-user-settings>
+      <!--<cl-user-settings></cl-user-settings>-->
     </mat-tab>
     
     <mat-tab label="Dienstplan">
-      <cl-rosta-edit *matTabContent></cl-rosta-edit>
+      <cl-rosta-edit *matTabContent [source]="calendarSource"></cl-rosta-edit>
     </mat-tab>
 </mat-tab-group>

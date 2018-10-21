@@ -1,10 +1,10 @@
-import { Component, OnInit, AfterViewInit, ViewChildren, QueryList, ElementRef, ChangeDetectorRef, Input, OnDestroy, AfterViewChecked, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChildren, ContentChildren, QueryList, ElementRef, ChangeDetectorRef, Input, OnDestroy, AfterViewChecked, Output, EventEmitter } from '@angular/core';
 import * as moment from 'moment';
 import { Time, OpeningHoursService, OpeningHoursConfig, WeekDay, TimeFrame } from 'src/app/openinghours.service';
-import { OpeningHourDirective } from './opening-hour.directive';
-import { Subscription } from 'rxjs';
-
-import {DateSpan} from './types';
+import {TdDaySectionDef, TdDaySectionOutlet} from './day-section';
+import {OpeningHourDirective} from './opening-hour.directive';
+import {Subscription} from 'rxjs';
+import {DateSpan, DaySection, CalendarDay} from './types';
 import {CalendarSource, CalendarViewer} from './calendar-source';
 
 /**
@@ -22,6 +22,9 @@ export interface Day {
   
   /** The weekday key */
   weekDay: WeekDay;
+  
+
+  sections: DaySection<any>[];
 }
 
 @Component({
@@ -47,6 +50,13 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
    * The next CalendarSource to use after the view has been checked
    */
   private _nextSource: CalendarSource | null = null;
+  
+  /**
+   * @internal
+   * A snapshot of the currently rendered day sections. Each DaySection may be rendered differently
+   * based on the "when" predicate condition of {@link TdDaySectionDef}
+   */
+  private _calendarDaysSnapshort: ReadonlyArray<CalendarDay> = [];
   
   /**
    * @internal
@@ -77,17 +87,36 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
    */
   @Output()
   readonly viewChange: EventEmitter<DateSpan> = new EventEmitter();
+  
+  /**
+   * @internal
+   * A query list watching day section definitions for the calendar
+   */
+  @ContentChildren(TdDaySectionDef)
+  _daySectionDefinitions: QueryList<TdDaySectionDef>;
 
-  /** The currently rendered ISO calendar week */
+  /**
+   * @internal
+   * The currently rendered ISO calendar week
+   */
   _currentWeek: number;
   
-  /** The current year displayed in the rosta */
+  /**
+   * @internal
+   * The current year displayed in the rosta
+   */
   _currentYear: number;
   
-  /** A string represenation of the current time span displayed in the rosta */
+  /**
+   * @internal
+   * A string represenation of the current time span displayed in the rosta
+   */
   _currentTimeSpan: string;
   
-  /** The current date displayed in the rosta. It may be in the middle of the week */
+  /**
+   * @internal 
+   * The current date displayed in the rosta. It may be in the middle of the week
+   */
   _currentDate: Date;
   
   /**
@@ -97,15 +126,16 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
   @ViewChildren('weekDayContainer', {read: ElementRef})
   _calendarContainer: QueryList<ElementRef>;
 
+
   /**
-   * @internal
+   * @deprecated
    * A query list watching all {@link OpeningHourDirective}s rendered at the rosta
    */
   @ViewChildren(OpeningHourDirective)
   _openingHourDirectives: QueryList<OpeningHourDirective>;
 
   /**
-   * @internal
+   * @deprecated
    * The current opening hours
    */
   _openingHours: OpeningHoursConfig = {};
@@ -121,7 +151,7 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
 
   ngOnInit() {
     this.openTodaysWeek();
-    this._loadOpeningHours();
+    //this._loadOpeningHours();
   }
   
   ngOnDestroy() {
@@ -129,16 +159,16 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
       this._sourceSubscription.unsubscribe();
       this._sourceSubscription = null;
     }
+    
+    if (!!this._currentSource) {
+      this._currentSource.disconnect(this);
+    }
   }
 
   ngAfterViewInit() {
     this._openingHourDirectives.changes
       .subscribe(() => {
-        if (Object.keys(this._openingHours).length === 0) {
-          return;
-        }
-        
-        this._realignOpeningHours();
+        this._alignDaySections();
       });
   }
 
@@ -150,7 +180,16 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
    * Switches the rosta to display the current week
    */
   openTodaysWeek() {
-    this._changeDate(new Date());
+    this.openFromDate(new Date());
+  }
+  
+  /**
+   * Switches the calendar to display the week of the provided day
+   * 
+   * @param d - The date to switch to
+   */
+  openFromDate(d: Date) {
+    this._changeDate(d);
     
     // As this function may be called from outside the component
     // make sure we trigger a new change detection round
@@ -186,14 +225,14 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
    * @param event - The resize event
    */
   _onResize(event?: any) {
-    this._realignOpeningHours();
+    this._alignDaySections();
   }
   
   /**
    * @internal
    * Changes the rosta to the next week
    */
-  _nextWeek() {
+  _openNextWeek() {
     const next = moment(this._currentDate)
                   .add(1, 'week');
     
@@ -204,7 +243,7 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
    * @internal
    * Changes to rosta to the previous week
    */
-  _prevWeek() {
+  _openPrevWeek() {
     const next = moment(this._currentDate)
                   .add(-1, 'week');
     
@@ -217,6 +256,10 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
    * and removes any previous source subscription
    */
   private _setupCalendarSource(): void {
+    if (!this._nextSource) {
+      return;
+    }
+    
     // Unsubscribe from the previous source
     if (!!this._sourceSubscription) {
       this._sourceSubscription.unsubscribe();
@@ -234,8 +277,8 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
     }
     
     // Make sure we only accept valid CalendarSource implementations
-    if (!(typeof this._nextSource['connect'] !== 'function') ||
-        !(typeof this._nextSource['disconnect'] !== 'function')) {
+    if ((typeof this._nextSource['connect'] !== 'function') ||
+        (typeof this._nextSource['disconnect'] !== 'function')) {
 
         throw new Error(`RostaComponent: received invalid calendar source. It MUST implement the CalendarSource interface`);
     }
@@ -246,7 +289,34 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
     // Connect to the current source
     this._sourceSubscription = this._currentSource.connect(this)
       .subscribe(calendarDays => {
+        this._calendarDaysSnapshort = calendarDays;
+        this._changeDate(new Date());
 
+        // find the earliest start and latest end times
+        this._earliestStart = -1;
+        this._latestEnd = -1;
+
+        calendarDays.forEach(day => {
+          (day.sections || []).forEach(frame => {
+            if (this._earliestStart === -1 || frame.start.totalMinutes < this._earliestStart) {
+              this._earliestStart = frame.start.totalMinutes;
+            }
+            
+            if (this._latestEnd === -1 || frame.end.totalMinutes > this._latestEnd) {
+              this._latestEnd = frame.end.totalMinutes;
+            }
+          });
+        });
+        
+        if (this._earliestStart > 30) {
+          this._earliestStart -= 30;
+        }
+        
+        if (this._latestEnd < 24*60 - 60) {
+          this._latestEnd += 60;
+        }
+        
+        this._alignDaySections();
       });
   }
   
@@ -258,6 +328,12 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
    * @param date - The new start date of the rosta
    */
   private _changeDate(date: Date) {
+    // If the date passed is a sunday we actually need to display
+    // the "last" week
+    if (date.getDay() === 0) {
+      date = moment(date).subtract(1, 'day').toDate();
+    }
+    
     let result = getWeekNumber(date);
     this._currentDate = date;
     this._currentTimeSpan = this._getMonthName(date);
@@ -268,10 +344,11 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
 
   /**
    * @internal
-   * Updates the position of the opening hour DOM elements
+   * Updates the position of the day section DOM elements
    */
-  private _realignOpeningHours() {
+  private _alignDaySections() {
     this._openingHourDirectives.forEach((directive, index) => {
+      
       let id = directive.weekdayNumber - 1;
       if (id < 0) { id = 6; }
       
@@ -329,14 +406,13 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
   }
 
   /**
-   * @internal
+   * @deprecated
    * Loads the current opening hours, calculates the earlies start and the latest end within the
    * week and realigns the opening hour containers using {@link RostaComponent#_realignOpeningHours()}
    */
   private _loadOpeningHours() {
     this._openingService.getConfig()
       .subscribe(config => {
-        console.log(`Opening hours `, config);
         this._openingHours = config;
 
         Object.keys(this._openingHours)
@@ -359,23 +435,21 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
           }
           
           if (this._latestEnd < 24*60 - 60) {
-            console.log(`Inceasing latestEnd by 30 minutes`);
             this._latestEnd += 60;
           }
-          console.log(`latestend: ${new Time(this._latestEnd)}`);
 
           if (!!this._calendarContainer) {
-            this._realignOpeningHours();
+            this._alignDaySections();
           }
       });
   }
   
   /**
    * @internal
-   * Generates a the list of days for the {@link RostaComponent#_days} property
+   * Generates the list of days for the {@link RostaComponent#_days} property
    * based on a given date
    *
-   * @param d - A date or moment that is used to determine the date range to create
+   * @param d - A date or moment that is used to determine the date range to create;
    *            it may be in the middle of a week
    */
   private _generateDays(d: Date|moment.Moment) {
@@ -383,11 +457,7 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
       d = moment(d);
     }
     
-    d.hours(0)
-      .minutes(0)
-      .seconds(0)
-      .milliseconds(0)
-      .weekday(0);
+    d.weekday(0).startOf('day');
       
     let days: Day[] = [];
     let names = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
@@ -398,12 +468,16 @@ export class RostaComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
       const name = names[i];
       const date = d.clone()
                     .add(weekDay, 'day');
+        
+      const calendarDay = this._calendarDaysSnapshort.find(day => moment(day.date).date() === date.date());
+      const section = !!calendarDay ? calendarDay.sections || [] : [];
 
       days.push({
         date: date,
         name: name,
         weekDayNumber: weekDay,
         weekDay: this._openingService.getKeyFromDay(weekDay),
+        sections: section,
       });
     }
 

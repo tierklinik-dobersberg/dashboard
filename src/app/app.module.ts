@@ -37,7 +37,7 @@ import { CreateUserDialogComponent } from './settings/users/create-user-dialog/c
 import { RolePipe } from './settings/users/role.pipe';
 import { UsertypePipe } from './settings/users/usertype.pipe';
 import { ConfirmationComponent } from './dialogs/confirmation/confirmation.component';
-import { RostaComponent } from './settings/rosta/rosta.component';
+import { RostaComponent, TdDaySectionDef, TdDaySectionOutlet } from './settings/rosta';
 import { OpeningHourDirective } from './settings/rosta/opening-hour.directive';
 
 // the second parameter 'fr' is optional
@@ -59,7 +59,9 @@ registerLocaleData(localeDe, 'de');
     UsertypePipe,
     ConfirmationComponent,
     RostaComponent,
-    OpeningHourDirective
+    OpeningHourDirective,
+    TdDaySectionDef,
+    TdDaySectionOutlet
   ],
   imports: [
     BrowserModule,
