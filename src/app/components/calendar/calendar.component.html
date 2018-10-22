@@ -1,0 +1,31 @@
+<mat-toolbar>
+  <mat-toolbar-row>Kalenderwoche <span class="kw">{{_currentWeek}} / {{_currentYear}}</span>
+    <div class="toolbar-buttons">
+      <button mat-button (click)="openTodaysWeek()">{{_currentTimeSpan}}</button>
+      <button mat-icon-button (click)="_openPrevWeek()"><mat-icon>keyboard_arrow_left</mat-icon></button>
+      <button mat-icon-button (click)="_openNextWeek()"><mat-icon>keyboard_arrow_right</mat-icon></button>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<div class="calendar" (window:resize)="_onResize($event)">
+  <div class="day" *ngFor="let day of _days; trackBy: _trackDays" >
+    <span class="day-header">
+      {{day.name}}
+      <span class="date">{{day.date.format('DD.MM')}}</span>
+    </span>
+
+    <div class="day-container" [class.clickable]="allowClick" #weekDayContainer (click)="_handleClick($event, day)">
+      <div class="auto-position" *ngFor="let frame of day.sections; trackBy: _trackFrame"
+          [style.top.px]="frame.position.top" [style.height.px]="frame.position.height" [style.opacity]="frame.position.opacity">
+          <ng-container *ngTemplateOutlet="frame.template; context: {$implicit: frame}"></ng-container>
+      </div>
+      
+      <div class="auto-position" *ngFor="let schedule of day.schedules; trackBy: _trackFrame"
+          (click)="_handleClick($event, day, schedule)"
+          [style.top.px]="schedule.position.top" [style.height.px]="schedule.position.height" [style.opacity]="schedule.position.opacity">
+          <ng-container *ngTemplateOutlet="schedule.template; context: {$implicit: schedule}"></ng-container>
+      </div>
+    </div>
+  </div>
+</div>

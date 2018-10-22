@@ -32,7 +32,24 @@ export class Time {
   private _minutes: number;
   private _hours: number;
 
-  constructor(minutes: number) {
+  constructor(minutes: number|string) {
+    if (typeof minutes === 'string') {
+      let [strHour, strMinutes, ...rest] = minutes.split(':');
+      if (strHour.length > 2 || strMinutes.length > 2) {
+        throw new Error(`Invalid time`);
+      }
+      
+      if (strHour[0] === '0') {
+        strHour = strHour.slice(1);
+      }
+      
+      if (strMinutes[0] === '0') {
+        strMinutes = strMinutes.slice(1);
+      }
+      
+      minutes = (+strHour) * 60 + (+strMinutes);
+    }
+    
     this._minutes = minutes % 60;
     this._hours = Math.floor(minutes / 60);
   }

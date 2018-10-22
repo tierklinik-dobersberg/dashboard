@@ -45,7 +45,7 @@ export interface DateSpan {
    */
   export interface Schedule<T> extends DaySection<T> {
     /** A list of attendees for this schedule */
-    attendees?: Attendee<any>[];
+    attendees: Attendee<any>[];
   }
   
   /**

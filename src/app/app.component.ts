@@ -20,13 +20,7 @@ export class AppComponent implements OnInit {
       Breakpoints.HandsetLandscape,
       Breakpoints.HandsetPortrait,
     ]).subscribe(result => {
-      if (result.matches) {
-        this._activateHandsetLayout();
-      }
+      this._handset = result.matches;
     });
-  }
-
-  private _activateHandsetLayout() {
-    this._handset = true;
   }
 }

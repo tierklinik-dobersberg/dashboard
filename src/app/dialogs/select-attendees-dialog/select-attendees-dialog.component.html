@@ -1,0 +1,17 @@
+<p mat-dialog-title>Personal auswählen</p>
+<mat-dialog-content>
+  <div class="attendees">
+   <mat-list>
+      <mat-list-item *ngFor="let user of _users; trackBy: _trackUser">
+        <div class="list-item">
+          <mat-checkbox [checked]="user.selected" (change)="_toggleUser(user, $event)">{{user.username}}</mat-checkbox>
+          <span class="type">{{user.type | usertype}}</span>
+        </div>
+      </mat-list-item>
+    </mat-list>   
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button matDialogClose>Abbrechen</button>
+  <button mat-button (click)="_save()">OK</button>
+</mat-dialog-actions>

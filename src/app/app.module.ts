@@ -37,8 +37,9 @@ import { CreateUserDialogComponent } from './settings/users/create-user-dialog/c
 import { RolePipe } from './settings/users/role.pipe';
 import { UsertypePipe } from './settings/users/usertype.pipe';
 import { ConfirmationComponent } from './dialogs/confirmation/confirmation.component';
-import { RostaComponent, TdDaySectionDef, TdDaySectionOutlet } from './settings/rosta';
-import { OpeningHourDirective } from './settings/rosta/opening-hour.directive';
+import { TdCalendarComponent, TdDaySectionDef, TdDayScheduleDef} from './components/calendar';
+import { SelectAttendeesDialogComponent } from './dialogs/select-attendees-dialog/select-attendees-dialog.component';
+import { CreateRostaScheduleComponent } from './dialogs/create-rosta-schedule/create-rosta-schedule.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -58,10 +59,11 @@ registerLocaleData(localeDe, 'de');
     RolePipe,
     UsertypePipe,
     ConfirmationComponent,
-    RostaComponent,
-    OpeningHourDirective,
+    TdCalendarComponent,
     TdDaySectionDef,
-    TdDaySectionOutlet
+    TdDayScheduleDef,
+    SelectAttendeesDialogComponent,
+    CreateRostaScheduleComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,7 +95,9 @@ registerLocaleData(localeDe, 'de');
     SelectTimeOffsetComponent,
     TimeFrameDialogComponent,
     CreateUserDialogComponent,
-    ConfirmationComponent
+    ConfirmationComponent,
+    SelectAttendeesDialogComponent,
+    CreateRostaScheduleComponent,
   ]
 })
 export class AppModule { }

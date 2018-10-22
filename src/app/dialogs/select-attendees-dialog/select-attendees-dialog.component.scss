@@ -1,0 +1,21 @@
+:host {
+    display: block;
+}
+
+.mat-dialog-content {
+    overflow: hidden;
+}
+
+.attendees {
+    max-height: 30vh;
+    overflow: auto;
+    padding: 5px;
+}
+.list-item {
+    width: 100%;
+    span.type {
+        font-size: 90%;
+        font-weight: lighter;
+        float: right;
+    }
+}

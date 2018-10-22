@@ -1,0 +1,40 @@
+.create-schedule-container {
+    min-width: 30vw;
+}
+
+:host-context(.handset) {
+    .create-schedule-container {
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+.attendees-selection {
+    border-top: 1px solid #f0f0f0;
+    margin-bottom: 10px;
+    max-height: 20vh;
+    overflow: auto;
+
+    .mat-list-item {
+        height: auto;
+        height: unset;
+        height: fit-content;
+        padding: 5px;
+        p {
+            font-weight: lighter;
+        }
+    }
+    
+}
+
+
+.time-selection {
+    .time-frame {
+        display: flex;
+        justify-content: space-evenly;
+        
+        .time {
+            flex-grow: 1;
+        }
+    }
+}

@@ -14,7 +14,7 @@ body { margin: 0; font-family: 'Roboto', sans-serif; }
     }
 }
 
-mat-card, cl-openinghours-settings {
+mat-card, cl-openinghours-settings, .mat-dialog-actions, .mat-dialog-content {
     .mat-button {
         color: #1080d0;
         text-transform: uppercase;

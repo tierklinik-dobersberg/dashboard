@@ -1,0 +1,28 @@
+<div class="create-schedule-container" [class.handset]="_handset">
+  <p mat-dialog-title>Diensteinteilung - {{_currentDate}}</p>
+  <mat-dialog-content>
+    <div class="time-selection">
+      <div class="time-frame">
+          <mat-form-field class="time">
+            <input matInput type="time" [(ngModel)]="_from" lang="de" name="fromHour" required placeholder="Von" value="00:00">
+          </mat-form-field>
+          <mat-form-field class="time">
+            <input matInput type="time" [(ngModel)]="_to" name="toMinute" lang="de" required placeholder="Bis" value="00:00">
+          </mat-form-field>
+      </div>
+    </div>
+    <div class="attendees-selection">
+      <mat-list>
+        <mat-list-item *ngFor="let user of _selectedAttendees; trackBy: _trackUser">
+            <h4 mat-line>{{user.username}}</h4>
+            <p mat-line>{{user.type | usertype}}</p>
+        </mat-list-item>
+      </mat-list> 
+    </div>
+    <button mat-button color="primary" (click)="_addAttendees()">Personal editieren</button>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button matDialogClose>Abbrechen</button>
+    <button mat-button (click)="_save()">OK</button>
+  </mat-dialog-actions>
+</div>
