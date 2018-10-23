@@ -15,9 +15,9 @@
     </mat-form-field>
     <mat-form-field>
       <mat-select required placeholder="Benutzertyp" name="type" [(ngModel)]="_type">
-        <mat-option value="doctor">Tierarzt</mat-option>
-        <mat-option value="assistent">Pfleger</mat-option>
-        <mat-option value="other">Benutzer</mat-option>
+        <mat-option value="doctor">{{'doctor'|usertype}}</mat-option>
+        <mat-option value="assistent">{{'assistent'|usertype}}</mat-option>
+        <mat-option value="other">{{'other'|usertype}}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-checkbox [(ngModel)]="_isAdmin" name="role">Administrator</mat-checkbox>

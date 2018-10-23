@@ -10,7 +10,7 @@ export class UsertypePipe implements PipeTransform {
     case 'doctor':
       return 'Tierarzt';
     case 'assistent':
-      return 'Pfleger';
+      return 'Assistent';
     case 'other':
       return 'Benutzer';
     }

@@ -1,7 +1,7 @@
 import { Component, OnInit, HostBinding, Inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SelectAttendeesDialogComponent } from '../select-attendees-dialog/select-attendees-dialog.component';
+import { SelectAttendeesDialogComponent, SelectAttendeesConfiguration } from '../select-attendees-dialog/select-attendees-dialog.component';
 import { User, UsersService } from '../../users.service';
 import * as moment from 'moment';
 import { Schedule } from '../../components/calendar';
@@ -9,7 +9,9 @@ import { Time } from 'src/app/openinghours.service';
 
 export interface CreateRostaScheduleConfig {
   date: Date;
+  end?: Date;
   schedule?: Schedule<any>;
+  disallowedUsers: string[];
 }
 
 @Component({
@@ -38,7 +40,11 @@ export class CreateRostaScheduleComponent implements OnInit {
     
     if (!this._config.schedule) {
       this._from = moment(this._config.date).format('HH:mm');
-      this._to = moment(this._config.date).add(4, 'hours').format('HH:mm');
+      if (!!this._config.end) {
+        this._to = moment(this._config.end).format('HH:mm');
+      } else {
+        this._to = moment(this._config.date).add(4, 'hours').format('HH:mm');
+      }
     } else {
       this._from = this._config.schedule.start.toString();
       this._to = this._config.schedule.end.toString();
@@ -75,8 +81,12 @@ export class CreateRostaScheduleComponent implements OnInit {
   }
 
   _addAttendees() {
+    let config: SelectAttendeesConfiguration = {
+        selectedUsers: this._selectedAttendees.map(u => u.username),
+        disallowedUsers: this._config.disallowedUsers,
+    }
     this._dialog.open(SelectAttendeesDialogComponent, {
-      data: this._selectedAttendees.map(u => u.username)
+      data: config
     })
       .afterClosed()
       .subscribe(users => {

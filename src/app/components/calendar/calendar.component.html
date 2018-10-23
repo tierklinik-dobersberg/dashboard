@@ -17,13 +17,20 @@
 
     <div class="day-container" [class.clickable]="allowClick" #weekDayContainer (click)="_handleClick($event, day)">
       <div class="auto-position" *ngFor="let frame of day.sections; trackBy: _trackFrame"
-          [style.top.px]="frame.position.top" [style.height.px]="frame.position.height" [style.opacity]="frame.position.opacity">
+          (click)="_handleClick($event, day, undefined, frame)"
+          [style.top.px]="frame.position.top"
+          [style.height.px]="frame.position.height"
+          [style.opacity]="frame.position.opacity">
           <ng-container *ngTemplateOutlet="frame.template; context: {$implicit: frame}"></ng-container>
       </div>
       
       <div class="auto-position" *ngFor="let schedule of day.schedules; trackBy: _trackFrame"
           (click)="_handleClick($event, day, schedule)"
-          [style.top.px]="schedule.position.top" [style.height.px]="schedule.position.height" [style.opacity]="schedule.position.opacity">
+          [style.top.px]="schedule.position.top"
+          [style.height.px]="schedule.position.height"
+          [style.opacity]="schedule.position.opacity"
+          [style.width]="schedule.position.width > 0 ? schedule.position.width + 'px' : '100%'"
+          [style.left.px]="schedule.position.left">
           <ng-container *ngTemplateOutlet="schedule.template; context: {$implicit: schedule}"></ng-container>
       </div>
     </div>

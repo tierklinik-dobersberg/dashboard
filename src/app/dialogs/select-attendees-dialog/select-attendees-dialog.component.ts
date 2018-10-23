@@ -7,6 +7,19 @@ interface SelectableUser extends User {
   selected: boolean;
 }
 
+export interface SelectAttendeesConfiguration {
+  /**
+   * A list of users that cannot be added as attendees because
+   * they are already part of an overlapping schedule
+   */
+  disallowedUsers: string[];
+
+  /**
+   * A list of already selected attendees for the schedule
+   */
+  selectedUsers: string[];
+}
+
 @Component({
   selector: 'cl-select-attendees-dialog',
   templateUrl: './select-attendees-dialog.component.html',
@@ -16,14 +29,17 @@ export class SelectAttendeesDialogComponent implements OnInit {
   _users: SelectableUser[] = [];
   
   constructor(private _userService: UsersService,
-              @Inject(MAT_DIALOG_DATA) private _selectedUser: string[],
+              @Inject(MAT_DIALOG_DATA) private _config: SelectAttendeesConfiguration,
               private _dialogRef: MatDialogRef<SelectAttendeesDialogComponent>) { }
 
   ngOnInit() {
     this._userService.listUsers()
-      .subscribe(users => this._users = users.map(user => ({
-        ...user,
-        selected: this._selectedUser.includes(user.username),
+      .subscribe(users => this._users = users
+        .filter(user => user.type !== 'other')
+        .filter(user => !this._config.disallowedUsers.includes(user.username))
+        .map(user => ({
+          ...user,
+          selected: this._config.selectedUsers.includes(user.username),
       })));
   }
 

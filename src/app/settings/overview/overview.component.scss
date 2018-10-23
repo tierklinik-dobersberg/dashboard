@@ -33,7 +33,7 @@ span.end-time {
 }
 
 .schedule {
-    border: 1px solid lightskyblue;
+    border: 1px solid white;
     border-radius: 5px;
     background-color: lightskyblue;
     height: 100%;
@@ -45,6 +45,37 @@ span.end-time {
     
     .attendees {
         margin-top: 20px;
+
+        div {
+            display: block;
+            margin-bottom: 5px;
+            margin-left: 10px;
+            margin-right: 10px;
+            line-height: 30px; 
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            span.avatar {
+                text-align: center;
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                border: solid 2px darken(#1080d0, 10%);
+                background-color: #1080d0;
+                color: white;
+                font-weight: bold;
+                display: inline-block;
+            }
+            
+            span.name {
+               white-space: nowrap;
+               overflow: hidden;
+               margin-left: 10px;
+               font-weight: lighter;
+            }
+        }
     }
 }
 

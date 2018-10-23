@@ -15,6 +15,7 @@ import { MatDatepickerModule  } from '@angular/material/datepicker';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -87,6 +88,7 @@ registerLocaleData(localeDe, 'de');
     MatTableModule,
     MatToolbarModule,
     MatFormFieldModule,
+    MatTooltipModule,
     MatTabsModule
   ],
   providers: [],

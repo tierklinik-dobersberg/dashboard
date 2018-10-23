@@ -26,6 +26,8 @@ interface PositionedDaySchedule extends Schedule<any> {
     top: number;
     height: number;
     opacity: number;
+    width?: number;
+    left: number;
   },
   template: TemplateRef<any>
 }
@@ -34,6 +36,7 @@ type Positioned<T> = T extends DaySection<any> ? PositionedDaySection : Position
 
 export interface TdCalendarClickEvent {
   date: Date;
+  end?: Date;
   position: {
     x: number;
     y: number;
@@ -56,11 +59,12 @@ export interface Day {
   
   /** The weekday key */
   weekDay: WeekDay;
-  
 
   sections: PositionedDaySection[];
   
   schedules: PositionedDaySchedule[];
+  
+  columns: Schedule<any>[][];
 }
 
 @Component({
@@ -265,7 +269,7 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
    * @internal
    * Callback function for click events within a day container
    */
-  _handleClick(event: MouseEvent, day: Day, schedule?: Schedule<any>) {
+  _handleClick(event: MouseEvent, day: Day, schedule?: Schedule<any>, section?: DaySection<any>) {
     if (!this._allowClick) {
       return;
     }
@@ -273,8 +277,21 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
     event.preventDefault();
     event.cancelBubble = true;
     
+    let start: Date | null = null;
+    let end: Date | null = null;
+    
+    if (!!section || !!schedule) {
+      if (!section) {
+        section = schedule;
+      }
+    
+      start = day.date.clone().startOf('day').add(section.start.totalMinutes, 'minutes').toDate();
+      end = day.date.clone().startOf('day').add(section.end.totalMinutes, 'minutes').toDate();
+    }
+    
     this.onClick.next({
-      date: this._calculateClickTime(event, day.date),
+      date: start || this._calculateClickTime(event, day.date),
+      end: end || undefined,
       position: {
         x: event.x,
         y: event.y 
@@ -587,17 +604,55 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
       const section = !!calendarDay ? calendarDay.sections || [] : [];
       const schedules = !!calendarDay ? calendarDay.schedules || [] : [];
 
+      const columns = this._calculateColumns(schedules);
+
       days.push({
         date: date,
         name: name,
         weekDayNumber: weekDay,
         weekDay: this._getWeekDayFromNumber(weekDay),
-        sections: section.map(section => this._positionSection('section', section)),
-        schedules: schedules.map(schedule => this._positionSection('schedule', schedule)),
+        sections: section.map(section => this._positionSection('section', weekDay, section)),
+        schedules: schedules.map(schedule => this._positionSection('schedule', weekDay, schedule, columns)),
+        columns: columns,
       });
     }
 
     this._days = days;
+  }
+
+  private _overlapsSchedule(a: Schedule<any>, b: Schedule<any>): boolean {
+    const startA = a.start.totalMinutes;
+    const endA = a.end.totalMinutes;
+    const startB = b.start.totalMinutes;
+    const endB = b.end.totalMinutes;
+
+    return (startB >= startA && startB <= endA) ||
+           (endB   <= endA   && endB   >= startA) ||
+           (startA >= startB && startA <= startB) ||
+           (endA   <= endB   && endA   >= startB)
+  }
+
+  private _calculateColumns(schedules: Schedule<any>[]): Schedule<any>[][] {
+    // we need at least one column
+    let ordered = [...schedules].sort((a, b) => a.start.totalMinutes - b.start.totalMinutes) 
+    let columns: Schedule<any>[][] = [[]];
+    
+    ordered.forEach(schedule => {
+        let currentColumnIndex = 0;
+        while(true) {
+          if (!columns[currentColumnIndex].some(b => this._overlapsSchedule(schedule, b))) {
+            columns[currentColumnIndex].push(schedule);
+            break;
+          }
+          
+          currentColumnIndex++;
+          if (columns.length <= currentColumnIndex) {
+            columns.push([]);
+          }
+        }
+    });
+    
+    return columns;
   }
   
   /**
@@ -612,8 +667,8 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
     this._days = this._days.map(day => {
       return {
         ...day,
-        sections: day.sections.map(section => this._positionSection('section', section)),
-        schedules: day.schedules.map(schedule => this._positionSection('schedule', schedule))
+        sections: day.sections.map(section => this._positionSection('section', day.weekDayNumber, section)),
+        schedules: day.schedules.map(schedule => this._positionSection('schedule', day.weekDayNumber, schedule, day.columns))
       }
     });
   }
@@ -626,10 +681,10 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
    * @param section 
    */
   
-  private _positionSection(type: 'section', section: DaySection<any>): PositionedDaySection;
-  private _positionSection(type: 'schedule', section: Schedule<any>): PositionedDaySchedule;
+  private _positionSection(type: 'section', weekDay: number, section: DaySection<any>): PositionedDaySection;
+  private _positionSection(type: 'schedule', weekDay: number, section: Schedule<any>, columns?: Schedule<any>[][]): PositionedDaySchedule;
 
-  private _positionSection<T>(type: 'section'|'schedule', section: any): Positioned<T> {
+  private _positionSection<T>(type: 'section'|'schedule', weekDay: number, section: any, columns?: Schedule<any>[][]): Positioned<T> {
     let template: TdDayScheduleDef | TdDaySectionDef | undefined = undefined; 
     
     switch(type) {
@@ -641,6 +696,9 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
       break;
     }
 
+    let width: number | null = null;
+    let left: number = 0;
+
     if (this._minContainerHeight === null) {
       return {
         ...section,
@@ -648,16 +706,39 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
           top: 0,
           height: 0,
           opacity: 0,
+          left: 0,
+          width: width,
         },
         template: !!template ? template.templateRef : null
       };
     }
-    const minutesPerDay = this._latestEnd - this._earliestStart;
+      
+    // For schedules, we need to take care about overlapping ones
+    // and adjust their left position and width accordingly
+    if (type === 'schedule')  {
+      const id = (weekDay + 6) % 7;
+      const container = this._calendarContainer.toArray()[id];
+      const containerWidth = container.nativeElement.clientWidth;
+      
+      let columnIndex = columns.findIndex(col => {
+        return col.some(sched => sched.id === section.id);
+      });
+      
+      let skipColumns = 0;
+      columns.slice(columnIndex + 1).forEach(col => {
+        if (!col.some(sched => this._overlapsSchedule(section, sched))) {
+          skipColumns++;
+        }
+      });
+      
+      left = columnIndex * (containerWidth / (columns.length - skipColumns));
+      width = (containerWidth / (columns.length - skipColumns));
+    }
     
+    const minutesPerDay = this._latestEnd - this._earliestStart;
     const duration = section.end.totalMinutes - section.start.totalMinutes;
     const startTime = section.start.totalMinutes - this._earliestStart;
-    let pixelPerMinute = this._minContainerHeight / minutesPerDay;
-    
+    const pixelPerMinute = this._minContainerHeight / minutesPerDay;
     const hourTop = Math.floor(pixelPerMinute * startTime);
     const hourHeight = Math.floor(pixelPerMinute * duration);
 
@@ -667,6 +748,8 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
         top: hourTop,
         height: hourHeight,
         opacity: 1,
+        width: width,
+        left: left,
       },
       template: !!template ? template.templateRef : null
     }

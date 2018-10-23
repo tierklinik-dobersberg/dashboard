@@ -6,7 +6,7 @@ import {Observable, BehaviorSubject} from 'rxjs';
 import {MatDialog, DialogPosition} from '@angular/material/dialog';
 import {map, take, combineLatest} from 'rxjs/operators'
 import * as moment from 'moment';
-import { CreateRostaScheduleComponent } from '../../dialogs/create-rosta-schedule/create-rosta-schedule.component';
+import { CreateRostaScheduleComponent, CreateRostaScheduleConfig } from '../../dialogs/create-rosta-schedule/create-rosta-schedule.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 interface DateSchedule {
@@ -142,15 +142,46 @@ export class SettingsOverviewComponent implements OnInit {
         });
       return;
     }
+    
+    let isEventBetween = (d: Date, s: Schedule<any>) => {
+      const start = moment(d).startOf('day').add(s.start.totalMinutes, 'minutes');
+      const end = moment(d).startOf('day').add(s.end.totalMinutes, 'minutes');
+      const date = moment(event.date);
+      
+      if (date >= start && date <= end) {
+        return true;
+      }
+      
+      if (!!event.end) {
+        return moment(event.end) >= start && moment(event.end) <= end;
+      }
+      
+      return false;
+    }
 
     this._userService.listUsers()
       .subscribe(users => {
         this._users = users;
-        this._dialog.open(CreateRostaScheduleComponent, {
-          data: {
+        const config: CreateRostaScheduleConfig = {
             date: event.date,
+            end: event.end,
             schedule: event.schedule,
-          },
+            disallowedUsers: this._schedules.getValue()
+              .filter(schedule => moment(event.date).format('dd.mm.YYYY') === moment(schedule.date).format('dd.mm.YYYY'))
+              .filter(schedule => isEventBetween(schedule.date, schedule.schedule))
+              .reduce<string[]>((users: string[], sched: DateSchedule) => {
+                sched.schedule.attendees.forEach(attendee => {
+                  if (!users.includes(attendee.name)) {
+                    console.log(`Adding user ${attendee.name} from schedule ${sched.schedule.start}-${sched.schedule.end}`);
+                    users.push(attendee.name);
+                  }
+                });
+
+                return users;
+              }, []),
+        }
+        this._dialog.open(CreateRostaScheduleComponent, {
+          data: config
         }).afterClosed()
           .subscribe(result => {
             if (!result) {
