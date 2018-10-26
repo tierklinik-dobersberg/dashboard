@@ -520,6 +520,8 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
         this._calendarDaysSnapshort = calendarDays;
         this._updateDayLength();
         this._changeDate(this._currentDate);
+
+        this._changeDetectorRef.detectChanges();
       });
   }
   

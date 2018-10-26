@@ -10,7 +10,7 @@
 </mat-toolbar>
 
 <div class="calendar-container">
-  <td-calendar #calendar="tdCalendar" [source]="calendarSource" (onClick)="_createSchedule($event)">
+  <td-calendar #calendar="tdCalendar" [allowClick]="!readonly" [source]="calendarSource" (onClick)="_createSchedule($event)">
     <div class="opening-hours" *tdDaySectionDef="let frame">
         <span class="start-time">{{frame.start}}</span>
         <span class="end-time">{{frame.end}}</span>
@@ -50,8 +50,8 @@
             (mouseenter)="_highlightUser(user)" (mouseleave)="_highlightUser(null)">
 
             <img class="user-avatar" [src]="user.icon" mat-list-icon />
-            <h4 mat-line>{{user.username}} <span class="hours">{{(user.hours | number:'1.0-1')}}/{{user.hoursPerWeek}}</span></h4>
-            <p class="hours-bar-container" mat-line [matTooltip]="(user.hours | number:'1.0-1') + ' von ' + user.hoursPerWeek + 'h/Woche'" matTooltipPosition="below" matTooltipClass="tooltip">
+            <h4 mat-line>{{user.username}} <span class="hours" *ngIf="!readonly">{{(user.hours | number:'1.0-1')}}/{{user.hoursPerWeek}}</span></h4>
+            <p *ngIf="!readonly" class="hours-bar-container" mat-line [matTooltip]="(user.hours | number:'1.0-1') + ' von ' + user.hoursPerWeek + 'h/Woche'" matTooltipPosition="below" matTooltipClass="tooltip">
               <span *ngIf="user.hoursPerWeek >= user.hours" [style.width.%]="(100 / user.hoursPerWeek) * user.hours"
                     class="hours-bar"></span>
                     

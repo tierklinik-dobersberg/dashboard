@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild, Input, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -9,6 +9,7 @@ import { OpeningHoursService, Time } from 'src/app/openinghours.service';
 import { RostaService } from 'src/app/rosta.service';
 import { User, UsersService } from 'src/app/users.service';
 import { CalendarDay, CalendarSource, CalendarViewer, DateSpan, Schedule, TdCalendarClickEvent, TdCalendarComponent } from '../calendar';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 interface DateSchedule {
   schedule: Schedule<any>;
@@ -99,6 +100,15 @@ export class RostaComponent implements OnInit, AfterViewInit {
 
   @ViewChild('calendar', {read: TdCalendarComponent})
   _calendar: TdCalendarComponent;
+
+  @Input()
+  set readonly(v: any) {
+    this._readonly = coerceBooleanProperty(v);
+  }
+  get readonly() {
+    return this._readonly;
+  }
+  private _readonly: boolean = true;
   
   _highlightedUser: string | null = null;
   _selecetedUser: string | null = null;
@@ -112,6 +122,7 @@ export class RostaComponent implements OnInit, AfterViewInit {
 
   constructor(private _openingHourService: OpeningHoursService,
               private _userService: UsersService,
+              private _changeDetectorRef: ChangeDetectorRef,
               private _rostaService: RostaService,
               private _dialog: MatDialog) { }
 
@@ -142,6 +153,7 @@ export class RostaComponent implements OnInit, AfterViewInit {
             this._schedules = schedules;
             
             this._updateUsers();
+            this._changeDetectorRef.markForCheck();
 
             return schedules;
           })
