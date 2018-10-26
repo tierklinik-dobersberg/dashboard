@@ -3,13 +3,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import * as cropper from 'cropperjs';
 
-
-export function DialogData() {
-  return function(...args) {
-    return Inject(MAT_DIALOG_DATA)(...args);
-  }
-}
-
 @Component({
   selector: 'cl-crop-image-dialog',
   templateUrl: './crop-image-dialog.component.html',
@@ -22,7 +15,7 @@ export class CropImageDialogComponent implements OnInit, OnDestroy {
   private _cropper: cropper.default;
 
   constructor(private _dialogRef: MatDialogRef<CropImageDialogComponent>,
-              @DialogData() private _imageBlogURL: string) { }
+              @Inject(MAT_DIALOG_DATA) private _imageBlogURL: string) { }
 
   ngOnInit() {
     this._imageContainer.nativeElement.src = this._imageBlogURL;
