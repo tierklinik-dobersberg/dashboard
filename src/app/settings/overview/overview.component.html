@@ -1,36 +1,12 @@
 <mat-tab-group>
     <mat-tab label="Öffnungszeiten">
-      <cl-openinghours-settings (scrollTo)="_scrollTo($event)"></cl-openinghours-settings>
+      <cl-openinghours-settings *matTabContent></cl-openinghours-settings>
     </mat-tab>
     <mat-tab label="Benutzer">
-      <cl-user-settings></cl-user-settings>
+      <cl-user-settings *matTabContent></cl-user-settings>
     </mat-tab>
     
     <mat-tab label="Dienstplan">
-      <td-calendar *matTabContent [source]="calendarSource" (onClick)="_createSchedule($event)">
-        <div class="opening-hours" *tdDaySectionDef="let frame">
-            <span class="start-time">{{frame.start}}</span>
-            <span class="end-time">{{frame.end}}</span>
-        </div>
-
-        <div *tdDayScheduleDef="let schedule" class="schedule">
-          <div class="attendees">
-            <div *ngFor="let attendee of schedule.attendees">
-              <span class="avatar"  [matTooltip]="attendee.name" matTooltipPosition="after" matTooltipClass="tooltip">{{attendee.name.slice(0, 1).toUpperCase()}}</span>
-              <span class="name">{{attendee.name}}</span>
-            </div>
-          </div>
-          <span class="start-time">{{schedule.start}}</span>
-          <span class="end-time">{{schedule.end}}</span>
-        </div>
-      </td-calendar>
+      <cl-rosta *matTabContent></cl-rosta>
     </mat-tab>
 </mat-tab-group>
-
-<ng-template #editOrNewMenu>
-  <div class="decision-menu" tabindex="0">
-    <button mat-button matDialogClose (click)="_editSchedule()">Bearbeiten</button>
-    <button mat-button matDialogClose (click)="_createNew()">Neu</button>
-    <button mat-button matDialogClose (click)="_deleteSchedule()">Löschen</button>
-  </div>
-</ng-template>

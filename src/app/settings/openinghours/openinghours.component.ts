@@ -111,6 +111,7 @@ export class OpeningHoursSettingsComponent implements OnInit, OnDestroy, AfterVi
   _loadConfig() {
     this._hours.getConfig()
       .subscribe(config => {
+        console.log(`COnfig: `, config);
         this._config = config;
       });
   }

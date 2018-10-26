@@ -38,7 +38,7 @@ export class UsersComponent implements OnInit {
 
   _toggleUser(user: User, event: MatCheckboxChange) {
     user.enabled = event.checked;
-    this._userService.updateUser(user.username, user.role, user.type, user.hoursPerWeek, event.checked)
+    this._userService.updateUser(user.username, user.role, user.type, user.hoursPerWeek, user.icon, event.checked)
       .subscribe();
   }
 
@@ -50,7 +50,7 @@ export class UsersComponent implements OnInit {
           return;
         }
         
-        this._userService.createUser(res.username, res.role, res.type, res.hoursPerWeek, res.password, res.enabled)
+        this._userService.createUser(res.username, res.role, res.type, res.hoursPerWeek, res.password, res.icon, res.enabled)
           .subscribe(() => this._loadUsers());
       });
   }
@@ -63,7 +63,7 @@ export class UsersComponent implements OnInit {
           return;
         }
         
-        this._userService.updateUser(res.username, res.role, res.type, res.hoursPerWeek, res.enabled)
+        this._userService.updateUser(res.username, res.role, res.type, res.hoursPerWeek, res.icon, res.enabled)
           .subscribe(() => this._loadUsers());
       });
   }

@@ -1,14 +1,25 @@
 <h2 mat-dialog-title>{{ !!_userToEdit ? 'Benutzer editieren' : 'Neuer Bentuzer' }}</h2>
 <mat-dialog-content>
   <form #form="ngForm">
-    <mat-form-field>
-      <input matInput [disabled]="!!_userToEdit" name="username" required [(ngModel)]="_username" placeholder="Name">
-    </mat-form-field>
+    <div class="name-with-avatar">
+      <mat-form-field>
+        <input matInput [disabled]="!!_userToEdit" name="username" required [(ngModel)]="_username" placeholder="Name">
+      </mat-form-field>
+      
+      <div class="avatar">
+        <label for="avatarInput" class="select-image">
+          <img #avatarContainer class="avatar-image" [src]="_icon"/>
+        </label>
+        <label for="avatarInput" class="select-image button" *ngIf="!_icon || _icon === ''">
+          Bild auswählen
+        </label>
+      </div>
+    </div>
     <mat-form-field *ngIf="!_userToEdit">
       <input matInput type="password" autocomplete="off" name="new-password" required [(ngModel)]="_password" placeholder="Passwort">
     </mat-form-field>
     <mat-form-field  *ngIf="!_userToEdit">
-      <input matInput type="password" autocomplete="off" [pattern]="_password" name="confirm-new-password" required [(ngModel)]="_confirmPassword" placeholder="Passwort wiederholden">
+      <input matInput type="password" autocomplete="off" [pattern]="_password" name="confirm-new-password" required placeholder="Passwort wiederholden">
     </mat-form-field>
     <mat-form-field>
       <input matInput type="number" name="hours-per-week" required [(ngModel)]="_hoursPerWeek" placeholder="Stunden pro Woche">
@@ -21,6 +32,7 @@
       </mat-select>
     </mat-form-field>
     <mat-checkbox [(ngModel)]="_isAdmin" name="role">Administrator</mat-checkbox>
+    <input style="visibility: hidden" name="avatarInput" id="avatarInput" class="avatar-selection" type="file" (change)="_loadImage($event)">
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>

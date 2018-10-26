@@ -1,16 +1,7 @@
-mat-toolbar {
-    span {
-        &.kw {
-            color: gray;
-        }
-        margin-left: 20px;
-        vertical-align: bottom;
-    }
-}
 
 .calendar {
     display: flex;
-    height: calc(100% - 64px);
+    height: 100%;
     overflow-y: hidden;
 
     .day {
@@ -25,6 +16,7 @@ mat-toolbar {
             height: 100%;
             width: 100%;
             display: block;
+            background-color: white;
             
             &.clickable {
                 cursor: pointer;
@@ -60,16 +52,4 @@ mat-toolbar {
         }
 
     }
-}
-
-.toolbar-buttons {
-    .mat-button {
-        font-size: 20px;
-        position: relative;
-        top: 2px;
-    }
-
-    position: absolute;
-    right: 20px;
-    text-align: right;
 }

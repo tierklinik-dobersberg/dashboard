@@ -1,0 +1,201 @@
+@import '~@angular/material/theming';
+
+mat-toolbar {
+    span {
+        &.kw {
+            color: gray;
+        }
+        margin-left: 20px;
+        vertical-align: bottom;
+    }
+
+
+    .toolbar-buttons {
+        .mat-button {
+            font-size: 20px;
+            position: relative;
+            top: 2px;
+        }
+
+        position: absolute;
+        right: 20px;
+        text-align: right;
+}
+}
+
+span.start-time, span.end-time {
+    font-size: 11px;
+    font-weight: lighter;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    height: 20px;
+    display: block;
+}
+
+span.start-time {
+    top: 0px;
+}
+
+span.end-time {
+    bottom: 0px;
+}
+
+.opening-hours {
+    height: 100%;
+    background-color: #f5f5f5;
+}
+
+.schedule {
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: lightskyblue;
+    height: 100%;
+    opacity: 0.85;
+    position: relative;
+    transition: opacity 200ms ease-in-out;
+
+    &.fade-out {
+        opacity: 0.2;
+    }
+
+    &.hidden {
+        opacity: 0;
+    }
+
+    &:hover {
+        background-color: darken(lightskyblue, 10%);
+    }
+
+    .gray-box {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, .12);
+    }
+    
+    .attendees {
+        margin-top: 20px;
+        
+
+        & > div {
+            display: block;
+            margin-bottom: 5px;
+            margin-left: 10px;
+            margin-right: 10px;
+            text-align: left;
+            line-height: 24px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            
+            .user-avatar {
+                vertical-align: bottom;
+            }
+            
+            span.name {
+               white-space: nowrap;
+               overflow: hidden;
+               margin-left: 10px;
+               font-weight: lighter;
+            }
+        }
+    }
+}
+
+.decision-menu {
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    
+    button {
+        display: block;
+        width: 100%;
+        text-align: left;
+    }
+}
+
+.calendar-container {
+    display: flex;
+    height: calc(100% - 64px);
+    transition: width 200ms ease-in-out;
+
+    td-calendar {
+        flex-grow: 1;
+        transition: width 200ms ease-in-out;
+    }
+    
+    .sidebar {
+        width: calc(100%/7);
+        min-width: 300px;
+        flex-grow: 0;
+        overflow: hidden;
+        
+        .sidebar-container {
+            height: calc(100% - 20px);
+            margin: 10px;
+            border: 1px solid #f0f0f0;
+            
+            .sidebar-header {
+                background-color: #f5f5f5;
+                text-align: center;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #f0f0f0;
+                h4 {
+                    padding: 0;
+                    margin: 0;
+                    font-weight: lighter;
+                }
+            }
+
+            .mat-list-item {
+                height: 50px;
+                
+                .hours-bar-container {
+                    display: flex;
+                    height: 7px;
+                    background-color: #f0f0f0;
+                    
+                    span {
+                        display: block;
+                        height: 100%;
+                        transition: width 300ms ease-in-out;
+                    }
+                    
+                    span.hours-bar {
+                        background-color: #1080d0;
+                    }
+
+                    span.too-much-hours-bar {
+                        background-color: red;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.user-details {
+    cursor: pointer;
+    border-left: 4px solid transparent;
+    transition: border-color 200ms ease-in-out;
+    
+    &.selected {
+        background-color: #f5f5f5;
+        border-left: 4px solid #1080d0;
+    }
+
+    span.hours {
+        font-size: 80%;
+        float: right;
+    }
+
+    &:hover {
+        background-color: #f5f5f5;
+    }
+}

@@ -1,3 +1,5 @@
+@import '~@angular/material/theming';
+
 :host {
     display: block;
     height: 100%;
@@ -19,4 +21,8 @@ table {
     table {
         width: 95%;
     }
+}
+
+.user-avatar {
+    vertical-align: bottom;
 }

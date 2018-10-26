@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
 
 
 html, body { height: 100%; }
@@ -30,4 +31,10 @@ mat-tab-group {
 
 .tooltip {
     font-size: 100%;
+}
+
+.user-avatar {
+    @include mat-elevation(1);
+    border-radius: 50%;
+    width: 24px;
 }

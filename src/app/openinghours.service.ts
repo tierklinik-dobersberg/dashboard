@@ -204,15 +204,15 @@ export class OpeningHoursService {
    */
   getKeyFromDay(day: number): WeekDay {
     let keys: WeekDay[] = [
-      'sunday',
       'monday',
       'tuesday',
       'wednesday',
       'thursday',
       'friday',
-      'saturday'
+      'saturday',
+      'sunday',
     ];
     
-    return keys[day];
+    return keys[day-1];
   }
 }

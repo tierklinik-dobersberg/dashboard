@@ -44,6 +44,8 @@ export interface TdCalendarClickEvent {
   schedule?: Schedule<any>
 }
 
+export type WeekendConfig = 'none' | 'saturday' | 'all';
+
 /**
  * Describes a day to be rendered at the calendar
  */
@@ -69,6 +71,7 @@ export interface Day {
 
 @Component({
   selector: 'td-calendar',
+  exportAs: 'tdCalendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })
@@ -116,6 +119,21 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
    * The minimum height of a day container
    */
   private _minContainerHeight: number | null = null;
+  
+  /**
+   * @internal
+   * Returns the number of days rendered
+   */
+  private get _numberOfDays(): number {
+    switch (this._weekendConfig) {
+    case 'none':
+      return 5;
+    case 'saturday':
+      return 6;
+    case 'all':
+      return 7;
+    }
+  }
 
   /**
    * Whether or not the calendar can be clicked
@@ -126,6 +144,21 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
   }
   get allowClick() { return this._allowClick; }
   private _allowClick: boolean = true;
+  
+
+  /**
+   * Configures which days of the weekend should be rendered
+   */
+  @Input()
+  set weekendDays(cfg: WeekendConfig) {
+    this._weekendConfig = cfg;
+    
+    requestAnimationFrame(() => this._changeDate(this._currentDate));
+  }
+  get weekendDays() {
+    return this._weekendConfig;
+  }
+  private _weekendConfig: WeekendConfig = 'all';
   
   /**
    * Input for the calendar source
@@ -144,8 +177,20 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
   @Output()
   readonly viewChange: EventEmitter<DateSpan> = new EventEmitter();
   
+  /**
+   * Emits a {@link TdCalendarClickEvent} when the user clicks inside the
+   * calendar. Depends on the value of the {@link TdCalendarComponent#allowClick}
+   * property
+   */
   @Output()
   readonly onClick: EventEmitter<TdCalendarClickEvent> = new EventEmitter();
+  
+  /**
+   * Returns the current date span that is shown in the calendar
+   */
+  get currentDateSpan(): DateSpan {
+    return this._currentDate;
+  }
   
   /**
    * @internal
@@ -162,22 +207,19 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
   _dayScheduleDefinitions: QueryList<TdDayScheduleDef>;
 
   /**
-   * @internal
    * The currently rendered ISO calendar week
    */
-  _currentWeek: number;
+  currentWeek: number;
   
   /**
-   * @internal
    * The current year displayed in the calendar
    */
-  _currentYear: number;
+  currentYear: number;
   
   /**
-   * @internal
    * A string represenation of the current time span displayed in the calendar
    */
-  _currentTimeSpan: string;
+  currentTimeSpan: string;
   
   /**
    * @internal 
@@ -245,6 +287,13 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
         this._updateDaySections();
       })
   }
+
+  /**
+   * Realigns and recalulates the position of sections and schedules
+   */
+  realign() {
+    this._changeDate(this._currentDate);
+  }
   
   /**
    * Switches the calendar to display the current week
@@ -289,7 +338,7 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
       end = day.date.clone().startOf('day').add(section.end.totalMinutes, 'minutes').toDate();
     }
     
-    this.onClick.next({
+    let e: TdCalendarClickEvent = {
       date: start || this._calculateClickTime(event, day.date),
       end: end || undefined,
       position: {
@@ -297,9 +346,21 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
         y: event.y 
       } ,
       schedule: schedule
-    });
+    };
+    
+    console.log(e);
+
+    this.onClick.next(e);
   }
 
+  /**
+   * @internal
+   * Given a reference date and a mouse click event this function returns
+   * a new Date with hours and minutes based on the events click coordinates
+   * 
+   * @param event - The MouseEvent emitted by the mouse click
+   * @param d - The date of the date
+   */
   private _calculateClickTime(event: MouseEvent, d: Date|moment.Moment): Date  {
     if (moment.isDate(d)) {
       d = moment(d);
@@ -357,7 +418,7 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
    * @internal
    * Changes the calendar to the next week
    */
-  _openNextWeek() {
+  openNextWeek() {
     const next = moment(this._currentDate.endDate)
                   .add(1, 'week');
     this._setCurrentDate(next.toDate());
@@ -367,15 +428,29 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
    * @internal
    * Changes to calendar to the previous week
    */
-  _openPrevWeek() {
+  openPrevWeek() {
     const next = moment(this._currentDate.endDate)
                   .add(-1, 'week');
     
     this._setCurrentDate(next.toDate());
   }
   
+  /**
+   * Sets the new date span for the calendar and emits an event on the viewChange
+   * property
+   * 
+   * @param d - The new date that should be displayed. May be in the middle of a week
+   */
   private _setCurrentDate(d: Date) {
-    this._currentDate = this._getDateSpan(d);
+    let nextDate = this._getDateSpan(d);
+    
+    if (!!this._currentDate && 
+        nextDate.startDate.getTime() === this._currentDate.startDate.getTime() &&
+        nextDate.endDate.getTime() === this._currentDate.endDate.getTime()) {
+      return;
+    }
+
+    this._currentDate = nextDate;
     this.viewChange.next(this._currentDate);
   }
   
@@ -489,18 +564,19 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
     }
   }
   
+  /**
+   * @internal
+   * Given a reference date this function returns a {@link DateSpan} that covers
+   * the week of the given date (with monday being the first day of the week)
+   * 
+   * @param d - The date reference
+   */
   private _getDateSpan(d: Date): DateSpan {
     const m = moment(d);
     
-    // If the date passed is a sunday we actually need to display
-    // the "last" week
-    if (m.day() === 0) {
-      m.subtract(1, 'day');
-    }
-    
     return {
-      startDate: m.startOf('week').toDate(),
-      endDate: m.endOf('week').toDate()
+      startDate: m.startOf('isoWeek').toDate(),
+      endDate: m.endOf('isoWeek').toDate()
     }
   }
   
@@ -512,10 +588,10 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
    * @param date - The new start date of the calendar
    */
   private _changeDate(date: DateSpan) {
-    let result = getWeekNumber(date.startDate);
-    this._currentTimeSpan = this._getMonthName(date.startDate);
-    this._currentWeek = result[1];
-    this._currentYear = result[0];
+    let result = moment(date.startDate).isoWeek();
+    this.currentTimeSpan = this._getMonthName(date.startDate);
+    this.currentWeek = result;
+    this.currentYear = moment(date.startDate).isoWeekYear();
     this._generateDays(date.startDate);
   }
 
@@ -544,8 +620,8 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
     ];
     
     const m = moment(date)
-    const startOfWeek = m.clone().weekday(1);
-    const endOfWeek = m.clone().weekday(6).add(1, 'day');
+    const startOfWeek = m.clone().isoWeekday(1);
+    const endOfWeek = m.clone().isoWeekday(7);
     const current = monthNames[m.month()];
     const end = monthNames[endOfWeek.month()];
     
@@ -563,13 +639,13 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
    */
   private _getWeekDayFromNumber(day: number): WeekDay {
     let keys: WeekDay[] = [
-      'sunday',
       'monday',
       'tuesday',
       'wednesday',
       'thursday',
       'friday',
-      'saturday'
+      'saturday',
+      'sunday',
     ];
     
     return keys[day];
@@ -588,17 +664,17 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
       d = moment(d);
     }
     
-    d.weekday(0).startOf('day');
+    d.startOf('isoWeek');
+    console.log(`generateDays: ${d.format()}`);
       
     let days: Day[] = [];
     let names = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 
-    for(let i = 0; i < 7; i++) {
-      // we start with monday so sunday actuall needs to display the next week
+    for(let i = 0; i < this._numberOfDays; i++) {
       const weekDay = i + 1;
       const name = names[i];
       const date = d.clone()
-                    .add(weekDay, 'day');
+                    .add(i, 'day');
         
       const calendarDay = this._calendarDaysSnapshort.find(day => moment(day.date).date() === date.date());
       const section = !!calendarDay ? calendarDay.sections || [] : [];
@@ -610,7 +686,7 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
         date: date,
         name: name,
         weekDayNumber: weekDay,
-        weekDay: this._getWeekDayFromNumber(weekDay),
+        weekDay: this._getWeekDayFromNumber(i),
         sections: section.map(section => this._positionSection('section', weekDay, section)),
         schedules: schedules.map(schedule => this._positionSection('schedule', weekDay, schedule, columns)),
         columns: columns,
@@ -620,6 +696,13 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
     this._days = days;
   }
 
+  /**
+   * @internal
+   * Checks whether schedule a overlaps with schedule b
+   * 
+   * @param a - The schedule to check if it overlaps with b
+   * @param b - The second schedule for the check
+   */
   private _overlapsSchedule(a: Schedule<any>, b: Schedule<any>): boolean {
     const startA = a.start.totalMinutes;
     const endA = a.end.totalMinutes;
@@ -632,6 +715,13 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
            (endA   <= endB   && endA   >= startB)
   }
 
+  /**
+   * @internal
+   * Aligns a list of schedule into a list of columns based on overlapping
+   * schedules. The number of columns is minimized
+   * 
+   * @param schedules - The list of schedules
+   */
   private _calculateColumns(schedules: Schedule<any>[]): Schedule<any>[][] {
     // we need at least one column
     let ordered = [...schedules].sort((a, b) => a.start.totalMinutes - b.start.totalMinutes) 
@@ -680,10 +770,8 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
    * height and the earliest start and latest end of day sections during the week 
    * @param section 
    */
-  
   private _positionSection(type: 'section', weekDay: number, section: DaySection<any>): PositionedDaySection;
   private _positionSection(type: 'schedule', weekDay: number, section: Schedule<any>, columns?: Schedule<any>[][]): PositionedDaySchedule;
-
   private _positionSection<T>(type: 'section'|'schedule', weekDay: number, section: any, columns?: Schedule<any>[][]): Positioned<T> {
     let template: TdDayScheduleDef | TdDaySectionDef | undefined = undefined; 
     
@@ -716,23 +804,9 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
     // For schedules, we need to take care about overlapping ones
     // and adjust their left position and width accordingly
     if (type === 'schedule')  {
-      const id = (weekDay + 6) % 7;
-      const container = this._calendarContainer.toArray()[id];
-      const containerWidth = container.nativeElement.clientWidth;
-      
-      let columnIndex = columns.findIndex(col => {
-        return col.some(sched => sched.id === section.id);
-      });
-      
-      let skipColumns = 0;
-      columns.slice(columnIndex + 1).forEach(col => {
-        if (!col.some(sched => this._overlapsSchedule(section, sched))) {
-          skipColumns++;
-        }
-      });
-      
-      left = columnIndex * (containerWidth / (columns.length - skipColumns));
-      width = (containerWidth / (columns.length - skipColumns));
+      let layout = this._calculateScheduleLayout(weekDay, section, columns);
+      width = layout.width;
+      left = layout.left;
     }
     
     const minutesPerDay = this._latestEnd - this._earliestStart;
@@ -754,6 +828,30 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
       template: !!template ? template.templateRef : null
     }
   }  
+  
+  private _calculateScheduleLayout(weekDay: number, schedule: Schedule<any>, columns: Schedule<any>[][]): { width: number; left: number } {
+    const id = weekDay;
+    const container = this._calendarContainer.toArray()[id];
+    const containerWidth = container.nativeElement.clientWidth;
+    
+    let columnIndex = columns.findIndex(col => {
+      return col.some(sched => sched.id === schedule.id);
+    });
+    
+    let skipColumns = 0;
+    columns.slice(columnIndex + 1).forEach(col => {
+      if (!col.some(sched => this._overlapsSchedule(schedule, sched))) {
+        skipColumns++;
+      }
+    });
+
+    const percentPerPixel = 100 / containerWidth
+    
+    const left = percentPerPixel * (columnIndex * (containerWidth / (columns.length - skipColumns)));
+    const width = percentPerPixel * ((containerWidth / (columns.length - skipColumns)));
+    
+    return { width, left };
+  }
 }
 
 

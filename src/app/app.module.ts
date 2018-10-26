@@ -41,6 +41,8 @@ import { ConfirmationComponent } from './dialogs/confirmation/confirmation.compo
 import { TdCalendarComponent, TdDaySectionDef, TdDayScheduleDef} from './components/calendar';
 import { SelectAttendeesDialogComponent } from './dialogs/select-attendees-dialog/select-attendees-dialog.component';
 import { CreateRostaScheduleComponent } from './dialogs/create-rosta-schedule/create-rosta-schedule.component';
+import { RostaComponent } from './components/rosta/rosta.component';
+import { CropImageDialogComponent } from './dialogs/crop-image-dialog/crop-image-dialog.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -65,6 +67,8 @@ registerLocaleData(localeDe, 'de');
     TdDayScheduleDef,
     SelectAttendeesDialogComponent,
     CreateRostaScheduleComponent,
+    RostaComponent,
+    CropImageDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -100,6 +104,7 @@ registerLocaleData(localeDe, 'de');
     ConfirmationComponent,
     SelectAttendeesDialogComponent,
     CreateRostaScheduleComponent,
+    CropImageDialogComponent
   ]
 })
 export class AppModule { }
