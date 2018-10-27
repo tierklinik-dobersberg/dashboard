@@ -30,6 +30,8 @@ export class AppComponent implements OnInit {
     this._router.events
       .subscribe(event => {
         this._loginPage = this._router.url.startsWith('/login');
-      })
+      });
+
+    this._router.navigate(['/login']);
   }
 }

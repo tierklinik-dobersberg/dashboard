@@ -1,12 +1,12 @@
-<div class="login-container">
+<div class="login-container" [@slideIn]>
   <img class="logo" src="assets/logo.png">
   
   <form (ngSubmit)="_login()">
     <mat-form-field>
-      <input type="text" [(ngModel)]="_username" name="username" matInput placeholder="Benutzername">
+      <input type="text" [(ngModel)]="_username" autocomplete="username" name="username" matInput placeholder="Benutzername">
     </mat-form-field>
     <mat-form-field>
-      <input type="password" [(ngModel)]="_password" name="password" matInput placeholder="Passwort">
+      <input type="password" [(ngModel)]="_password" name="password" autocomplete="off" matInput placeholder="Passwort">
     </mat-form-field>
 
     <div *ngIf="_invalidCreds" class="invalid-creds">
