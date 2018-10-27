@@ -1,0 +1,49 @@
+@import '~@angular/material/theming';
+
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: #f0f0f0;
+}
+
+.login-container {
+    @include mat-elevation(1);
+
+    background-color: white;
+    padding: 20px;
+    width: 20vw;
+    min-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    transform: translateY(-25%);
+    
+    .logo {
+        max-width: 50%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 20px;
+    }
+    
+    mat-form-field {
+        width: 100%;
+        display: block;
+        
+        text-align: center;
+    }
+
+    button {
+        text-transform: uppercase;
+        color: #1080d0;
+        font-weight: lighter;
+    }
+}
+
+.invalid-creds {
+    width: 100%;
+    text-align: center;
+    color: red;
+}

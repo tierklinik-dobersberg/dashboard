@@ -43,6 +43,7 @@ import { SelectAttendeesDialogComponent } from './dialogs/select-attendees-dialo
 import { CreateRostaScheduleComponent } from './dialogs/create-rosta-schedule/create-rosta-schedule.component';
 import { RostaComponent } from './components/rosta/rosta.component';
 import { CropImageDialogComponent } from './dialogs/crop-image-dialog/crop-image-dialog.component';
+import { LoginComponent } from './login/login.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -69,6 +70,7 @@ registerLocaleData(localeDe, 'de');
     CreateRostaScheduleComponent,
     RostaComponent,
     CropImageDialogComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

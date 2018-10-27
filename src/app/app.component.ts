@@ -1,4 +1,5 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
+import { Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
@@ -9,10 +10,13 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 export class AppComponent implements OnInit {
   title = 'dashboard';
 
+  _loginPage: boolean = false;
+
   @HostBinding('class.handset')
   _handset = false;
 
-  constructor(private _breakpointObserver: BreakpointObserver) {}
+  constructor(private _breakpointObserver: BreakpointObserver,
+              private _router: Router) {}
 
   ngOnInit() {
     this._breakpointObserver.observe([
@@ -22,5 +26,10 @@ export class AppComponent implements OnInit {
     ]).subscribe(result => {
       this._handset = result.matches;
     });
+    
+    this._router.events
+      .subscribe(event => {
+        this._loginPage = this._router.url.startsWith('/login');
+      })
   }
 }
