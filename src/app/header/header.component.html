@@ -3,5 +3,16 @@
 <div class="navigation">
   <button mat-button routerLink="/door" routerLinkActive="active">Eingangstür</button>
   <button mat-button routerLink="/rosta" routerLinkActive="active">Dienstplan</button>
-  <button mat-button routerLink="/settings" routerLinkActive="active">Einstellungen</button>
+  <button mat-button *ngIf="(_user|async)?.role === 'admin'" routerLink="/settings" routerLinkActive="active">Einstellungen</button>
 </div>
+
+<button mat-button [matMenuTriggerFor]="userMenu" class="user" *ngIf="!!(_user|async)">
+  <span>{{(_user|async)?.username}}</span>
+  <img class="user-avatar" [src]="(_user|async)?.icon">
+</button>
+
+<mat-menu #userMenu>
+  <span mat-menu-item>Einstellungen</span>
+  <span mat-menu-item>Passwort ändern</span>
+  <span mat-menu-item>Abmelden</span>
+</mat-menu>

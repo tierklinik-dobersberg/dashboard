@@ -30,3 +30,22 @@ button {
         border-bottom: 2px solid white;
     }
 }
+
+.user {
+    float: right;
+
+    color: white;
+    margin-right: 10px;
+    cursor: pointer;
+    margin-top: 8px;
+    
+    .user-avatar {
+        width: 30px;
+        background-color: white;
+        margin-top: -3px;
+    }
+    
+    span {
+        margin-right: 10px;
+    }
+}
