@@ -44,7 +44,7 @@ export class LoginService implements HttpInterceptor {
     return next.handle(req)
       .pipe(
         catchError(err => {
-          if (err instanceof HttpErrorResponse && err.status === 401) {
+          if (err instanceof HttpErrorResponse && (err.status === 401 || err.status === 403)) {
             if (!this._router.url.startsWith('/login')) {
               this._router.navigate(['/login']);
             }
