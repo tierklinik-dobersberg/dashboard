@@ -20,6 +20,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { LayoutModule } from '@angular/cdk/layout';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
@@ -96,6 +97,7 @@ registerLocaleData(localeDe, 'de');
     MatToolbarModule,
     MatFormFieldModule,
     MatTooltipModule,
+    MatSidenavModule,
     MatTabsModule
   ],
   providers: [

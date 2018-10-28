@@ -8,6 +8,23 @@
             min-height: 400px;
         }
     }
+    
+    .day-buttons {
+        display: block;
+
+        position: fixed;
+        bottom: 0px;
+        right: 10px;
+        
+        button {
+            display: block;
+            margin-bottom: 10px;
+        }
+    }
+}
+
+.day-buttons {
+    display: none;
 }
 
 .calendar {

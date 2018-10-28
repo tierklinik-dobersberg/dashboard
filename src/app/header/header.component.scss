@@ -3,6 +3,9 @@
     line-height: 50px;
     width: 100%;
     display: block;
+    position: fixed;
+    top: 0px;
+    z-index: 2;
 }
 
 span.logo {
