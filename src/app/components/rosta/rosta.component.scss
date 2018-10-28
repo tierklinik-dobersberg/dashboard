@@ -20,7 +20,21 @@ mat-toolbar {
         position: absolute;
         right: 20px;
         text-align: right;
+    }
 }
+
+:host-context(.handset) {
+    .kw-full {
+        display: none;
+    }
+    
+    .kw-handset {
+        display: inline-block;
+    }
+}
+
+.kw-handset {
+    display: none;
 }
 
 span.start-time, span.end-time {

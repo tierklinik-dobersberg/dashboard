@@ -1,4 +1,15 @@
 
+:host-context(.handset) {
+    .calendar {
+        flex-direction: column;
+        height: auto;
+        .day {
+            height: 50vh;
+            min-height: 400px;
+        }
+    }
+}
+
 .calendar {
     display: flex;
     height: 100%;

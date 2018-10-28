@@ -1,5 +1,8 @@
 <mat-toolbar>
-  <mat-toolbar-row>Kalenderwoche <span class="kw">{{calendar.currentWeek}} / {{calendar.currentYear}}</span>
+  <mat-toolbar-row>
+    <span class="kw-full">Kalenderwoche</span>
+    <span class="kw-handset">KW</span>
+    <span class="kw">{{calendar.currentWeek}} / {{calendar.currentYear}}</span>
     <div class="toolbar-buttons">
       <button mat-button (click)="calendar.openTodaysWeek()">{{calendar.currentTimeSpan}}</button>
       <button mat-icon-button (click)="calendar.openPrevWeek()"><mat-icon>keyboard_arrow_left</mat-icon></button>
