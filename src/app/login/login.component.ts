@@ -12,8 +12,8 @@ import { trigger, transition, style, animate, stagger, query } from '@angular/an
     trigger('slideIn', [
       transition(':enter', [
           style({transform: 'translateY(25%)', opacity: 0}),
-          animate('200ms ease-in-out', style({transform: 'translateY(-5%)', opacity: 0.3})),
-          animate('300ms ease-in-out', style({transform: 'translateY(0%)', opacity: 1}))
+          animate('200ms 1s ease-in-out', style({transform: 'translateY(-2%)', opacity: 0.3})),
+          animate('300ms ease-in-out', style({transform: 'translateY(0%)', opacity: 0.95}))
       ]),
     ]),
     trigger('host', [
@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
       .subscribe(
         () => this._router.navigate(['/door']),
         (err: HttpErrorResponse) => {
-          if (err.status === 401) {
+          if (err.status === 401 || err.status === 403) {
             this._invalidCreds = true;
           } else {
             console.error(err);

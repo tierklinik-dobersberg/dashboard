@@ -1,6 +1,7 @@
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { LoginService } from './login.service';
 
 @Component({
   selector: 'cl-root',
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit {
   _handset = false;
 
   constructor(private _breakpointObserver: BreakpointObserver,
+              private _loginService: LoginService,
               private _router: Router) {}
 
   ngOnInit() {
@@ -32,6 +34,14 @@ export class AppComponent implements OnInit {
         this._loginPage = this._router.url.startsWith('/login');
       });
 
-    this._router.navigate(['/login']);
+    // Check if we are logged in. If the backend replys with 401 or 403
+    // the login service will redirect us to the login page on it's own
+    this._loginService.getCurrentUser()
+      .subscribe(() => {
+        // if we are still on the login page redirect to user
+        if (this._router.url.startsWith('/login')) {
+          this._router.navigate(['/door'])
+        }
+      });
   }
 }

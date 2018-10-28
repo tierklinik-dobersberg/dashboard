@@ -6,10 +6,17 @@
     justify-content: center;
     height: 100%;
     background-color: #f0f0f0;
+
+    background-image: url('/assets/background.jpg');
+    background-size:     cover;                      /* <------ */
+    background-repeat:   no-repeat;
+    background-position: center center; 
 }
 
 .login-container {
     @include mat-elevation(1);
+
+    opacity: 0.95;
 
     background-color: white;
     padding: 20px;

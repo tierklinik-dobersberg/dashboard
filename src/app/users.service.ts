@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { LoginService } from './login.service';
+import { tap } from 'rxjs/operators';
 
 export type Role = 'admin' | 'user';
 export type UserType = 'assistent' | 'doctor' | 'other';
@@ -20,7 +22,8 @@ export interface User {
 })
 export class UsersService {
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient,
+              private _loginService: LoginService) { }
   
   listUsers(): Observable<User[]> {
     return this._http.get<User[]>('/api/users/');
@@ -46,7 +49,17 @@ export class UsersService {
       color: '',
       enabled: enabled,
       icon: icon,
-    });
+    }).pipe(
+      tap(result => {
+        let currentUser = this._loginService.currentUser;
+        if (!!currentUser && currentUser.username === name) {
+        
+          // Update the logged-in user object to reflect any changes
+          this._loginService.getCurrentUser()
+            .subscribe();
+        }
+      })
+    );
   }
 
   deleteUser(name: string): Observable<void> {

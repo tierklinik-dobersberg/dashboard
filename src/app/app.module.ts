@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -44,6 +44,7 @@ import { CreateRostaScheduleComponent } from './dialogs/create-rosta-schedule/cr
 import { RostaComponent } from './components/rosta/rosta.component';
 import { CropImageDialogComponent } from './dialogs/crop-image-dialog/crop-image-dialog.component';
 import { LoginComponent } from './login/login.component';
+import { LoginService } from './login.service';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -97,7 +98,13 @@ registerLocaleData(localeDe, 'de');
     MatTooltipModule,
     MatTabsModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useExisting: LoginService,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent],
   entryComponents: [
     SelectTimeOffsetComponent,
