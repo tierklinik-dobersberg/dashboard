@@ -24,14 +24,8 @@ button {
     font-weight: initial;
 }
 
-.navigation {
-    height: 100%;
-    display: inline-block;
-    margin-left: 20px;
-    
-    button.active {
-        border-bottom: 2px solid white;
-    }
+.menu-button {
+    margin-left: 10px;
 }
 
 .user {
