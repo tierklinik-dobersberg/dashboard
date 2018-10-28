@@ -34,9 +34,24 @@ export class RostaService {
   constructor(private _http: HttpClient) { }
   
   getRemoteSchedules(start: number, end: number): Observable<RemoteRosta[]> {
+  
+    // if the schedules are for the current isoWeek, load them instead
+    // this allows the service worker to always cache the current rosta schedules
+    // without interfering with other range requests
+    const startWeek = moment(start).startOf('isoWeek');
+    const endWeek = moment(end).endOf('isoWeek');
+    if (startWeek.valueOf() === moment().startOf('isoWeek').valueOf()
+        && endWeek.valueOf() === moment().endOf('isoWeek').valueOf()) {
+      return this.getCurrentSchedules();
+    }
+
     return this._http.get<RemoteRosta[]>('/api/rosta/schedules', {params: {from: ''+start, to: ''+end}});
   }
   
+  getCurrentSchedules(): Observable<RemoteRosta[]> {
+    return this._http.get<RemoteRosta[]>('/api/rosta/current');
+  }
+
   createSchedule(date: Date, schedule: Schedule<any>): Observable<void> {
     return this._http.post<void>('/api/rosta/schedules', {
       start: schedule.start.totalMinutes,
