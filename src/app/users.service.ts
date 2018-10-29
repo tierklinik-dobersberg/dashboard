@@ -15,6 +15,10 @@ export interface User {
   enabled: boolean;
   icon?: string;
   color: string;
+  firstname?: string;
+  lastname?: string;
+  mailAddress?: string;
+  phoneNumber?: string;
 }
 
 @Injectable({
@@ -29,7 +33,7 @@ export class UsersService {
     return this._http.get<User[]>('/api/users/');
   }
   
-  createUser(name: string, role: Role, type: UserType, hoursPerWeek: number, password: string, icon: string = '', enabled = true): Observable<void> {
+  createUser(name: string, role: Role, type: UserType, hoursPerWeek: number, password: string, icon: string = '', enabled = true, firstname?: string, lastname?: string, phone?: string, mail?: string): Observable<void> {
     return this._http.post<void>(`/api/users/${name}`, {
       role: role,
       type: type,
@@ -38,10 +42,14 @@ export class UsersService {
       enabled: enabled,
       color: '',
       icon: icon,
+      firstname: firstname,
+      lastname: lastname,
+      phoneNumber: phone,
+      mailAddress: mail
     });
   }
 
-  updateUser(name: string, role: Role, type: UserType, hoursPerWeek: number, icon: string = '', enabled = true): Observable<void> {
+  updateUser(name: string, role: Role, type: UserType, hoursPerWeek: number, icon: string = '', enabled = true, firstname?: string, lastname?: string, phone?: string, mail?: string): Observable<void> {
     return this._http.put<void>(`/api/users/${name}`, {
       role: role,
       type: type,
@@ -49,6 +57,10 @@ export class UsersService {
       color: '',
       enabled: enabled,
       icon: icon,
+      firstname: firstname,
+      lastname: lastname,
+      phoneNumber: phone,
+      mailAddress: mail
     }).pipe(
       tap(result => {
         let currentUser = this._loginService.currentUser;
@@ -60,6 +72,13 @@ export class UsersService {
         }
       })
     );
+  }
+
+  changePassword(username: string, old: string, newpwd: string): Observable<void> {
+    return this._http.put<void>(`/api/users/${username}/password`, {
+      current: old,
+      newPassword: newpwd,
+    });
   }
 
   deleteUser(name: string): Observable<void> {

@@ -1,8 +1,7 @@
 <cl-header *ngIf="!_loginPage" (toggleNav)="snav.toggle()"></cl-header>
 
 
-<mat-sidenav-container class="sidenav-container"
-                        [style.top.px]="52">
+<mat-sidenav-container class="sidenav-container" [class.login-page]="_loginPage">
                         
     <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
                        [fixedInViewport]="true" fixedTopGap="52" [class.mobile]="mobileQuery.matches">
@@ -18,6 +17,10 @@
             <a mat-list-item *ngIf="(_user|async)?.role === 'admin'" routerLink="/settings" routerLinkActive="active">
                 <mat-icon mat-list-icon>settings</mat-icon>
                 Einstellungen
+            </a>
+            <a class="profile-link" mat-list-item routerLink="/profile" routerLinkActive="active">
+                <mat-icon mat-list-icon>account_box</mat-icon>
+                Mein Profil
             </a>
         </mat-nav-list>
     </mat-sidenav>

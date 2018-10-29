@@ -1,9 +1,18 @@
 .sidenav-container {
     height: calc(100% - 52px);
+    top: 52px;
+    transition: top 300ms ease-in-out;
+    
+    &.login-page {
+        height: 100%;
+        top: 0px;
+    }
 }
 
 .mat-sidenav {
     width: 30vw;
+    max-width: 250px;
+
     border-right: 1px solid #f0f0f0;
 
     a {
@@ -16,9 +25,18 @@
         border-right: 3px solid #1080d0;
         background-color: #f5f5f5;
     }
+
+    a.profile-link {
+        border-top: 1px solid #f0f0f0;
+    }
     
     &.mobile {
-        widtH: 70vw;
+        width: 70vw;
+        max-width: 70vw;
+    }
+
+    mat-icon {
+        margin-right: 10px;
     }
 }
 

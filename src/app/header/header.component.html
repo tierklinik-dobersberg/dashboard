@@ -7,7 +7,6 @@
 </button>
 
 <mat-menu #userMenu>
-  <span mat-menu-item>Einstellungen</span>
-  <span mat-menu-item>Passwort ändern</span>
-  <span mat-menu-item (click)="_logout()">Abmelden</span>
+  <span mat-menu-item class="menu-item" routerLink="/profile">Mein Profil</span>
+  <span mat-menu-item class="menu-item"  (click)="_logout()">Abmelden</span>
 </mat-menu>

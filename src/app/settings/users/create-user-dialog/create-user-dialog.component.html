@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>{{ !!_userToEdit ? 'Benutzer editieren' : 'Neuer Bentuzer' }}</h2>
 <mat-dialog-content>
-  <form #form="ngForm">
+  <form #form="ngForm" (ngSubmit)="_save()">
     <div class="name-with-avatar">
       <mat-form-field>
         <input matInput [disabled]="!!_userToEdit" name="username" required [(ngModel)]="_username" placeholder="Name">
@@ -15,27 +15,48 @@
         </label>
       </div>
     </div>
+
     <mat-form-field *ngIf="!_userToEdit">
       <input matInput type="password" autocomplete="off" name="new-password" required [(ngModel)]="_password" placeholder="Passwort">
     </mat-form-field>
+
     <mat-form-field  *ngIf="!_userToEdit">
       <input matInput type="password" autocomplete="off" [pattern]="_password" name="confirm-new-password" required placeholder="Passwort wiederholden">
     </mat-form-field>
+
     <mat-form-field>
+      <input matInput type="text" autocomplete="off" name="firstname" placeholder="Vorname" [(ngModel)]="_firstname">
+    </mat-form-field>
+    
+    <mat-form-field>
+      <input matInput type="text" autocomplete="off" name="lastname" placeholder="Vorname" [(ngModel)]="_lastname">
+    </mat-form-field>
+    
+    <mat-form-field>
+      <input matInput type="text" autocomplete="off" name="mail" placeholder="E-Mail Adresse" [(ngModel)]="_mailAddress">
+    </mat-form-field>
+    
+    <mat-form-field>
+      <input matInput type="text" autocomplete="off" name="phone" placeholder="Telefonnummer" [(ngModel)]="_phoneNumber">
+    </mat-form-field>
+
+    <mat-form-field  *ngIf="_editorIsAdmin">
       <input matInput type="number" name="hours-per-week" required [(ngModel)]="_hoursPerWeek" placeholder="Stunden pro Woche">
     </mat-form-field>
-    <mat-form-field>
+
+    <mat-form-field *ngIf="_editorIsAdmin">
       <mat-select required placeholder="Benutzertyp" name="type" [(ngModel)]="_type">
         <mat-option value="doctor">{{'doctor'|usertype}}</mat-option>
         <mat-option value="assistent">{{'assistent'|usertype}}</mat-option>
         <mat-option value="other">{{'other'|usertype}}</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-checkbox [(ngModel)]="_isAdmin" name="role">Administrator</mat-checkbox>
+
+    <mat-checkbox  *ngIf="_editorIsAdmin" [(ngModel)]="_isAdmin" name="role">Administrator</mat-checkbox>
     <input style="visibility: hidden" name="avatarInput" id="avatarInput" class="avatar-selection" type="file" (change)="_loadImage($event)">
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="_abort()">Abbrechen</button>
-  <button mat-button [disabled]="!form.valid" (click)="_save()">{{!!_userToEdit ? 'Speichern' : 'Erstellen'}}</button>
+  <button mat-button type="submit" [disabled]="!form.valid" (click)="_save()">{{!!_userToEdit ? 'Speichern' : 'Erstellen'}}</button>
 </mat-dialog-actions>

@@ -4,6 +4,7 @@ import { DoorComponent } from './door/door.component';
 import { SettingsOverviewComponent } from './settings/overview/overview.component';
 import { RostaComponent } from './components/rosta/rosta.component';
 import { LoginComponent } from './login/login.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent
   },
   {
     path: '**',

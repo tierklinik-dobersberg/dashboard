@@ -50,7 +50,18 @@ export class UsersComponent implements OnInit {
           return;
         }
         
-        this._userService.createUser(res.username, res.role, res.type, res.hoursPerWeek, res.password, res.icon, res.enabled)
+        this._userService.createUser(
+          res.username,
+          res.role,
+          res.type,
+          res.hoursPerWeek,
+          res.password,
+          res.icon,
+          res.enabled,
+          res.firstname,
+          res.lastname,
+          res.phoneNumber,
+          res.mailAddress)
           .subscribe(() => this._loadUsers());
       });
   }
@@ -63,7 +74,17 @@ export class UsersComponent implements OnInit {
           return;
         }
         
-        this._userService.updateUser(res.username, res.role, res.type, res.hoursPerWeek, res.icon, res.enabled)
+        this._userService.updateUser(
+          res.username,
+          res.role,
+          res.type,
+          res.hoursPerWeek,
+          res.icon,
+          res.enabled,
+          res.firstname,
+          res.lastname,
+          res.phoneNumber,
+          res.mailAddress)
           .subscribe(() => this._loadUsers());
       });
   }

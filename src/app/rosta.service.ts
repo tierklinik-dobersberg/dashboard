@@ -5,6 +5,11 @@ import { Observable } from 'rxjs';
 import { Schedule } from './components/calendar';
 import { User } from './users.service';
 
+export interface RostaScheduleType {
+  id: number;
+  type: string;
+}
+
 export interface RemoteRosta {
   id: number;
   
@@ -33,6 +38,20 @@ export class RostaService {
 
   constructor(private _http: HttpClient) { }
   
+  getTypes(): Observable<RostaScheduleType[]> {
+    return this._http.get<RostaScheduleType[]>('/api/rosta/types');
+  }
+  
+  createType(type: string): Observable<RostaScheduleType> {
+    return this._http.post<RostaScheduleType>('/api/rosta/types', {
+      name: type,
+    });
+  }
+  
+  deleteType(id: number): Observable<void> {
+    return this._http.delete<void>(`/api/rosta/types/${id}`);
+  }
+  
   getRemoteSchedules(start: number, end: number): Observable<RemoteRosta[]> {
   
     // if the schedules are for the current isoWeek, load them instead
@@ -58,6 +77,7 @@ export class RostaService {
       end: schedule.end.totalMinutes,
       users: schedule.attendees.map(at => at.name),
       color: '',
+      type: 1,
       date: date.getTime(),
     });
   }
@@ -68,6 +88,7 @@ export class RostaService {
       end: schedule.end.totalMinutes,
       users: schedule.attendees.map(at => at.name),
       color: '',
+      type: 1,
       date: date.getTime(),
     });
   }

@@ -52,7 +52,11 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(event => {
         this._loginPage = this._router.url.startsWith('/login');
         
-        if (event instanceof NavigationEnd) {
+        if (this._loginPage) {
+          this._sideNav.close();
+        }
+        
+        if (event instanceof NavigationEnd && this.mobileQuery.matches) {
           this._sideNav.close();
         }
       });

@@ -2,6 +2,7 @@ import { Optional, Component, OnInit, Inject, ViewChild, ElementRef } from '@ang
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { UserType, User } from 'src/app/users.service';
 import { CropImageDialogComponent } from 'src/app/dialogs/crop-image-dialog/crop-image-dialog.component';
+import { LoginService } from 'src/app/login.service';
 
 // Unfortunately there are no typings for blueimp-load-image
 declare var loadImage: any;
@@ -17,23 +18,35 @@ export class CreateUserDialogComponent implements OnInit {
   _type: UserType;
   _isAdmin: boolean = false;
   _hoursPerWeek: number;
+  _firstname: string;
+  _lastname: string;
+  _phoneNumber: string;
+  _mailAddress: string;
 
   _icon: string = '';
+  _editorIsAdmin = false;
 
   @ViewChild('avatarContainer', {read: ElementRef})
   _avatarContainer: ElementRef;
 
   constructor(private _dialogRef: MatDialogRef<CreateUserDialogComponent>,
               private _dialog: MatDialog,
+              private _loginService: LoginService,
               @Optional() @Inject(MAT_DIALOG_DATA) public _userToEdit?: User) { }
 
   ngOnInit() {
+    this._editorIsAdmin = this._loginService.currentUser.role === 'admin';
+    
     if (!!this._userToEdit) {
       this._username = this._userToEdit.username;
       this._type = this._userToEdit.type;
       this._isAdmin = this._userToEdit.role === 'admin';
       this._hoursPerWeek = this._userToEdit.hoursPerWeek;
       this._icon = this._userToEdit.icon || '';
+      this._lastname = this._userToEdit.lastname;
+      this._firstname = this._userToEdit.firstname;
+      this._mailAddress = this._userToEdit.mailAddress;
+      this._phoneNumber = this._userToEdit.phoneNumber;
     }
   }
 
@@ -74,6 +87,10 @@ export class CreateUserDialogComponent implements OnInit {
       hoursPerWeek: this._hoursPerWeek,
       icon: this._icon,
       color: '',
+      firstname: this._firstname,
+      lastname: this._lastname,
+      phoneNumber: this._phoneNumber,
+      mailAddress: this._mailAddress
     }
     this._dialogRef.close(user);
   }

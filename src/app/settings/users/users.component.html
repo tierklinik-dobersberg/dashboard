@@ -8,7 +8,7 @@
 </mat-toolbar>
 
 <div class="user-list-wrapper">
-  <table mat-table [dataSource]="_users" [class.handset]="_handset" class="mat-elevation-z2">
+  <table mat-table [dataSource]="_users" [trackBy]="_trackUser" [class.handset]="_handset" class="mat-elevation-z2">
   
     <ng-container matColumnDef="avatar">
       <th mat-header-cell *matHeaderCellDef style="width: 60px"></th>

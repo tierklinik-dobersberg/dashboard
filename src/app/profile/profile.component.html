@@ -1,0 +1,49 @@
+<div class="profile-container">
+  <mat-toolbar class="profile-header">
+    <h3 class="username">
+      <img class="user-avatar" *ngIf="!!_user?.icon" [src]="_user?.icon">
+      {{_user?.username}}
+    </h3>
+
+    <div>
+      <button mat-button color="primary" (click)="_editUser()">Bearbeiten</button>
+      <button mat-button color="primary" (click)="_changePassword()">Passwort ändern</button>
+    </div>
+  </mat-toolbar>
+  
+  <section>
+    <h3>Einstellungen</h3>
+    <div class="section-content">
+      <span>Vorname</span>
+      <span>{{_user?.firstname}}</span>
+    </div>
+    <div class="section-content">
+      <span>Nachname</span>
+      <span>{{_user?.lastname}}</span>
+    </div>
+    <div class="section-content">
+      <span>E-Mail Adresse</span>
+      <span>{{_user?.mailAddress}}</span>
+    </div>
+    <div class="section-content">
+      <span>Telefonnummber</span>
+      <span>{{_user?.phoneNumber}}</span>
+    </div>
+    <div class="section-content">
+      <span>Stunden/Woche</span>
+      <span>{{_user?.hoursPerWeek}}</span>
+    </div>
+  </section>
+  
+  <section>
+    <h3>Berechtigungen</h3>
+    <div class="section-content">
+      <span>Rolle</span>
+      <span>{{ _user?.role === 'admin' ? 'Administrator' : 'Benutzer' }}</span>
+    </div>
+    <div class="section-content">
+      <span>Typ</span>
+      <span>{{ _user?.type | usertype }}</span>
+    </div>
+  </section>
+</div>
