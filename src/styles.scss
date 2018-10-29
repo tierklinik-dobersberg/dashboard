@@ -35,6 +35,7 @@ mat-tab-group {
 
 .user-avatar {
     @include mat-elevation(1);
+    background-color: white;
     border-radius: 50%;
     width: 24px;
 }
