@@ -20,6 +20,7 @@
     </div>
 
     <div *tdDayScheduleDef="let schedule" class="schedule" [class.fade-out]="_shouldBeGray(schedule)" [class.hidden]="_containsSelectedUser(schedule)">
+      <div class="schedule-color" [style.background]="schedule.type.color"></div>
       <div class="attendees">
         <div *ngFor="let attendee of schedule.attendees">
           <img class="user-avatar" [src]="attendee.data.icon" [matTooltip]="attendee.name" matTooltipPosition="after" matTooltipClass="tooltip" />

@@ -348,8 +348,6 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
       schedule: schedule
     };
     
-    console.log(e);
-
     this.onClick.next(e);
   }
 
@@ -667,7 +665,6 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
     }
     
     d.startOf('isoWeek');
-    console.log(`generateDays: ${d.format()}`);
       
     let days: Day[] = [];
     let names = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];

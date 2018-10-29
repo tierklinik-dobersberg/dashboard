@@ -4,6 +4,10 @@
     <mat-form-field>
       <input matInput name="name" placeholder="Name" [(ngModel)]="_name">
     </mat-form-field>
+
+    <mat-form-field>
+      <input matInput name="color" [(colorPicker)]="_color" [style.background-color]="_color" placeholder="Farbe auswählen" [ngModel]="_color">
+    </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button type="button" color="primary" matDialogClose>Abbrechen</button>

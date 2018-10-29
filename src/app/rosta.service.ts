@@ -29,6 +29,7 @@ export interface RemoteRostaSchedule {
   color: string;
   weekDay: number;
   id: number;
+  type: RostaScheduleType;
 }
 
 @Injectable({
@@ -42,9 +43,10 @@ export class RostaService {
     return this._http.get<RostaScheduleType[]>('/api/rosta/types');
   }
   
-  createType(type: string): Observable<RostaScheduleType> {
+  createType(type: string, color: string): Observable<RostaScheduleType> {
     return this._http.post<RostaScheduleType>('/api/rosta/types', {
       name: type,
+      color: color,
     });
   }
   
@@ -77,7 +79,7 @@ export class RostaService {
       end: schedule.end.totalMinutes,
       users: schedule.attendees.map(at => at.name),
       color: '',
-      type: 1,
+      type: schedule.type.id,
       date: date.getTime(),
     });
   }
@@ -88,7 +90,7 @@ export class RostaService {
       end: schedule.end.totalMinutes,
       users: schedule.attendees.map(at => at.name),
       color: '',
-      type: 1,
+      type: schedule.type.id,
       date: date.getTime(),
     });
   }

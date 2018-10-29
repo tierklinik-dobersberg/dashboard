@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RostaScheduleType, RostaService } from 'src/app/rosta.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EnterNameDialogComponent } from 'src/app/dialogs/enter-name-dialog/enter-name-dialog.component';
+import { RostaTypeDialogComponent } from 'src/app/dialogs/rosta-type-dialog/rosta-type-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -40,14 +40,14 @@ export class RostaTypesComponent implements OnInit {
   }
   
   _createType() {
-    this._dialog.open(EnterNameDialogComponent)
+    this._dialog.open(RostaTypeDialogComponent)
       .afterClosed()
       .subscribe(result => {
         if (!result) {
           return;
         }
         
-        this._rostaService.createType(result)
+        this._rostaService.createType(result.name, result.color)
           .subscribe(() => this._loadTypes());
       })
   }

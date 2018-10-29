@@ -24,9 +24,11 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DoorComponent } from './door/door.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
@@ -50,7 +52,7 @@ import { LoginService } from './login.service';
 import { ProfileComponent } from './profile/profile.component';
 import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/change-password-dialog.component';
 import { RostaTypesComponent } from './settings/rosta-types/rosta-types.component';
-import { EnterNameDialogComponent } from './dialogs/enter-name-dialog/enter-name-dialog.component';
+import { RostaTypeDialogComponent } from './dialogs/rosta-type-dialog/rosta-type-dialog.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -81,7 +83,7 @@ registerLocaleData(localeDe, 'de');
     ProfileComponent,
     ChangePasswordDialogComponent,
     RostaTypesComponent,
-    EnterNameDialogComponent,
+    RostaTypeDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -108,7 +110,9 @@ registerLocaleData(localeDe, 'de');
     MatTooltipModule,
     MatSidenavModule,
     MatTabsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatStepperModule,
+    ColorPickerModule
   ],
   providers: [
     {
@@ -127,7 +131,7 @@ registerLocaleData(localeDe, 'de');
     CreateRostaScheduleComponent,
     CropImageDialogComponent,
     ChangePasswordDialogComponent,
-    EnterNameDialogComponent
+    RostaTypeDialogComponent
   ]
 })
 export class AppModule { }

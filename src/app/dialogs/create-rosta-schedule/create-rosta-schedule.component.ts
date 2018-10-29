@@ -6,6 +6,7 @@ import { User, UsersService } from '../../users.service';
 import * as moment from 'moment';
 import { Schedule } from '../../components/calendar';
 import { Time } from 'src/app/openinghours.service';
+import { RostaService, RostaScheduleType } from 'src/app/rosta.service';
 
 export interface CreateRostaScheduleConfig {
   date: Date;
@@ -26,12 +27,15 @@ export class CreateRostaScheduleComponent implements OnInit {
   _from: string;
   _to: string;
   _currentDate: string;
+  _types: RostaScheduleType[];
+  _type: number;
   
   _selectedAttendees: User[] = [];
 
   constructor(private _breakpointObserver: BreakpointObserver,
               @Inject(MAT_DIALOG_DATA) private _config: CreateRostaScheduleConfig,
               private _userService: UsersService,
+              private _rostaService: RostaService,
               private _dialogRef: MatDialogRef<CreateRostaScheduleComponent>,
               private _dialog: MatDialog) {}
 
@@ -45,15 +49,25 @@ export class CreateRostaScheduleComponent implements OnInit {
       } else {
         this._to = moment(this._config.date).add(4, 'hours').format('HH:mm');
       }
+      
     } else {
       this._from = this._config.schedule.start.toString();
       this._to = this._config.schedule.end.toString();
+      this._type = this._config.schedule.type.id;
       
       this._userService.listUsers()
         .subscribe(users => {
           this._selectedAttendees = users.filter(user => this._config.schedule.attendees.some(at => at.name === user.username))
         });
     }
+    
+    this._rostaService.getTypes()
+      .subscribe(types => {
+        this._types = types;
+        if (this._type === undefined) {
+          this._type = types[0].id;
+        }
+      });
     
     this._breakpointObserver.observe([
       Breakpoints.Handset,
@@ -77,6 +91,7 @@ export class CreateRostaScheduleComponent implements OnInit {
       end: end,
       date: this._config.date,
       id: !!this._config.schedule ? this._config.schedule.id : null,
+      type: this._types.find(type => type.id === this._type)
     });
   }
 

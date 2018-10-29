@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EnterNameDialogComponent } from './enter-name-dialog.component';
+import { RostaTypeDialogComponent } from './rosta-type-dialog.component';
 
 describe('EnterNameDialogComponent', () => {
-  let component: EnterNameDialogComponent;
-  let fixture: ComponentFixture<EnterNameDialogComponent>;
+  let component: RostaTypeDialogComponent;
+  let fixture: ComponentFixture<RostaTypeDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EnterNameDialogComponent ]
+      declarations: [ RostaTypeDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EnterNameDialogComponent);
+    fixture = TestBed.createComponent(RostaTypeDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

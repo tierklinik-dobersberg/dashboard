@@ -64,11 +64,20 @@ span.end-time {
 .schedule {
     border: 1px solid white;
     border-radius: 5px;
-    background-color: lightskyblue;
     height: 100%;
     opacity: 0.85;
     position: relative;
     transition: opacity 200ms ease-in-out;
+    
+    .schedule-color {
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        opacity: 0.5;
+    }
 
     &.fade-out {
         opacity: 0.2;

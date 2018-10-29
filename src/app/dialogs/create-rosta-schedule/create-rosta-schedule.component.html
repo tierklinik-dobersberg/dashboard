@@ -11,6 +11,15 @@
           </mat-form-field>
       </div>
     </div>
+    <div class="type-selection">
+      <mat-form-field>
+        <mat-select placeholder="Dienstart" [(ngModel)]="_type">
+          <mat-option *ngFor="let type of _types" [value]="type.id">
+            <span [style.background-color]="type.color" class="type-color"></span> {{type.type}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <div class="attendees-selection">
       <mat-list>
         <mat-list-item *ngFor="let user of _selectedAttendees; trackBy: _trackUser">

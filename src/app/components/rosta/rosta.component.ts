@@ -145,7 +145,8 @@ export class RostaComponent implements OnInit, AfterViewInit {
                     })),
                     start: new Time(schedule.start),
                     end: new Time(schedule.end),
-                    id: schedule.id
+                    id: schedule.id,
+                    type: schedule.type
                   },
                 })
               })

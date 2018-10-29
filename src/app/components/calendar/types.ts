@@ -1,5 +1,6 @@
 import {TimeFrame} from '../../openinghours.service';
 import * as moment from 'moment';
+import { RostaScheduleType } from 'src/app/rosta.service';
 
 /** DateSpan represents a span between days */
 export interface DateSpan {
@@ -46,6 +47,8 @@ export interface DateSpan {
   export interface Schedule<T> extends DaySection<T> {
     /** A list of attendees for this schedule */
     attendees: Attendee<any>[];
+    
+    type: RostaScheduleType;
   }
   
   /**
