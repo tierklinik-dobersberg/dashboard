@@ -41,18 +41,18 @@ export class RosterService {
   constructor(private _http: HttpClient) { }
   
   getTypes(): Observable<RosterScheduleType[]> {
-    return this._http.get<RosterScheduleType[]>('/api/rosta/types');
+    return this._http.get<RosterScheduleType[]>('/api/roster/types');
   }
   
   createType(type: string, color: string): Observable<RosterScheduleType> {
-    return this._http.post<RosterScheduleType>('/api/rosta/types', {
+    return this._http.post<RosterScheduleType>('/api/roster/types', {
       name: type,
       color: color,
     });
   }
   
   deleteType(id: number): Observable<void> {
-    return this._http.delete<void>(`/api/rosta/types/${id}`);
+    return this._http.delete<void>(`/api/roster/types/${id}`);
   }
   
   getRemoteSchedules(start: number, end: number): Observable<RemoteRoster[]> {
@@ -67,15 +67,15 @@ export class RosterService {
       return this.getCurrentSchedules();
     }
 
-    return this._http.get<RemoteRoster[]>('/api/rosta/schedules', {params: {from: ''+start, to: ''+end}});
+    return this._http.get<RemoteRoster[]>('/api/roster/schedules', {params: {from: ''+start, to: ''+end}});
   }
   
   getCurrentSchedules(): Observable<RemoteRoster[]> {
-    return this._http.get<RemoteRoster[]>('/api/rosta/current');
+    return this._http.get<RemoteRoster[]>('/api/roster/current');
   }
 
   createSchedule(date: Date, schedule: Schedule<any>): Observable<void> {
-    return this._http.post<void>('/api/rosta/schedules', {
+    return this._http.post<void>('/api/roster/schedules', {
       start: schedule.start.totalMinutes,
       end: schedule.end.totalMinutes,
       users: schedule.attendees.map(at => at.name),
@@ -86,7 +86,7 @@ export class RosterService {
   }
 
   editSchedule(date: Date, schedule: Schedule<any>): Observable<void> {
-    return this._http.put<void>(`/api/rosta/schedules/${schedule.id}`, {
+    return this._http.put<void>(`/api/roster/schedules/${schedule.id}`, {
       start: schedule.start.totalMinutes,
       end: schedule.end.totalMinutes,
       users: schedule.attendees.map(at => at.name),
@@ -97,6 +97,6 @@ export class RosterService {
   }
 
   deleteSchedule(id: number): Observable<void> {
-    return this._http.delete<void>(`/api/rosta/schedules/${id}`);
+    return this._http.delete<void>(`/api/roster/schedules/${id}`);
   }
 }
