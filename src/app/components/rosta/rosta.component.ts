@@ -121,6 +121,15 @@ export class RostaComponent implements OnInit, AfterViewInit {
     return this._readonly;
   }
   private _readonly: boolean = true;
+
+  @Input()
+  set sideNavOpen(v: any) {
+    this._sideNavOpen = coerceBooleanProperty(v);
+  }
+  get sideNavOpen() {
+    return this._sideNavOpen;
+  }
+  private _sideNavOpen: boolean = true;
   
   _highlightedUser: string | null = null;
   _selecetedUser: string | null = null;

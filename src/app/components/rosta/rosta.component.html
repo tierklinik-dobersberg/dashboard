@@ -15,7 +15,7 @@
 <div class="calendar-container">
     <mat-sidenav-container>
 
-      <mat-sidenav #snav mode="side" class="sidebar" position="end">
+      <mat-sidenav #snav mode="side" class="sidebar" position="end" [opened]="sideNavOpen">
           <div class="sidebar-container">
             <div class="sidebar-header">
               <mat-select [(ngModel)]="_filteredType" placeholder="Dienste" class="type-selection">
