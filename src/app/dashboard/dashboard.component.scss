@@ -1,0 +1,27 @@
+.dashboard {
+    --column-count: 2;
+
+    display: grid;
+    width: 90%;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    grid-template-columns: repeat(var(--column-count), 1fr);
+    grid-gap: 2rem;
+    
+    &__item {
+        grid-column-end: span 2;
+        
+        &--half {
+            grid-column-end: span 1;
+        }
+        
+        &--full {
+            grid-column: 1 / -1;
+        }
+    }
+
+    @media screen and (min-width: 48rem) {
+        --column-count: 4;
+    }
+}

@@ -53,6 +53,8 @@ import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/
 import { RostaTypesComponent } from './settings/rosta-types/rosta-types.component';
 import { RostaTypeDialogComponent } from './dialogs/rosta-type-dialog/rosta-type-dialog.component';
 import { HypnoloadComponent } from './components/hypnoload/hypnoload.component';
+import { RostaWidgetComponent } from './widgets/rosta-widget/rosta-widget.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -84,6 +86,8 @@ registerLocaleData(localeDe, 'de');
     RostaTypesComponent,
     RostaTypeDialogComponent,
     HypnoloadComponent,
+    RostaWidgetComponent,
+    DashboardComponent,
   ],
   imports: [
     BrowserModule,

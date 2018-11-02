@@ -1,0 +1,47 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Heute im Dienst</mat-card-title>
+    <mat-card-subtitle>Vormittag und Nachmittag</mat-card-subtitle>
+  </mat-card-header>
+  
+  <mat-card-content>
+    <ng-container *ngFor="let schedule of _schedules; trackBy: _trackSchedule">
+      <ng-container *ngTemplateOutlet="scheduleTemplate; context: {$implicit: schedule}"></ng-container>
+    </ng-container>
+  </mat-card-content>
+  
+  <mat-card-actions>
+    <button mat-button routerLink="/rosta">Dienstplan anzeigen</button>
+  </mat-card-actions>
+
+</mat-card>
+
+<ng-template #scheduleTemplate let-schedule>
+    <div class="schedule">
+      <p>{{_formatTime(schedule.start)}} - {{_formatTime(schedule.end)}}</p>
+      
+      <div class="users">
+        <span>Tierärzte</span>
+        <ng-container *ngTemplateOutlet="avatarList; context: {$implicit: schedule.users, 'type': 'doctor'}"></ng-container>
+      </div>
+      
+      <div class="users">
+        <span>Assistenten</span>
+        <ng-container *ngTemplateOutlet="avatarList; context: {$implicit: schedule.users, 'type': 'assistent'}"></ng-container>
+      </div>
+    </div>
+</ng-template>
+
+<ng-template #avatarList let-users let-type="type">
+    <div class="avatar-list">
+        <ng-container *ngFor="let user of users; trackBy: _trackUser">
+          <img  
+             *ngIf="user.type === type"
+             class="user-avatar"
+             [alt]="user.username"
+             [src]="user.icon || 'not-found'"
+             [matTooltip]="user.firstname + ' ' + user.lastname"
+             matTooltipPosition="before"/>
+        </ng-container>
+    </div>
+</ng-template>

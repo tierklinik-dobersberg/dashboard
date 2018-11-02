@@ -5,6 +5,7 @@ import { SettingsOverviewComponent } from './settings/overview/overview.componen
 import { RostaComponent } from './components/rosta/rosta.component';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent
   },
   {
     path: '**',

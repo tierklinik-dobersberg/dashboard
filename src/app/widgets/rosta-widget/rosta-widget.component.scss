@@ -1,0 +1,40 @@
+:host {
+    display: block;
+}
+
+.user-avatar {
+    margin-right: 10px;
+}
+
+.schedule {
+    & > p:first-of-type {
+        text-decoration: underline;
+    }
+    
+    .users {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        
+        &:not(:last-of-type) {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        span {
+            width: 100px;
+            height: 24px;
+            line-height: 24px;
+            color: gray;
+            margin-left: 10px;
+        }
+    }
+}
+
+mat-card-actions {
+    text-align: right;
+}
+
+button {
+    text-transform: uppercase;
+    color: #1080d0;
+}
