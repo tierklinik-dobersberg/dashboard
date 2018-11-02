@@ -2,7 +2,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { Component, HostBinding, Inject, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { Time } from 'src/app/openinghours.service';
 import { RosterScheduleType, RosterService } from 'src/app/roster.service';
@@ -44,9 +44,8 @@ export class CreateRosterScheduleComponent implements OnInit {
   constructor(private _breakpointObserver: BreakpointObserver,
               @Inject(MAT_DIALOG_DATA) private _config: CreateRosterScheduleConfig,
               private _userService: UsersService,
-              private _rostaService: RosterService,
-              private _dialogRef: MatDialogRef<CreateRosterScheduleComponent>,
-              private _dialog: MatDialog) {}
+              private _rosterService: RosterService,
+              private _dialogRef: MatDialogRef<CreateRosterScheduleComponent>) {}
 
   ngOnInit() {
     this._currentDate = moment(this._config.date).format('DD.MM');
@@ -100,7 +99,7 @@ export class CreateRosterScheduleComponent implements OnInit {
   }
   
   private _loadTypes() {
-    this._rostaService.getTypes()
+    this._rosterService.getTypes()
       .subscribe(types => {
         this._types = types;
         if (this._type === undefined) {

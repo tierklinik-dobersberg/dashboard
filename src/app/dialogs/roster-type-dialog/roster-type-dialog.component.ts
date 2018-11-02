@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  templateUrl: './rosta-type-dialog.component.html',
-  styleUrls: ['./rosta-type-dialog.component.scss']
+  templateUrl: './roster-type-dialog.component.html',
+  styleUrls: ['./roster-type-dialog.component.scss']
 })
-export class RostaTypeDialogComponent implements OnInit {
+export class RosterTypeDialogComponent implements OnInit {
   _name: string;
   _color: string;
 
-  constructor(private _dialogRef: MatDialogRef<RostaTypeDialogComponent>) { }
+  constructor(private _dialogRef: MatDialogRef<RosterTypeDialogComponent>) { }
 
   ngOnInit() {
   }

@@ -146,20 +146,20 @@ export class RosterComponent implements OnInit, AfterViewInit {
               private _userService: UsersService,
               private _loader: HypnoloadService,
               private _changeDetectorRef: ChangeDetectorRef,
-              private _rostaService: RosterService,
+              private _rosterService: RosterService,
               private _dialog: MatDialog) { }
 
   ngOnInit() {
     const load = (span: DateSpan) => {
-      return this._rostaService.getRemoteSchedules(span.startDate.getTime(), span.endDate.getTime())
+      return this._rosterService.getRemoteSchedules(span.startDate.getTime(), span.endDate.getTime())
         .pipe(
-          map(rostas => {
+          map(rosters => {
             let schedules: DateSchedule[] = [];
 
-            rostas.forEach(rosta => {
-              rosta.schedules.forEach(schedule => {
+            rosters.forEach(roster => {
+              roster.schedules.forEach(schedule => {
                 schedules.push({
-                  date: moment(rosta.startDate).add(schedule.weekDay - 1, 'days').toDate(),
+                  date: moment(roster.startDate).add(schedule.weekDay - 1, 'days').toDate(),
                   schedule: {
                     attendees: (schedule.users || []).map(user => ({
                       name: user.username,
@@ -186,7 +186,7 @@ export class RosterComponent implements OnInit, AfterViewInit {
     
     this.calendarSource = new RosterSource(this._openingHourService, this._reload, this._loader, load);
       
-    this._rostaService.getTypes()
+    this._rosterService.getTypes()
       .subscribe(types => this._types = types);
     
     this._userService.listUsers()
@@ -284,7 +284,7 @@ export class RosterComponent implements OnInit, AfterViewInit {
 
   _deleteSchedule() {
     //let idx = last.findIndex(l => l.schedule.id === this._lastClickEvent.schedule.id);
-    this._rostaService.deleteSchedule(this._lastClickEvent.schedule.id)
+    this._rosterService.deleteSchedule(this._lastClickEvent.schedule.id)
       .subscribe(() => {
         this._reload.next(null);
       });
@@ -352,12 +352,12 @@ export class RosterComponent implements OnInit, AfterViewInit {
             }
 
             if (edit) {
-              this._rostaService.editSchedule(result.date, result)
+              this._rosterService.editSchedule(result.date, result)
                 .subscribe(res => {
                   this._reload.next(null);
                 });
             } else {
-              this._rostaService.createSchedule(result.date, result)
+              this._rosterService.createSchedule(result.date, result)
                 .subscribe(res => {
                   this._reload.next(null);
                 });

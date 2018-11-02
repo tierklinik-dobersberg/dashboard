@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RosterScheduleType, RosterService } from 'src/app/roster.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RostaTypeDialogComponent } from 'src/app/dialogs/rosta-type-dialog/rosta-type-dialog.component';
+import { RosterTypeDialogComponent } from 'src/app/dialogs/roster-type-dialog/roster-type-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -12,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class RosterTypesComponent implements OnInit {
   _types: RosterScheduleType[];
 
-  constructor(private _rostaService: RosterService,
+  constructor(private _rosterService: RosterService,
               private _dialog: MatDialog,
               private _snackBar: MatSnackBar) { }
 
@@ -21,7 +21,7 @@ export class RosterTypesComponent implements OnInit {
   }
   
   private _loadTypes() {
-    this._rostaService.getTypes()
+    this._rosterService.getTypes()
       .subscribe(types => this._types = types);
   }
   
@@ -35,19 +35,19 @@ export class RosterTypesComponent implements OnInit {
       return;
     }
     
-    this._rostaService.deleteType(type.id)
+    this._rosterService.deleteType(type.id)
       .subscribe(() => this._loadTypes());
   }
   
   _createType() {
-    this._dialog.open(RostaTypeDialogComponent)
+    this._dialog.open(RosterTypeDialogComponent)
       .afterClosed()
       .subscribe(result => {
         if (!result) {
           return;
         }
         
-        this._rostaService.createType(result.name, result.color)
+        this._rosterService.createType(result.name, result.color)
           .subscribe(() => this._loadTypes());
       })
   }

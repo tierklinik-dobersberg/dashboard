@@ -51,9 +51,9 @@ import { LoginService } from './login.service';
 import { ProfileComponent } from './profile/profile.component';
 import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/change-password-dialog.component';
 import { RosterTypesComponent } from './settings/roster-types/roster-types.component';
-import { RostaTypeDialogComponent } from './dialogs/rosta-type-dialog/rosta-type-dialog.component';
+import { RosterTypeDialogComponent } from './dialogs/roster-type-dialog/roster-type-dialog.component';
 import { HypnoloadComponent } from './components/hypnoload/hypnoload.component';
-import { RostaWidgetComponent } from './widgets/roster-widget/roster-widget.component';
+import { RosterWidgetComponent } from './widgets/roster-widget/roster-widget.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 // the second parameter 'fr' is optional
@@ -84,9 +84,9 @@ registerLocaleData(localeDe, 'de');
     ProfileComponent,
     ChangePasswordDialogComponent,
     RosterTypesComponent,
-    RostaTypeDialogComponent,
+    RosterTypeDialogComponent,
     HypnoloadComponent,
-    RostaWidgetComponent,
+    RosterWidgetComponent,
     DashboardComponent,
   ],
   imports: [
@@ -134,7 +134,7 @@ registerLocaleData(localeDe, 'de');
     CreateRosterScheduleComponent,
     CropImageDialogComponent,
     ChangePasswordDialogComponent,
-    RostaTypeDialogComponent
+    RosterTypeDialogComponent
   ]
 })
 export class AppModule { }

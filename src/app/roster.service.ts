@@ -58,7 +58,7 @@ export class RosterService {
   getRemoteSchedules(start: number, end: number): Observable<RemoteRoster[]> {
   
     // if the schedules are for the current isoWeek, load them instead
-    // this allows the service worker to always cache the current rosta schedules
+    // this allows the service worker to always cache the current roster schedules
     // without interfering with other range requests
     const startWeek = moment(start).startOf('isoWeek');
     const endWeek = moment(end).endOf('isoWeek');
