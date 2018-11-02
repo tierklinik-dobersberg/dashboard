@@ -67,7 +67,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         // if we are still on the login page redirect to user
         if (this._router.url.startsWith('/login')) {
-          this._router.navigate(['/door'])
+          this._router.navigate(['/dashboard'])
         }
       });
   }

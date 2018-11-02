@@ -1,11 +1,24 @@
 .dashboard {
+    // Fallback for older browsers
+    display: flex;
+    flex-wrap: wrap;
+
+    &__item {
+        flex: 1 1 50%;
+        // this will add up to a 2rem gap between items.
+        padding: 1rem;
+    }
+  
+    // For new browsers
     --column-count: 2;
 
     display: grid;
     width: 90%;
+    
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
+    
     grid-template-columns: repeat(var(--column-count), 1fr);
     grid-gap: 2rem;
     
@@ -23,5 +36,11 @@
 
     @media screen and (min-width: 48rem) {
         --column-count: 4;
+    }
+}
+
+@supports (display: grid) {
+    .dashboard__item {
+        padding: 0;
     }
 }

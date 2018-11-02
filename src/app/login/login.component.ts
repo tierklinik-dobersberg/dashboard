@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
   _login() {
     this._loginService.login(this._username, this._password)
       .subscribe(
-        () => this._router.navigate(['/door']),
+        () => this._router.navigate(['/dashboard']),
         (err: HttpErrorResponse) => {
           if (err.status === 401 || err.status === 403) {
             this._invalidCreds = true;

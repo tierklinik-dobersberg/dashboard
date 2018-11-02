@@ -8,9 +8,14 @@ import { ProfileComponent } from './profile/profile.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
+  /**
+   * @deprecated
+   * Door does not have a dedicated route anymore
+   * Redirect to dashboard
+   */
   {
     path: 'door',
-    component: DoorComponent
+    redirectTo: 'dashboard'
   },
   {
     path: 'settings',
