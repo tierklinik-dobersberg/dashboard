@@ -11,6 +11,15 @@ mat-form-field {
     width: 100%;
 }
 
+.fullname {
+    display: flex;
+    
+    mat-form-field {
+        width: auto;
+        flex-grow: 1;
+    }
+}
+
 .mat-dialog-content {
     padding-bottom: 15px;
 }

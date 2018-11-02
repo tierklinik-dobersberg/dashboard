@@ -1,9 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { LoginService } from '../login.service';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { } from 'protractor';
 import { Observable } from 'rxjs';
+import { LoginService } from '../login.service';
 import { User } from '../users.service';
-import { Router } from '@angular/router';
-import {  } from 'protractor';
 
 @Component({
   selector: 'cl-header',
@@ -16,15 +15,13 @@ export class HeaderComponent implements OnInit {
   @Output()
   readonly toggleNav = new EventEmitter<void>();
 
-  constructor(private _loginService: LoginService,
-              private _router: Router) { }
+  constructor(private _loginService: LoginService) { }
 
   ngOnInit() {
     this._user = this._loginService.user;
   }
   
   _logout() {
-    this._router.navigate(['/login']);
     this._loginService.logout();
   }
   

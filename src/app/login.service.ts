@@ -33,11 +33,24 @@ export class LoginService implements HttpInterceptor {
     return this._http.post<User>('/api/users/login', {
       username: user,
       password: password,
-    }).pipe(tap(user => this._user.next(user), err => this._user.next(null)));
+    }).pipe(
+        tap(
+          user => {
+            this._user.next(user);
+          }, 
+          err => {
+            this._user.next(null);
+          }
+        )
+      );
   }
 
   logout() {
-    this.login('', '').subscribe(); 
+    this.login('', '').subscribe(
+      {
+        complete: () => this._router.navigate(['/login'])
+      }
+    ); 
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

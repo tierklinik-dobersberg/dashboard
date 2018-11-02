@@ -64,9 +64,13 @@ export class AppComponent implements OnInit, OnDestroy {
     // Check if we are logged in. If the backend replys with 401 or 403
     // the login service will redirect us to the login page on it's own
     this._loginService.getCurrentUser()
-      .subscribe(() => {
+      .subscribe((user) => {
+        if (user.mustChangePassword) {
+          this._router.navigate(['/login']);
+        }
+        
         // if we are still on the login page redirect to user
-        if (this._router.url.startsWith('/login')) {
+        if (this._router.url.startsWith('/login') && !user.mustChangePassword) {
           this._router.navigate(['/dashboard'])
         }
       });

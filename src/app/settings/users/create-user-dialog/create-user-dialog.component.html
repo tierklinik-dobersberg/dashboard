@@ -24,13 +24,15 @@
       <input matInput type="password" autocomplete="off" [pattern]="_password" name="confirm-new-password" required placeholder="Passwort wiederholden">
     </mat-form-field>
 
-    <mat-form-field>
-      <input matInput type="text" autocomplete="off" name="firstname" placeholder="Vorname" [(ngModel)]="_firstname">
-    </mat-form-field>
-    
-    <mat-form-field>
-      <input matInput type="text" autocomplete="off" name="lastname" placeholder="Vorname" [(ngModel)]="_lastname">
-    </mat-form-field>
+    <div class="fullname">
+      <mat-form-field>
+        <input matInput type="text" autocomplete="off" name="firstname" placeholder="Vorname" [(ngModel)]="_firstname">
+      </mat-form-field>
+      
+      <mat-form-field>
+        <input matInput type="text" autocomplete="off" name="lastname" placeholder="Nachname" [(ngModel)]="_lastname">
+      </mat-form-field>
+    </div>
     
     <mat-form-field>
       <input matInput type="text" autocomplete="off" name="mail" placeholder="E-Mail Adresse" [(ngModel)]="_mailAddress">
@@ -53,10 +55,13 @@
     </mat-form-field>
 
     <mat-checkbox  *ngIf="_editorIsAdmin" [(ngModel)]="_isAdmin" name="role">Administrator</mat-checkbox>
-    <input style="visibility: hidden" name="avatarInput" id="avatarInput" class="avatar-selection" type="file" (change)="_loadImage($event)">
+    <br >
+    <mat-checkbox  *ngIf="_editorIsAdmin" [(ngModel)]="_mustChangePassword" name="must-change-password">Benutzer muss Passwort ändern</mat-checkbox>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="_abort()">Abbrechen</button>
   <button mat-button type="submit" [disabled]="!form.valid" (click)="_save()">{{!!_userToEdit ? 'Speichern' : 'Erstellen'}}</button>
 </mat-dialog-actions>
+    
+<input style="visibility: hidden" name="avatarInput" id="avatarInput" class="avatar-selection" type="file" (change)="_loadImage($event)">

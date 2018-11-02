@@ -22,6 +22,7 @@ export class CreateUserDialogComponent implements OnInit {
   _lastname: string;
   _phoneNumber: string;
   _mailAddress: string;
+  _mustChangePassword: boolean = true;
 
   _icon: string = '';
   _editorIsAdmin = false;
@@ -47,6 +48,7 @@ export class CreateUserDialogComponent implements OnInit {
       this._firstname = this._userToEdit.firstname;
       this._mailAddress = this._userToEdit.mailAddress;
       this._phoneNumber = this._userToEdit.phoneNumber;
+      this._mustChangePassword = this._userToEdit.mustChangePassword;
     }
   }
 
@@ -90,7 +92,8 @@ export class CreateUserDialogComponent implements OnInit {
       firstname: this._firstname,
       lastname: this._lastname,
       phoneNumber: this._phoneNumber,
-      mailAddress: this._mailAddress
+      mailAddress: this._mailAddress,
+      mustChangePassword: this._mustChangePassword
     }
     this._dialogRef.close(user);
   }

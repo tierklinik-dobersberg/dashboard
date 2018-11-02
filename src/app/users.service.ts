@@ -19,6 +19,7 @@ export interface User {
   lastname?: string;
   mailAddress?: string;
   phoneNumber?: string;
+  mustChangePassword?: boolean;
 }
 
 @Injectable({
@@ -33,7 +34,18 @@ export class UsersService {
     return this._http.get<User[]>('/api/users/');
   }
   
-  createUser(name: string, role: Role, type: UserType, hoursPerWeek: number, password: string, icon: string = '', enabled = true, firstname?: string, lastname?: string, phone?: string, mail?: string): Observable<void> {
+  createUser(name: string,
+             role: Role,
+             type: UserType,
+             hoursPerWeek: number,
+             password: string,
+             icon: string = '',
+             enabled = true,
+             firstname?: string,
+             lastname?: string,
+             phone?: string,
+             mail?: string,
+             mustChangePassword?: boolean): Observable<void> {
     return this._http.post<void>(`/api/users/${name}`, {
       role: role,
       type: type,
@@ -45,11 +57,22 @@ export class UsersService {
       firstname: firstname,
       lastname: lastname,
       phoneNumber: phone,
-      mailAddress: mail
+      mailAddress: mail,
+      mustChangePassword: mustChangePassword
     });
   }
 
-  updateUser(name: string, role: Role, type: UserType, hoursPerWeek: number, icon: string = '', enabled = true, firstname?: string, lastname?: string, phone?: string, mail?: string): Observable<void> {
+  updateUser(name: string,
+             role: Role,
+             type: UserType,
+             hoursPerWeek: number,
+             icon: string = '',
+             enabled = true,
+             firstname?: string,
+             lastname?: string,
+             phone?: string,
+             mail?: string,
+             mustChangePassword?: boolean): Observable<void> {
     return this._http.put<void>(`/api/users/${name}`, {
       role: role,
       type: type,
@@ -60,7 +83,8 @@ export class UsersService {
       firstname: firstname,
       lastname: lastname,
       phoneNumber: phone,
-      mailAddress: mail
+      mailAddress: mail,
+      mustChangePassword: mustChangePassword
     }).pipe(
       tap(result => {
         let currentUser = this._loginService.currentUser;

@@ -1,12 +1,12 @@
 <div class="login-container" [@slideIn]>
   <img class="logo" src="assets/logo.png">
   
-  <form (ngSubmit)="_login()">
+  <form (ngSubmit)="_login()" *ngIf="!_passwordChangeRequired">
     <mat-form-field>
-      <input type="text" [(ngModel)]="_username" autocomplete="username" name="username" matInput placeholder="Benutzername">
+      <input type="text" [(ngModel)]="_username" autocomplete="username" name="username" matInput required placeholder="Benutzername">
     </mat-form-field>
     <mat-form-field>
-      <input type="password" [(ngModel)]="_password" name="password" autocomplete="off" matInput placeholder="Passwort">
+      <input type="password" [(ngModel)]="_password" name="password" autocomplete="off" matInput required placeholder="Passwort">
     </mat-form-field>
 
     <div *ngIf="_invalidCreds" class="invalid-creds">
@@ -14,5 +14,23 @@
     </div>
 
     <button mat-button color="primary" type="submit">Login</button>
+  </form>
+  
+  <form *ngIf="_passwordChangeRequired" (ngSubmit)="_changePassword()">
+    <p>Dein Password muss geändert werden</p>
+    
+    <mat-form-field *ngIf="_oldPasswordRequired">
+      <input type="password" [(ngModel)]="_password" name="password" autocomplete="off" matInput required placeholder="Passwort">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="password" [(ngModel)]="_newPassword" autocomplete="off" name="new-password" matInput required placeholder="Neues Passwort">
+    </mat-form-field>
+    
+    <mat-form-field>
+      <input type="password" autocomplete="off" name="new-password-confirm" [pattern]="_newPassword" matInput required placeholder="Passwort wiederholen">
+    </mat-form-field>
+    
+    <button mat-button color="primary" type="submit">Speichern</button>
   </form>
 </div>

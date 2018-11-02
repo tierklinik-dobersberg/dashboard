@@ -61,7 +61,8 @@ export class UsersComponent implements OnInit {
           res.firstname,
           res.lastname,
           res.phoneNumber,
-          res.mailAddress)
+          res.mailAddress,
+          res.mustChangePassword)
           .subscribe(() => this._loadUsers());
       });
   }
@@ -84,7 +85,8 @@ export class UsersComponent implements OnInit {
           res.firstname,
           res.lastname,
           res.phoneNumber,
-          res.mailAddress)
+          res.mailAddress,
+          res.mustChangePassword)
           .subscribe(() => this._loadUsers());
       });
   }
