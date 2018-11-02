@@ -4,9 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { combineLatest, map } from 'rxjs/operators';
-import { CreateRostaScheduleComponent, CreateRostaScheduleConfig } from 'src/app/dialogs/create-rosta-schedule/create-rosta-schedule.component';
+import { CreateRosterScheduleComponent, CreateRosterScheduleConfig } from 'src/app/dialogs/create-roster-schedule/create-roster-schedule.component';
 import { OpeningHoursService, Time } from 'src/app/openinghours.service';
-import { RostaService, RostaScheduleType } from 'src/app/rosta.service';
+import { RosterService, RosterScheduleType } from 'src/app/roster.service';
 import { User, UsersService } from 'src/app/users.service';
 import { CalendarDay, CalendarSource, CalendarViewer, DateSpan, Schedule, TdCalendarClickEvent, TdCalendarComponent } from '../calendar';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -20,11 +20,11 @@ interface DateSchedule {
 interface UserWithHours extends User {
   hours: {
     total: number;
-    perType: {type: RostaScheduleType, hours: number}[],
+    perType: {type: RosterScheduleType, hours: number}[],
   };
 }
 
-export class RostaSource implements CalendarSource {
+export class RosterSource implements CalendarSource {
   constructor(private _service: OpeningHoursService,
               private _reload: Observable<void>,
               private _loader: HypnoloadService,
@@ -87,9 +87,9 @@ let _nextUniqueId = 100;
 
 
 @Component({
-  selector: 'cl-rosta',
-  templateUrl: './rosta.component.html',
-  styleUrls: ['./rosta.component.scss'],
+  selector: 'cl-roster',
+  templateUrl: './roster.component.html',
+  styleUrls: ['./roster.component.scss'],
   animations: [
     trigger('slideIn', [
       transition(':enter', [
@@ -102,8 +102,8 @@ let _nextUniqueId = 100;
     ]),
   ]
 })
-export class RostaComponent implements OnInit, AfterViewInit {
-  calendarSource: RostaSource;
+export class RosterComponent implements OnInit, AfterViewInit {
+  calendarSource: RosterSource;
 
   _lastClickEvent: TdCalendarClickEvent | null = null;
 
@@ -133,7 +133,7 @@ export class RostaComponent implements OnInit, AfterViewInit {
   
   _highlightedUser: string | null = null;
   _selecetedUser: string | null = null;
-  _types: RostaScheduleType[] = [];
+  _types: RosterScheduleType[] = [];
   _showSideBar = false;
   _filteredType: 'all'|number = 'all';
 
@@ -146,7 +146,7 @@ export class RostaComponent implements OnInit, AfterViewInit {
               private _userService: UsersService,
               private _loader: HypnoloadService,
               private _changeDetectorRef: ChangeDetectorRef,
-              private _rostaService: RostaService,
+              private _rostaService: RosterService,
               private _dialog: MatDialog) { }
 
   ngOnInit() {
@@ -184,7 +184,7 @@ export class RostaComponent implements OnInit, AfterViewInit {
         )
     }
     
-    this.calendarSource = new RostaSource(this._openingHourService, this._reload, this._loader, load);
+    this.calendarSource = new RosterSource(this._openingHourService, this._reload, this._loader, load);
       
     this._rostaService.getTypes()
       .subscribe(types => this._types = types);
@@ -324,7 +324,7 @@ export class RostaComponent implements OnInit, AfterViewInit {
 
     this._userService.listUsers()
       .subscribe(users => {
-        const config: CreateRostaScheduleConfig = {
+        const config: CreateRosterScheduleConfig = {
             date: event.date,
             end: event.end,
             schedule: event.schedule,
@@ -343,7 +343,7 @@ export class RostaComponent implements OnInit, AfterViewInit {
                 return users;
               }, []),
         }
-        this._dialog.open(CreateRostaScheduleComponent, {
+        this._dialog.open(CreateRosterScheduleComponent, {
           data: config
         }).afterClosed()
           .subscribe((result?: Schedule<any>&{date: Date}) => {

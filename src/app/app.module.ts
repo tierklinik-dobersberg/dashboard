@@ -43,17 +43,17 @@ import { RolePipe } from './settings/users/role.pipe';
 import { UsertypePipe } from './settings/users/usertype.pipe';
 import { ConfirmationComponent } from './dialogs/confirmation/confirmation.component';
 import { TdCalendarComponent, TdDaySectionDef, TdDayScheduleDef} from './components/calendar';
-import { CreateRostaScheduleComponent } from './dialogs/create-rosta-schedule/create-rosta-schedule.component';
-import { RostaComponent } from './components/rosta/rosta.component';
+import { CreateRosterScheduleComponent } from './dialogs/create-roster-schedule/create-roster-schedule.component';
+import { RosterComponent } from './components/roster/roster.component';
 import { CropImageDialogComponent } from './dialogs/crop-image-dialog/crop-image-dialog.component';
 import { LoginComponent } from './login/login.component';
 import { LoginService } from './login.service';
 import { ProfileComponent } from './profile/profile.component';
 import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/change-password-dialog.component';
-import { RostaTypesComponent } from './settings/rosta-types/rosta-types.component';
+import { RosterTypesComponent } from './settings/roster-types/roster-types.component';
 import { RostaTypeDialogComponent } from './dialogs/rosta-type-dialog/rosta-type-dialog.component';
 import { HypnoloadComponent } from './components/hypnoload/hypnoload.component';
-import { RostaWidgetComponent } from './widgets/rosta-widget/rosta-widget.component';
+import { RostaWidgetComponent } from './widgets/roster-widget/roster-widget.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 // the second parameter 'fr' is optional
@@ -77,13 +77,13 @@ registerLocaleData(localeDe, 'de');
     TdCalendarComponent,
     TdDaySectionDef,
     TdDayScheduleDef,
-    CreateRostaScheduleComponent,
-    RostaComponent,
+    CreateRosterScheduleComponent,
+    RosterComponent,
     CropImageDialogComponent,
     LoginComponent,
     ProfileComponent,
     ChangePasswordDialogComponent,
-    RostaTypesComponent,
+    RosterTypesComponent,
     RostaTypeDialogComponent,
     HypnoloadComponent,
     RostaWidgetComponent,
@@ -131,7 +131,7 @@ registerLocaleData(localeDe, 'de');
     TimeFrameDialogComponent,
     CreateUserDialogComponent,
     ConfirmationComponent,
-    CreateRostaScheduleComponent,
+    CreateRosterScheduleComponent,
     CropImageDialogComponent,
     ChangePasswordDialogComponent,
     RostaTypeDialogComponent

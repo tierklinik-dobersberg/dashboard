@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
-import { RostaService, RemoteRostaSchedule } from 'src/app/rosta.service';
+import { RosterService, RemoteRosterSchedule } from 'src/app/roster.service';
 import { User, UsersService } from 'src/app/users.service';
 import { Time } from 'src/app/openinghours.service';
 
 @Component({
-  selector: 'cl-rosta-widget',
-  templateUrl: './rosta-widget.component.html',
-  styleUrls: ['./rosta-widget.component.scss']
+  selector: 'cl-roster-widget',
+  templateUrl: './roster-widget.component.html',
+  styleUrls: ['./roster-widget.component.scss']
 })
 export class RostaWidgetComponent implements OnInit {
-  _schedules: RemoteRostaSchedule[] = [];
+  _schedules: RemoteRosterSchedule[] = [];
 
   constructor(private _userService: UsersService,
-              private _rostaService: RostaService) { }
+              private _rostaService: RosterService) { }
 
   ngOnInit() {
     this._load();
@@ -23,7 +23,7 @@ export class RostaWidgetComponent implements OnInit {
     return user.username;
   }
   
-  _trackSchedule(_: number, sched: RemoteRostaSchedule) {
+  _trackSchedule(_: number, sched: RemoteRosterSchedule) {
     return sched.id;
   }
 
@@ -37,7 +37,7 @@ export class RostaWidgetComponent implements OnInit {
 
     this._rostaService.getRemoteSchedules(start.valueOf(), end.valueOf())
       .subscribe(rostas => {
-        let schedules: RemoteRostaSchedule[] = [];
+        let schedules: RemoteRosterSchedule[] = [];
 
         rostas.forEach(rosta => {
           rosta.schedules.forEach(sched => {

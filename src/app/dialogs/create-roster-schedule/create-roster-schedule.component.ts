@@ -5,11 +5,11 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { Time } from 'src/app/openinghours.service';
-import { RostaScheduleType, RostaService } from 'src/app/rosta.service';
+import { RosterScheduleType, RosterService } from 'src/app/roster.service';
 import { Schedule } from '../../components/calendar';
 import { User, UsersService } from '../../users.service';
 
-export interface CreateRostaScheduleConfig {
+export interface CreateRosterScheduleConfig {
   date: Date;
   end?: Date;
   schedule?: Schedule<any>;
@@ -21,18 +21,18 @@ interface SelectableUser extends User {
 }
 
 @Component({
-  selector: 'cl-create-rosta-schedule',
-  templateUrl: './create-rosta-schedule.component.html',
-  styleUrls: ['./create-rosta-schedule.component.scss']
+  selector: 'cl-create-roster-schedule',
+  templateUrl: './create-roster-schedule.component.html',
+  styleUrls: ['./create-roster-schedule.component.scss']
 })
-export class CreateRostaScheduleComponent implements OnInit {
+export class CreateRosterScheduleComponent implements OnInit {
   @HostBinding('class.handset')
   _handset = false;
 
   _from: string;
   _to: string;
   _currentDate: string;
-  _types: RostaScheduleType[];
+  _types: RosterScheduleType[];
   _type: number;
   _filterType: string = 'all';
   _users: SelectableUser[] = [];
@@ -42,10 +42,10 @@ export class CreateRostaScheduleComponent implements OnInit {
   _selectedAttendees: User[] = [];
 
   constructor(private _breakpointObserver: BreakpointObserver,
-              @Inject(MAT_DIALOG_DATA) private _config: CreateRostaScheduleConfig,
+              @Inject(MAT_DIALOG_DATA) private _config: CreateRosterScheduleConfig,
               private _userService: UsersService,
-              private _rostaService: RostaService,
-              private _dialogRef: MatDialogRef<CreateRostaScheduleComponent>,
+              private _rostaService: RosterService,
+              private _dialogRef: MatDialogRef<CreateRosterScheduleComponent>,
               private _dialog: MatDialog) {}
 
   ngOnInit() {

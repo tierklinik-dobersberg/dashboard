@@ -1,18 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { RostaScheduleType, RostaService } from 'src/app/rosta.service';
+import { RosterScheduleType, RosterService } from 'src/app/roster.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RostaTypeDialogComponent } from 'src/app/dialogs/rosta-type-dialog/rosta-type-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'cl-rosta-types',
-  templateUrl: './rosta-types.component.html',
-  styleUrls: ['./rosta-types.component.scss']
+  selector: 'cl-roster-types',
+  templateUrl: './roster-types.component.html',
+  styleUrls: ['./roster-types.component.scss']
 })
-export class RostaTypesComponent implements OnInit {
-  _types: RostaScheduleType[];
+export class RosterTypesComponent implements OnInit {
+  _types: RosterScheduleType[];
 
-  constructor(private _rostaService: RostaService,
+  constructor(private _rostaService: RosterService,
               private _dialog: MatDialog,
               private _snackBar: MatSnackBar) { }
 
@@ -25,11 +25,11 @@ export class RostaTypesComponent implements OnInit {
       .subscribe(types => this._types = types);
   }
   
-  _trackType(_: number, type: RostaScheduleType) {
+  _trackType(_: number, type: RosterScheduleType) {
     return type.id;
   }
 
-  _deleteType(type: RostaScheduleType) {
+  _deleteType(type: RosterScheduleType) {
     if (this._types.length === 1) {
       this._snackBar.open('Die letzte Dienstart kann nicht gelöscht werden', undefined, {duration: 2000});
       return;

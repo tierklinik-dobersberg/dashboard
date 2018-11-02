@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SettingsOverviewComponent } from './settings/overview/overview.component';
-import { RostaComponent } from './components/rosta/rosta.component';
+import { RosterComponent } from './components/roster/roster.component';
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -21,8 +21,8 @@ const routes: Routes = [
     component: SettingsOverviewComponent
   },
   {
-    path: 'rosta',
-    component: RostaComponent,
+    path: 'roster',
+    component: RosterComponent,
   },
   {
     path: 'login',

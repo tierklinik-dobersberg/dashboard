@@ -5,13 +5,13 @@ import { Observable } from 'rxjs';
 import { Schedule } from './components/calendar';
 import { User } from './users.service';
 
-export interface RostaScheduleType {
+export interface RosterScheduleType {
   id: number;
   color: string;
   type: string;
 }
 
-export interface RemoteRosta {
+export interface RemoteRoster {
   id: number;
   
   calendarWeek: string;
@@ -20,32 +20,32 @@ export interface RemoteRosta {
   
   endDate: number;
   
-  schedules: RemoteRostaSchedule[];
+  schedules: RemoteRosterSchedule[];
 }
 
-export interface RemoteRostaSchedule {
+export interface RemoteRosterSchedule {
   start: number;
   end: number;
   users: User[];
   color: string;
   weekDay: number;
   id: number;
-  type: RostaScheduleType;
+  type: RosterScheduleType;
 }
 
 @Injectable({
   providedIn: 'root'
 })
-export class RostaService {
+export class RosterService {
 
   constructor(private _http: HttpClient) { }
   
-  getTypes(): Observable<RostaScheduleType[]> {
-    return this._http.get<RostaScheduleType[]>('/api/rosta/types');
+  getTypes(): Observable<RosterScheduleType[]> {
+    return this._http.get<RosterScheduleType[]>('/api/rosta/types');
   }
   
-  createType(type: string, color: string): Observable<RostaScheduleType> {
-    return this._http.post<RostaScheduleType>('/api/rosta/types', {
+  createType(type: string, color: string): Observable<RosterScheduleType> {
+    return this._http.post<RosterScheduleType>('/api/rosta/types', {
       name: type,
       color: color,
     });
@@ -55,7 +55,7 @@ export class RostaService {
     return this._http.delete<void>(`/api/rosta/types/${id}`);
   }
   
-  getRemoteSchedules(start: number, end: number): Observable<RemoteRosta[]> {
+  getRemoteSchedules(start: number, end: number): Observable<RemoteRoster[]> {
   
     // if the schedules are for the current isoWeek, load them instead
     // this allows the service worker to always cache the current rosta schedules
@@ -67,11 +67,11 @@ export class RostaService {
       return this.getCurrentSchedules();
     }
 
-    return this._http.get<RemoteRosta[]>('/api/rosta/schedules', {params: {from: ''+start, to: ''+end}});
+    return this._http.get<RemoteRoster[]>('/api/rosta/schedules', {params: {from: ''+start, to: ''+end}});
   }
   
-  getCurrentSchedules(): Observable<RemoteRosta[]> {
-    return this._http.get<RemoteRosta[]>('/api/rosta/current');
+  getCurrentSchedules(): Observable<RemoteRoster[]> {
+    return this._http.get<RemoteRoster[]>('/api/rosta/current');
   }
 
   createSchedule(date: Date, schedule: Schedule<any>): Observable<void> {

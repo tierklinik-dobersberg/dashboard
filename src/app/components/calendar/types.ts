@@ -1,6 +1,6 @@
 import {TimeFrame} from '../../openinghours.service';
 import * as moment from 'moment';
-import { RostaScheduleType } from 'src/app/rosta.service';
+import { RosterScheduleType } from 'src/app/roster.service';
 
 /** DateSpan represents a span between days */
 export interface DateSpan {
@@ -42,17 +42,17 @@ export interface DateSpan {
   }
   
   /**
-   * Schedule is a generic for something that should be displayed in the rosta
+   * Schedule is a generic for something that should be displayed in the roster
    */
   export interface Schedule<T> extends DaySection<T> {
     /** A list of attendees for this schedule */
     attendees: Attendee<any>[];
     
-    type: RostaScheduleType;
+    type: RosterScheduleType;
   }
   
   /**
-   * Configuration for a calendar day to be rendered at the rosta
+   * Configuration for a calendar day to be rendered at the roster
    */
   export interface CalendarDay {
     /** The date this calendar day is abount */
