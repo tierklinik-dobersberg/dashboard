@@ -38,7 +38,7 @@
           <img  
              *ngIf="user.type === type"
              class="user-avatar"
-             [alt]="user.username"
+             [alt]="user.firstname + '' + user.lastname"
              [src]="user.icon || 'not-found'"
              [matTooltip]="user.firstname + ' ' + user.lastname"
              matTooltipPosition="before"/>
