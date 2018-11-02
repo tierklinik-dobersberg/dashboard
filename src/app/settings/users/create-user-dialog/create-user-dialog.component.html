@@ -56,7 +56,7 @@
 
     <mat-checkbox  *ngIf="_editorIsAdmin" [(ngModel)]="_isAdmin" name="role">Administrator</mat-checkbox>
     <br >
-    <mat-checkbox  *ngIf="_editorIsAdmin" [(ngModel)]="_mustChangePassword" name="must-change-password">Benutzer muss Passwort ändern</mat-checkbox>
+    <mat-checkbox  *ngIf="_editorIsAdmin && !_isCurrentUser" [(ngModel)]="_mustChangePassword" name="must-change-password">Benutzer muss Passwort ändern</mat-checkbox>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>

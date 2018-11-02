@@ -23,6 +23,8 @@ export class CreateUserDialogComponent implements OnInit {
   _phoneNumber: string;
   _mailAddress: string;
   _mustChangePassword: boolean = true;
+  
+  _isCurrentUser: boolean = false;
 
   _icon: string = '';
   _editorIsAdmin = false;
@@ -39,6 +41,8 @@ export class CreateUserDialogComponent implements OnInit {
     this._editorIsAdmin = this._loginService.currentUser.role === 'admin';
     
     if (!!this._userToEdit) {
+      this._isCurrentUser = this._loginService.currentUser.username === this._userToEdit.username;
+      
       this._username = this._userToEdit.username;
       this._type = this._userToEdit.type;
       this._isAdmin = this._userToEdit.role === 'admin';
