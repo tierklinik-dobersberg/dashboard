@@ -6,10 +6,11 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { combineLatest, map } from 'rxjs/operators';
 import { CreateRostaScheduleComponent, CreateRostaScheduleConfig } from 'src/app/dialogs/create-rosta-schedule/create-rosta-schedule.component';
 import { OpeningHoursService, Time } from 'src/app/openinghours.service';
-import { RostaService } from 'src/app/rosta.service';
+import { RostaService, RostaScheduleType } from 'src/app/rosta.service';
 import { User, UsersService } from 'src/app/users.service';
 import { CalendarDay, CalendarSource, CalendarViewer, DateSpan, Schedule, TdCalendarClickEvent, TdCalendarComponent } from '../calendar';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { HypnoloadService } from '../hypnoload/hypnoload.service';
 
 interface DateSchedule {
   schedule: Schedule<any>;
@@ -17,12 +18,16 @@ interface DateSchedule {
 }
 
 interface UserWithHours extends User {
-  hours: number;
+  hours: {
+    total: number;
+    perType: {type: RostaScheduleType, hours: number}[],
+  };
 }
 
 export class RostaSource implements CalendarSource {
   constructor(private _service: OpeningHoursService,
               private _reload: Observable<void>,
+              private _loader: HypnoloadService,
               private _schedules: (span: DateSpan) => Observable<DateSchedule[]>) {}
   
   connect(viewer: CalendarViewer): Observable<CalendarDay[]> {
@@ -30,6 +35,9 @@ export class RostaSource implements CalendarSource {
       const sub = viewer.viewChange
         .pipe(combineLatest(this._reload))
         .subscribe(([span]) => {
+          
+          this._loader.show();
+
           this._service.getConfig()
           .pipe(
             combineLatest(this._schedules(span)),
@@ -56,6 +64,10 @@ export class RostaSource implements CalendarSource {
                 });
               }
     
+              // make sure we show the loader at least for ~250ms
+              // to prevent flickering if the response was that quick
+              setTimeout(() => this._loader.hide(), 250);
+              
               return result;
             })
           )
@@ -112,8 +124,9 @@ export class RostaComponent implements OnInit, AfterViewInit {
   
   _highlightedUser: string | null = null;
   _selecetedUser: string | null = null;
-
+  _types: RostaScheduleType[] = [];
   _showSideBar = false;
+  _filteredType: 'all'|number = 'all';
 
   private _reload: BehaviorSubject<void> = new BehaviorSubject(null);
   private _schedules: DateSchedule[] = [];
@@ -122,6 +135,7 @@ export class RostaComponent implements OnInit, AfterViewInit {
 
   constructor(private _openingHourService: OpeningHoursService,
               private _userService: UsersService,
+              private _loader: HypnoloadService,
               private _changeDetectorRef: ChangeDetectorRef,
               private _rostaService: RostaService,
               private _dialog: MatDialog) { }
@@ -161,14 +175,20 @@ export class RostaComponent implements OnInit, AfterViewInit {
         )
     }
     
-    this.calendarSource = new RostaSource(this._openingHourService, this._reload, load);
+    this.calendarSource = new RostaSource(this._openingHourService, this._reload, this._loader, load);
       
+    this._rostaService.getTypes()
+      .subscribe(types => this._types = types);
+    
     this._userService.listUsers()
       .subscribe(users => {
         this._users = users.filter(user => user.type !== 'other').map(user => {
           return {
             ...user,
-            hours: 0,
+            hours: {
+              total: 0,
+              perType: []
+            },
           }
         });
       });
@@ -177,6 +197,10 @@ export class RostaComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
   }
   
+  _filterType(type: number|'all') {
+    console.log(`filtering by ${type}`);
+  }
+
   _trackUser(_: number, user: User) {
     return user.username;
   }
@@ -224,12 +248,16 @@ export class RostaComponent implements OnInit, AfterViewInit {
     return !schedule.attendees.some(at => at.name === this._highlightedUser);
   }
   
-  _containsSelectedUser(schedule: Schedule<any>) {
-    if (this._selecetedUser === null) {
+  _containsSelectedUserOrType(schedule: Schedule<any>) {
+    if (schedule.type.id !== this._filteredType && this._filteredType !== 'all') {
       return false;
     }
     
-    return !schedule.attendees.some(at => at.name === this._selecetedUser);
+    if (this._selecetedUser === null) {
+      return true;
+    }
+    
+    return schedule.attendees.some(at => at.name === this._selecetedUser);
   }
 
   _realignCalendar() {
@@ -331,21 +359,35 @@ export class RostaComponent implements OnInit, AfterViewInit {
 
   private _updateUsers() {
     this._users = this._users.map(user => {
-      let hours = 0;
+      let total = 0;
+      let perType: UserWithHours['hours']['perType'] = [];
+
 
       this._schedules.forEach(sched => {
         if (!(moment(sched.date).isSameOrAfter(this._calendar.currentDateSpan.startDate) && moment(sched.date).isSameOrBefore(this._calendar.currentDateSpan.endDate))) {
           return;
         }
         
+        if (!perType.find(p => p.type.id === sched.schedule.type.id)) {
+          perType.push({
+            type: sched.schedule.type,
+            hours: 0
+          });
+        }
+        
+        perType.find(p => p.type.id === sched.schedule.type.id)!.hours++;
+        
         if (sched.schedule.attendees.find(at => at.name === user.username)) {
-          hours += (sched.schedule.end.totalMinutes - sched.schedule.start.totalMinutes) / 60;
+          total += (sched.schedule.end.totalMinutes - sched.schedule.start.totalMinutes) / 60;
         }
       })
 
       return {
         ...user,
-        hours: hours,
+        hours: {
+          total,
+          perType
+        }
       }
     });
   }

@@ -13,6 +13,8 @@ export class UsertypePipe implements PipeTransform {
       return 'Assistent';
     case 'other':
       return 'Benutzer';
+    case 'all':
+      return 'Alle'
     }
   }
 

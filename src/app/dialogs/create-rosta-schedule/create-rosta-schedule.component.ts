@@ -1,18 +1,23 @@
-import { Component, OnInit, HostBinding, Inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SelectAttendeesDialogComponent, SelectAttendeesConfiguration } from '../select-attendees-dialog/select-attendees-dialog.component';
-import { User, UsersService } from '../../users.service';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { Component, HostBinding, Inject, OnInit } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
-import { Schedule } from '../../components/calendar';
 import { Time } from 'src/app/openinghours.service';
-import { RostaService, RostaScheduleType } from 'src/app/rosta.service';
+import { RostaScheduleType, RostaService } from 'src/app/rosta.service';
+import { Schedule } from '../../components/calendar';
+import { User, UsersService } from '../../users.service';
 
 export interface CreateRostaScheduleConfig {
   date: Date;
   end?: Date;
   schedule?: Schedule<any>;
   disallowedUsers: string[];
+}
+
+interface SelectableUser extends User {
+  selected: boolean;
 }
 
 @Component({
@@ -29,6 +34,10 @@ export class CreateRostaScheduleComponent implements OnInit {
   _currentDate: string;
   _types: RostaScheduleType[];
   _type: number;
+  _filterType: string = 'all';
+  _users: SelectableUser[] = [];
+
+  _isLastStep: boolean = false;
   
   _selectedAttendees: User[] = [];
 
@@ -54,20 +63,10 @@ export class CreateRostaScheduleComponent implements OnInit {
       this._from = this._config.schedule.start.toString();
       this._to = this._config.schedule.end.toString();
       this._type = this._config.schedule.type.id;
-      
-      this._userService.listUsers()
-        .subscribe(users => {
-          this._selectedAttendees = users.filter(user => this._config.schedule.attendees.some(at => at.name === user.username))
-        });
     }
     
-    this._rostaService.getTypes()
-      .subscribe(types => {
-        this._types = types;
-        if (this._type === undefined) {
-          this._type = types[0].id;
-        }
-      });
+    this._loadTypes();
+    this._loadUsers();
     
     this._breakpointObserver.observe([
       Breakpoints.Handset,
@@ -78,13 +77,66 @@ export class CreateRostaScheduleComponent implements OnInit {
     });
   }
 
+  private _loadUsers() {
+    this._userService.listUsers()
+        .subscribe(users => {
+          if (!!this._config.schedule) {
+            this._selectedAttendees = users.filter(user => this._config.schedule.attendees.some(at => at.name === user.username))
+          }
+          
+          this._users = users
+            .map(user => ({
+              ...user,
+              selected: this._selectedAttendees.find(at => at.username === user.username) !== undefined
+            }))
+            .filter(user => {
+              if (this._filterType === 'all') {
+                return true;
+              }
+              
+              return user.type === this._filterType;
+            });
+        });
+  }
+  
+  private _loadTypes() {
+    this._rostaService.getTypes()
+      .subscribe(types => {
+        this._types = types;
+        if (this._type === undefined) {
+          this._type = types[0].id;
+        }
+      });
+  }
+
+  _stepChanged(event: StepperSelectionEvent) {
+    this._isLastStep = event.selectedIndex === 1;
+  }
+
   _trackUser(_: number, user: User) {
     return user.username;
+  }
+  
+  _toggleUser(user: SelectableUser, event: MatCheckboxChange) {
+    console.log(`toggling user ${user.username} to ${event.checked}`);
+    user.selected = event.checked;
+    
+    if (!user.selected) {
+      let idx = this._selectedAttendees.findIndex(at => at.username === user.username);
+      if (idx > -1) {
+        this._selectedAttendees.splice(idx, 1);
+      }
+    }
+    
+    if (user.selected && this._selectedAttendees.find(at => at.username === user.username) === undefined) {
+      this._selectedAttendees.push(user);
+    }
   }
 
   _save() {
     let start = new Time(this._from);
     let end = new Time(this._to);
+    console.log(this._selectedAttendees);
     this._dialogRef.close({
       attendees: this._selectedAttendees.map(user => ({name: user.username})),
       start: start,
@@ -93,23 +145,5 @@ export class CreateRostaScheduleComponent implements OnInit {
       id: !!this._config.schedule ? this._config.schedule.id : null,
       type: this._types.find(type => type.id === this._type)
     });
-  }
-
-  _addAttendees() {
-    let config: SelectAttendeesConfiguration = {
-        selectedUsers: this._selectedAttendees.map(u => u.username),
-        disallowedUsers: this._config.disallowedUsers,
-    }
-    this._dialog.open(SelectAttendeesDialogComponent, {
-      data: config
-    })
-      .afterClosed()
-      .subscribe(users => {
-        if (!users) {
-          return;
-        }
-
-        this._selectedAttendees = users;
-      });
   }
 }

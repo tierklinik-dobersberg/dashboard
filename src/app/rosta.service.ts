@@ -7,6 +7,7 @@ import { User } from './users.service';
 
 export interface RostaScheduleType {
   id: number;
+  color: string;
   type: string;
 }
 

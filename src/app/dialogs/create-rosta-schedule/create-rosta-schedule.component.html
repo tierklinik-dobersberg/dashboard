@@ -1,37 +1,54 @@
-<div class="create-schedule-container" [class.handset]="_handset">
+<div class ="create-schedule-container">
   <p mat-dialog-title>Diensteinteilung - {{_currentDate}}</p>
   <mat-dialog-content>
-    <div class="time-selection">
-      <div class="time-frame">
-          <mat-form-field class="time">
-            <input matInput type="time" [(ngModel)]="_from" lang="de" name="fromHour" required placeholder="Von" value="00:00">
+    <mat-horizontal-stepper #stepper linear="false" #stepper (selectionChange)="_stepChanged($event)">
+      <mat-step>
+        <ng-template matStepLabel>Dienst</ng-template>
+        <div class="time-selection">
+          <div class="time-frame">
+              <mat-form-field class="time">
+                <input matInput type="time" [(ngModel)]="_from" lang="de" name="fromHour" required placeholder="Von" value="00:00">
+              </mat-form-field>
+              <mat-form-field class="time">
+                <input matInput type="time" [(ngModel)]="_to" name="toMinute" lang="de" required placeholder="Bis" value="00:00">
+              </mat-form-field>
+          </div>
+        </div>
+        <div class="type-selection">
+          <mat-form-field>
+            <mat-select placeholder="Dienstart" [(ngModel)]="_type">
+              <mat-option *ngFor="let type of _types" [value]="type.id">
+                <span [style.background-color]="type.color" class="type-color"></span> {{type.type}}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
-          <mat-form-field class="time">
-            <input matInput type="time" [(ngModel)]="_to" name="toMinute" lang="de" required placeholder="Bis" value="00:00">
-          </mat-form-field>
-      </div>
-    </div>
-    <div class="type-selection">
-      <mat-form-field>
-        <mat-select placeholder="Dienstart" [(ngModel)]="_type">
-          <mat-option *ngFor="let type of _types" [value]="type.id">
-            <span [style.background-color]="type.color" class="type-color"></span> {{type.type}}
-          </mat-option>
+        </div>
+      </mat-step>
+      
+      <mat-step>
+        <ng-template matStepLabel>Personal</ng-template>
+        <mat-select placeholder="Benutzertypen" [(ngModel)]="_filterType" (ngModelChange)="_loadUsers()">
+          <mat-option *ngFor="let type of ['doctor', 'assistent', 'all']" [value]="type">{{type | usertype}}</mat-option>
         </mat-select>
-      </mat-form-field>
-    </div>
-    <div class="attendees-selection">
-      <mat-list>
-        <mat-list-item *ngFor="let user of _selectedAttendees; trackBy: _trackUser">
-            <h4 mat-line>{{user.username}}</h4>
-            <p mat-line>{{user.type | usertype}}</p>
-        </mat-list-item>
-      </mat-list> 
-    </div>
-    <button mat-button color="primary" (click)="_addAttendees()">Personal editieren</button>
+
+        <div class="attendees">
+          <mat-list>
+              <mat-list-item *ngFor="let user of _users; trackBy: _trackUser">
+                <div class="list-item">
+                  <mat-checkbox [checked]="user.selected" (change)="_toggleUser(user, $event)">{{user.username}}</mat-checkbox>
+                  <span class="type">{{user.type | usertype}}</span>
+                </div>
+              </mat-list-item>
+            </mat-list>   
+          </div>
+          
+      </mat-step> 
+    </mat-horizontal-stepper>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-button matDialogClose>Abbrechen</button>
-    <button mat-button (click)="_save()">OK</button>
+    <button mat-button (click)="stepper.previous()">Zurück</button>
+    <button *ngIf="!_isLastStep" mat-button (click)="stepper.next()">Weiter</button>
+    <button *ngIf="_isLastStep" mat-button (click)="_save()">OK</button>
   </mat-dialog-actions>
 </div>

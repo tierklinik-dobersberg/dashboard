@@ -43,7 +43,6 @@ import { RolePipe } from './settings/users/role.pipe';
 import { UsertypePipe } from './settings/users/usertype.pipe';
 import { ConfirmationComponent } from './dialogs/confirmation/confirmation.component';
 import { TdCalendarComponent, TdDaySectionDef, TdDayScheduleDef} from './components/calendar';
-import { SelectAttendeesDialogComponent } from './dialogs/select-attendees-dialog/select-attendees-dialog.component';
 import { CreateRostaScheduleComponent } from './dialogs/create-rosta-schedule/create-rosta-schedule.component';
 import { RostaComponent } from './components/rosta/rosta.component';
 import { CropImageDialogComponent } from './dialogs/crop-image-dialog/crop-image-dialog.component';
@@ -53,6 +52,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { ChangePasswordDialogComponent } from './dialogs/change-password-dialog/change-password-dialog.component';
 import { RostaTypesComponent } from './settings/rosta-types/rosta-types.component';
 import { RostaTypeDialogComponent } from './dialogs/rosta-type-dialog/rosta-type-dialog.component';
+import { HypnoloadComponent } from './components/hypnoload/hypnoload.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -75,7 +75,6 @@ registerLocaleData(localeDe, 'de');
     TdCalendarComponent,
     TdDaySectionDef,
     TdDayScheduleDef,
-    SelectAttendeesDialogComponent,
     CreateRostaScheduleComponent,
     RostaComponent,
     CropImageDialogComponent,
@@ -84,6 +83,7 @@ registerLocaleData(localeDe, 'de');
     ChangePasswordDialogComponent,
     RostaTypesComponent,
     RostaTypeDialogComponent,
+    HypnoloadComponent,
   ],
   imports: [
     BrowserModule,
@@ -127,7 +127,6 @@ registerLocaleData(localeDe, 'de');
     TimeFrameDialogComponent,
     CreateUserDialogComponent,
     ConfirmationComponent,
-    SelectAttendeesDialogComponent,
     CreateRostaScheduleComponent,
     CropImageDialogComponent,
     ChangePasswordDialogComponent,

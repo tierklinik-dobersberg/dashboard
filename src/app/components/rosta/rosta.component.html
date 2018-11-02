@@ -7,30 +7,73 @@
       <button mat-button (click)="calendar.openTodaysWeek()">{{calendar.currentTimeSpan}}</button>
       <button mat-icon-button (click)="calendar.openPrevWeek()"><mat-icon>keyboard_arrow_left</mat-icon></button>
       <button mat-icon-button (click)="calendar.openNextWeek()"><mat-icon>keyboard_arrow_right</mat-icon></button>
-      <button mat-icon-button (click)="_toggleSideBar()" matTooltip="Personal anzeigen/schließen" matTooltipPosition="before"><mat-icon>filter_list</mat-icon></button>
+      <button mat-icon-button (click)="snav.toggle()" matTooltip="Personal anzeigen/schließen" matTooltipPosition="before"><mat-icon>settings</mat-icon></button>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>
 
 <div class="calendar-container">
-  <td-calendar #calendar="tdCalendar" [allowClick]="!readonly" [source]="calendarSource" (onClick)="_createSchedule($event)">
-    <div class="opening-hours" *tdDaySectionDef="let frame">
-        <span class="start-time">{{frame.start}}</span>
-        <span class="end-time">{{frame.end}}</span>
-    </div>
+    <mat-sidenav-container>
 
-    <div *tdDayScheduleDef="let schedule" class="schedule" [class.fade-out]="_shouldBeGray(schedule)" [class.hidden]="_containsSelectedUser(schedule)">
-      <div class="schedule-color" [style.background]="schedule.type.color"></div>
-      <div class="attendees">
-        <div *ngFor="let attendee of schedule.attendees">
-          <img class="user-avatar" [src]="attendee.data.icon" [matTooltip]="attendee.name" matTooltipPosition="after" matTooltipClass="tooltip" />
-          <span class="name">{{attendee.name}}</span>
-        </div>
-      </div>
-      <span class="start-time">{{schedule.start}}</span>
-      <span class="end-time">{{schedule.end}}</span>
-    </div>
-  </td-calendar>
+      <mat-sidenav #snav mode="side" class="sidebar" position="end">
+          <div class="sidebar-container">
+            <div class="sidebar-header">
+              <mat-select [(ngModel)]="_filteredType" placeholder="Dienste" class="type-selection">
+                <mat-option value="all">Alle Dienste</mat-option>
+                <mat-option *ngFor="let type of _types" [value]="type.id">
+                  <span class="type-color" [style.background-color]="type.color"></span>{{type.type}}
+                </mat-option>
+              </mat-select>
+            </div>
+            
+            <div class="sidebar-header">
+              <h4>Personal</h4>
+            </div> 
+            <div class="sidebar-content">
+              <mat-list>
+                <mat-list-item class="user-details" *ngFor="let user of _users; trackBy: _trackUser"
+                  (click)="_toggleSelectedUser(user)"
+                  [class.selected]="_selecetedUser === user.username"
+                  (mouseenter)="_highlightUser(user)" (mouseleave)="_highlightUser(null)">
+      
+                  <img class="user-avatar" [src]="user.icon" mat-list-icon />
+                  <h4 mat-line>{{user.username}} <span class="hours" *ngIf="!readonly">{{(user.hours.total | number:'1.0-1')}}/{{user.hoursPerWeek}}</span></h4>
+                  <p *ngIf="!readonly" class="hours-bar-container" mat-line>
+                    <span *ngIf="user.hoursPerWeek >= user.hours.total" [style.width.%]="(100 / user.hoursPerWeek) * user.hours.total"
+                          class="hours-bar"></span>
+                          
+                    <span *ngIf="user.hoursPerWeek < user.hours.total" [style.width.%]="(100 / user.hours.total) * user.hoursPerWeek"
+                        class="hours-bar"></span>
+                    <span *ngIf="user.hoursPerWeek < user.hours.total" [style.width.%]="(100 / user.hours.total) * (user.hours.total - user.hoursPerWeek)" class="too-much-hours-bar"></span>
+                  </p>
+                </mat-list-item>
+              </mat-list>
+            </div>
+          </div>
+      </mat-sidenav>
+
+      <mat-sidenav-content>
+        <td-calendar #calendar="tdCalendar" [allowClick]="!readonly" [source]="calendarSource" (onClick)="_createSchedule($event)">
+            <div class="opening-hours" *tdDaySectionDef="let frame">
+                <span class="start-time">{{frame.start}}</span>
+                <span class="end-time">{{frame.end}}</span>
+            </div>
+        
+            <div *tdDayScheduleDef="let schedule" class="schedule" [class.fade-out]="_shouldBeGray(schedule)" [class.hidden]="!_containsSelectedUserOrType(schedule)">
+              <div class="schedule-color" [style.background]="schedule.type.color"></div>
+              <div class="attendees">
+                <div *ngFor="let attendee of schedule.attendees">
+                  <img class="user-avatar" [src]="attendee.data.icon" [matTooltip]="attendee.name" matTooltipPosition="after" matTooltipClass="tooltip" />
+                  <span class="name">{{attendee.name}}</span>
+                </div>
+              </div>
+              <span class="start-time">{{schedule.start}}</span>
+              <span class="end-time">{{schedule.end}}</span>
+            </div>
+          </td-calendar>
+      </mat-sidenav-content>
+
+    </mat-sidenav-container>
 
   <ng-template #editOrNewMenu>
     <div class="decision-menu" tabindex="0">
@@ -39,33 +82,4 @@
       <button mat-button matDialogClose (click)="_deleteSchedule()">Löschen</button>
     </div>
   </ng-template>
-
-
-  <div class="sidebar" *ngIf="_showSideBar" [@slideIn]>
-    <div class="sidebar-container">
-      <div class="sidebar-header">
-        <h4>Personal</h4>
-      </div> 
-      <div class="sidebar-content">
-        <mat-list>
-          <mat-list-item class="user-details" *ngFor="let user of _users; trackBy: _trackUser"
-            (click)="_toggleSelectedUser(user)"
-            [class.selected]="_selecetedUser === user.username"
-            (mouseenter)="_highlightUser(user)" (mouseleave)="_highlightUser(null)">
-
-            <img class="user-avatar" [src]="user.icon" mat-list-icon />
-            <h4 mat-line>{{user.username}} <span class="hours" *ngIf="!readonly">{{(user.hours | number:'1.0-1')}}/{{user.hoursPerWeek}}</span></h4>
-            <p *ngIf="!readonly" class="hours-bar-container" mat-line [matTooltip]="(user.hours | number:'1.0-1') + ' von ' + user.hoursPerWeek + 'h/Woche'" matTooltipPosition="below" matTooltipClass="tooltip">
-              <span *ngIf="user.hoursPerWeek >= user.hours" [style.width.%]="(100 / user.hoursPerWeek) * user.hours"
-                    class="hours-bar"></span>
-                    
-              <span *ngIf="user.hoursPerWeek < user.hours" [style.width.%]="(100 / user.hours) * user.hoursPerWeek"
-                  class="hours-bar"></span>
-              <span *ngIf="user.hoursPerWeek < user.hours" [style.width.%]="(100 / user.hours) * (user.hours - user.hoursPerWeek)" class="too-much-hours-bar"></span>
-            </p>
-          </mat-list-item>
-        </mat-list>
-      </div>
-    </div>
-  </div>
 </div>
