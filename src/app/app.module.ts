@@ -57,6 +57,8 @@ import { RosterWidgetComponent } from './widgets/roster-widget/roster-widget.com
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { IntegrationComponent } from './settings/integration';
 import { UpcomingEventsComponent } from './widgets/upcoming-events/upcoming-events.component';
+import { CalendarComponent } from './settings/calendar/calendar.component';
+import { CreateCalendarDialogComponent } from './dialogs/create-calendar-dialog/create-calendar-dialog.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -91,7 +93,9 @@ registerLocaleData(localeDe, 'de');
     RosterWidgetComponent,
     DashboardComponent,
     IntegrationComponent,
-    UpcomingEventsComponent
+    UpcomingEventsComponent,
+    CalendarComponent,
+    CreateCalendarDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -138,7 +142,8 @@ registerLocaleData(localeDe, 'de');
     CreateRosterScheduleComponent,
     CropImageDialogComponent,
     ChangePasswordDialogComponent,
-    RosterTypeDialogComponent
+    RosterTypeDialogComponent,
+    CreateCalendarDialogComponent
   ]
 })
 export class AppModule { }

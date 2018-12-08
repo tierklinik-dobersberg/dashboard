@@ -1,0 +1,42 @@
+<div *ngIf="!_enabled; else: calendarSettings" class="disabled-settings">
+  <p>Kein Google Account gefunden. Bitte konfiguriere zu erst einen unter "Integration"</p>
+</div>
+
+<ng-template #calendarSettings>
+
+  <mat-toolbar>
+    <mat-toolbar-row>
+        <button class="create-button" mat-button color="primary" (click)="_createNew()">Neuer Kalender</button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+
+  <table mat-table [dataSource]="_calendars" [trackBy]="_trackCalendar" class="mat-elevation-z2">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let calendar">
+        <span class="type-color" [style.background-color]="calendar.backgroundColor"></span>
+        {{calendar.name}}
+      </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="accountname">
+      <th mat-header-cell *matHeaderCellDef> Google Account </th>
+      <td mat-cell *matCellDef="let calendar">
+        {{_accountName}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef style="width: 100px; text-align: right;"></th>
+      <td mat-cell *matCellDef="let calendar">
+        <button mat-icon-button color="primary" (click)="_editCalendar(calendar)"><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button color="primary" (click)="_deleteCalendar(calendar)"><mat-icon>delete</mat-icon></button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['name', 'accountname', 'action']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['name', 'accountname', 'action'];"></tr>
+  </table>
+
+</ng-template>

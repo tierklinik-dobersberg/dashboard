@@ -1,0 +1,33 @@
+mat-toolbar {
+    button {
+        text-transform: uppercase;
+    }
+}
+
+.disabled-settings {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    
+    p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+.type-color {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+table {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+}

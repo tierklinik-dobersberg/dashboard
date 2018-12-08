@@ -3,6 +3,7 @@ import { RosterScheduleType, RosterService } from 'src/app/roster.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RosterTypeDialogComponent } from 'src/app/dialogs/roster-type-dialog/roster-type-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationComponent } from 'src/app/dialogs/confirmation/confirmation.component';
 
 @Component({
   selector: 'cl-roster-types',
@@ -34,9 +35,20 @@ export class RosterTypesComponent implements OnInit {
       this._snackBar.open('Die letzte Dienstart kann nicht gelöscht werden', undefined, {duration: 2000});
       return;
     }
+
+    this._dialog.open(ConfirmationComponent, {
+      data: {
+        title: type.type,
+        message: 'Solle diese Dienstart wirklich gelöscht werden? Alle Dienstplan Einträge von diesem Type werden ebenfalls gelöscht'
+      }
+    }).afterClosed()
+      .subscribe(res => {
+        if (!!res) {
+          this._rosterService.deleteType(type.id)
+            .subscribe(() => this._loadTypes());
+        }
+      })
     
-    this._rosterService.deleteType(type.id)
-      .subscribe(() => this._loadTypes());
   }
   
   _createType() {

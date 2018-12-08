@@ -1,0 +1,27 @@
+<div class ="create-calendar-container">
+  <p mat-dialog-title>Neuer Google Kalender</p>
+  
+<form (ngSubmit)="_save()">
+  <mat-dialog-content>
+    <mat-form-field>
+      <input matInput placeholder="Name" name="name" required [(ngModel)]="_name">
+    </mat-form-field>
+    
+    <mat-form-field>
+      <input matInput name="backgroundColor" [(colorPicker)]="_backgroundColor" [style.background-color]="_backgroundColor" placeholder="Hintergrundfarbe auswählen" [ngModel]="_backgroundColor">
+    </mat-form-field>
+    
+    <mat-form-field>
+      <mat-select placeholder="Google Kalender" name="calendar" required [(ngModel)]="_accountId">
+        <mat-option [value]="_accountId">{{_accountName}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+  </mat-dialog-content>
+</form>
+  
+  <mat-dialog-actions>
+    <button mat-button matDialogClose>Abbrechen</button>
+    <button mat-button (click)="_save()">OK</button>
+  </mat-dialog-actions>
+</div>

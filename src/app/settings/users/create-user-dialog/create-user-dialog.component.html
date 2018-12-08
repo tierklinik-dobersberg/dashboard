@@ -50,7 +50,7 @@
       <mat-select placeholder="Google Kalender" name="calendar" [(ngModel)]="_calendarId">
         <mat-option value="">Kein Kalender</mat-option>
         <mat-option *ngFor="let option of _calendars" [value]="option.id">
-            <span [style.background-color]="option.color" class="type-color"></span>{{option.name}}
+            <span [style.background-color]="option.backgroundColor" class="type-color"></span>{{option.name}}
         </mat-option>
       </mat-select>
     </mat-form-field>

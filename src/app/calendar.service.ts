@@ -8,7 +8,8 @@ import * as moment from 'moment';
 export interface CalendarListEntry {
     id: string;
     name: string;
-    color: string;
+    backgroundColor: string;
+    foregroundColor: string;
 }
 
 export interface CalendarEvent {
@@ -26,6 +27,27 @@ export class CalendarService {
     
     listCalendars(): Observable<CalendarListEntry[]> {
         return this._http.get<CalendarListEntry[]>('/api/calendar/');
+    }
+
+    createCalendar(name: string, backgroundColor: string, foregroundColor: string): Observable<void> {
+        return this._http.post<void>('/api/calendar/', {
+            name,
+            backgroundColor,
+            foregroundColor
+        });
+    }
+
+    
+    updateCalendar(id: string, name: string, backgroundColor: string, foregroundColor: string): Observable<void> {
+        return this._http.put<void>(`/api/calendar/${id}`, {
+            name,
+            backgroundColor,
+            foregroundColor
+        });
+    }
+    
+    deleteCalendar(id: string): Observable<void> {
+        return this._http.delete<void>(`/api/calendar/${id}`);
     }
     
     listEvents(ids: string[], from?: Date, to?: Date): Observable<CalendarEvent[]> {
