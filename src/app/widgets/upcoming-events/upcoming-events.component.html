@@ -12,7 +12,7 @@
       </div>
       
       <mat-list *ngIf="_events.length > 0">
-        <mat-list-item *ngFor="let event of _events; trackBy: _trackEvent" [style.border-color]="_calendards.get(event.calendarId).color">
+        <mat-list-item *ngFor="let event of _events; trackBy: _trackEvent" [style.border-color]="_calendards.get(event.calendarId).backgroundColor">
           <h4 mat-line>
             <span class="start-time" [matTooltip]="_calendards.get(event.calendarId).name">{{event.start.format('HH:mm')}}</span>
             {{event.summary}}
