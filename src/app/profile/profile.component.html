@@ -25,6 +25,10 @@
       <span>E-Mail Adresse</span>
       <span>{{_user?.mailAddress}}</span>
     </div>
+    <div class="section-content" *ngIf="!!_calendarName">
+      <span>Google Kalendar</span>
+      <span>{{_calendarName}}</span>
+    </div>
     <div class="section-content">
       <span>Telefonnummber</span>
       <span>{{_user?.phoneNumber}}</span>

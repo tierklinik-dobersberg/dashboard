@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateUserDialogComponent } from '../settings/users/create-user-dialog/create-user-dialog.component';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog.component';
+import { CalendarService } from '../calendar.service';
 
 @Component({
   selector: 'cl-profile',
@@ -16,15 +17,32 @@ export class ProfileComponent implements OnInit, OnDestroy {
   private _userSubscription: Subscription = Subscription.EMPTY;
 
   _user: User;
+  _calendarName: string;
   
   constructor(private _loginService: LoginService,
               private _userService: UsersService,
               private _dialog: MatDialog,
+              private _calendarService: CalendarService,
               private _changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this._userSubscription = this._loginService.user.subscribe(user => {
       this._user = user;
+      
+      if (!!user && !!user.googleCalendarID) {
+        this._calendarService.listCalendars()
+          .subscribe(list => {
+            const cal = list.find(cal => cal.id === user.googleCalendarID);
+            
+            if (!cal) {
+              return;
+            }
+            
+            this._calendarName = cal.name;
+            this._changeDetectorRef.markForCheck();
+          }, err => {});
+      }
+
       this._changeDetectorRef.markForCheck();
     });
   }
@@ -57,6 +75,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         result.lastname,
         result.phoneNumber,
         result.mailAddress,
+        result.googleCalendarID
       ).subscribe();
     })
   }

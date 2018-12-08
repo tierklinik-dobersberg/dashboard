@@ -1,0 +1,35 @@
+.create-event-container {
+    min-width: 30vw;
+}
+
+mat-form-field {
+    width: 100%;
+    display: block;
+}
+
+.type-selection {
+    mat-form-field {
+        display: block;
+        width: 100%;
+    }
+}
+
+span.type-color {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+
+.time-selection {
+    .time-frame {
+        display: flex;
+        justify-content: space-evenly;
+        
+        .time {
+            flex-grow: 1;
+        }
+    }
+}

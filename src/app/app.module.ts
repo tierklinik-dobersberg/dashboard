@@ -59,6 +59,7 @@ import { IntegrationComponent } from './settings/integration';
 import { UpcomingEventsComponent } from './widgets/upcoming-events/upcoming-events.component';
 import { CalendarComponent } from './settings/calendar/calendar.component';
 import { CreateCalendarDialogComponent } from './dialogs/create-calendar-dialog/create-calendar-dialog.component';
+import { CreateCalendarEventComponent } from './dialogs/create-calendar-event/create-calendar-event.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -95,7 +96,8 @@ registerLocaleData(localeDe, 'de');
     IntegrationComponent,
     UpcomingEventsComponent,
     CalendarComponent,
-    CreateCalendarDialogComponent
+    CreateCalendarDialogComponent,
+    CreateCalendarEventComponent
   ],
   imports: [
     BrowserModule,
@@ -143,7 +145,8 @@ registerLocaleData(localeDe, 'de');
     CropImageDialogComponent,
     ChangePasswordDialogComponent,
     RosterTypeDialogComponent,
-    CreateCalendarDialogComponent
+    CreateCalendarDialogComponent,
+    CreateCalendarEventComponent
   ]
 })
 export class AppModule { }

@@ -1,9 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import * as moment from 'moment';
-import { interval, Subscription } from 'rxjs';
-import { flatMap, startWith } from 'rxjs/operators';
+import { interval, Subscription, BehaviorSubject } from 'rxjs';
+import { flatMap, startWith, combineLatest } from 'rxjs/operators';
 import { CalendarEvent, CalendarListEntry, CalendarService } from 'src/app/calendar.service';
 import { User, UsersService } from 'src/app/users.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateCalendarEventComponent } from 'src/app/dialogs/create-calendar-event/create-calendar-event.component';
 
 @Component({
   selector: 'cl-upcoming-events',
@@ -16,10 +18,11 @@ export class UpcomingEventsComponent implements OnInit {
   _calendards: Map<string, CalendarListEntry> = new Map();
   _users: Map<string, User> = new Map();
   _events: CalendarEvent[] = [];
-  
+  _reload: BehaviorSubject<null> = new BehaviorSubject(null);
 
   constructor(private _calService: CalendarService,
               private _userService: UsersService,
+              private _dialog: MatDialog,
               private _changeDetector: ChangeDetectorRef) { }
 
   ngOnInit() {
@@ -44,6 +47,7 @@ export class UpcomingEventsComponent implements OnInit {
         this._sub = interval(20000)
           .pipe(
             startWith(-1),
+            combineLatest(this._reload),
             flatMap(() => {
               let ids: string[] = [];
               this._calendards.forEach(value => ids.push(value.id));
@@ -61,6 +65,17 @@ export class UpcomingEventsComponent implements OnInit {
     if (!!this._sub) {
       this._sub.unsubscribe();
     }
+  }
+
+  _createEvent() {
+    this._dialog.open(CreateCalendarEventComponent)
+      .afterClosed()
+      .subscribe(res => {
+        if (!!res) {
+          this._calService.createEvent(res.calendarId, res.title, res.description, res.from, res.to)
+            .subscribe(() => this._reload.next(null));
+        }
+      });
   }
   
   _trackEvent(idx: number, event: CalendarEvent) {

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import * as moment from 'moment';
+import { Time } from './openinghours.service';
 
 export interface CalendarListEntry {
     id: string;
@@ -37,6 +38,14 @@ export class CalendarService {
         });
     }
 
+    createEvent(calendarId: string, summary: string, description: string, from: Date, to: Date): Observable<void> {
+        return this._http.post<void>(`/api/calendar/${calendarId}/events`, {
+            summary: summary,
+            description: description,
+            start: from.getTime(),
+            end: to.getTime(),
+        });
+    }
     
     updateCalendar(id: string, name: string, backgroundColor: string, foregroundColor: string): Observable<void> {
         return this._http.put<void>(`/api/calendar/${id}`, {

@@ -1,0 +1,39 @@
+<div class ="create-event-container">
+    <p mat-dialog-title>Neuer Termin</p>
+    
+  <form (ngSubmit)="_save()">
+    <mat-dialog-content>
+      <mat-form-field>
+        <input matInput placeholder="Titel" name="titel" required [(ngModel)]="_title">
+      </mat-form-field>
+    </mat-dialog-content>
+
+    <div class="time-selection">
+        <div class="time-frame">
+            <mat-form-field class="time">
+              <input matInput type="time" [(ngModel)]="_from" lang="de" name="fromHour" required placeholder="Von" value="00:00">
+            </mat-form-field>
+            <mat-form-field class="time">
+              <input matInput type="time" [(ngModel)]="_to" name="toMinute" lang="de" required placeholder="Bis" value="00:00">
+            </mat-form-field>
+        </div>
+      </div>
+
+    <mat-form-field>
+      <textarea rows="5" name="description" matInput placeholder="Beschreibung" [(ngModel)]="_description"></textarea>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-select placeholder="Google Kalender" name="calendar" [(ngModel)]="_calendarId" required>
+          <mat-option *ngFor="let option of _calendars" [value]="option.id">
+              <span [style.background-color]="option.backgroundColor" class="type-color"></span>{{option.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+  </form>
+    
+    <mat-dialog-actions>
+      <button mat-button matDialogClose>Abbrechen</button>
+      <button mat-button (click)="_save()">Speichern</button>
+    </mat-dialog-actions>
+  </div>
