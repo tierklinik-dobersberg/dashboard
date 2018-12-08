@@ -62,6 +62,7 @@ export class UsersComponent implements OnInit {
           res.lastname,
           res.phoneNumber,
           res.mailAddress,
+          res.googleCalendarID,
           res.mustChangePassword)
           .subscribe(() => this._loadUsers());
       });
@@ -86,6 +87,7 @@ export class UsersComponent implements OnInit {
           res.lastname,
           res.phoneNumber,
           res.mailAddress,
+          res.googleCalendarID,
           res.mustChangePassword)
           .subscribe(() => this._loadUsers());
       });

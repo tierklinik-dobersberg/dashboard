@@ -3,6 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dial
 import { UserType, User } from 'src/app/users.service';
 import { CropImageDialogComponent } from 'src/app/dialogs/crop-image-dialog/crop-image-dialog.component';
 import { LoginService } from 'src/app/login.service';
+import { IntegrationService } from 'src/app/integration.service';
+import { CalendarService, CalendarListEntry } from 'src/app/calendar.service';
 
 // Unfortunately there are no typings for blueimp-load-image
 declare var loadImage: any;
@@ -23,7 +25,11 @@ export class CreateUserDialogComponent implements OnInit {
   _phoneNumber: string;
   _mailAddress: string;
   _mustChangePassword: boolean = true;
+  _calendarId: string = '';
+  _canUseGoolge: boolean = false;
   
+  _calendars: CalendarListEntry[] = [];
+
   _isCurrentUser: boolean = false;
 
   _icon: string = '';
@@ -35,11 +41,23 @@ export class CreateUserDialogComponent implements OnInit {
   constructor(private _dialogRef: MatDialogRef<CreateUserDialogComponent>,
               private _dialog: MatDialog,
               private _loginService: LoginService,
+              private _integrationService: IntegrationService,
+              private _calendarService: CalendarService,
               @Optional() @Inject(MAT_DIALOG_DATA) public _userToEdit?: User) { }
 
   ngOnInit() {
     this._editorIsAdmin = this._loginService.currentUser.role === 'admin';
     
+    this._integrationService.getGoogleAuthStatus()
+      .subscribe(res => {
+        this._canUseGoolge = res.authenticated;
+        
+        if (this._canUseGoolge) {
+          this._calendarService.listCalendars()
+            .subscribe(res => this._calendars = res);
+        }
+      });
+
     if (!!this._userToEdit) {
       this._isCurrentUser = this._loginService.currentUser.username === this._userToEdit.username;
       
@@ -53,6 +71,7 @@ export class CreateUserDialogComponent implements OnInit {
       this._mailAddress = this._userToEdit.mailAddress;
       this._phoneNumber = this._userToEdit.phoneNumber;
       this._mustChangePassword = this._userToEdit.mustChangePassword;
+      this._calendarId = this._userToEdit.googleCalendarID || '';
     }
   }
 
@@ -97,6 +116,7 @@ export class CreateUserDialogComponent implements OnInit {
       lastname: this._lastname,
       phoneNumber: this._phoneNumber,
       mailAddress: this._mailAddress,
+      googleCalendarID: this._calendarId,
       mustChangePassword: this._mustChangePassword
     }
     this._dialogRef.close(user);

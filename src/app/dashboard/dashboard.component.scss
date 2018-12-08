@@ -19,6 +19,11 @@
     margin-left: auto;
     margin-right: auto;
     
+    & .dashboard {
+        margin-top: 0px;
+        width: 100%;
+    }
+    
     grid-template-columns: repeat(var(--column-count), 1fr);
     grid-gap: 2rem;
     

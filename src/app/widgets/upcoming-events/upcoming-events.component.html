@@ -1,0 +1,29 @@
+<mat-card>
+
+    <mat-card-header>
+      <mat-card-title>Termine</mat-card-title>
+      <mat-card-subtitle>Die nächsten Termine für heute</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="no-events" *ngIf="_events.length === 0">
+        <mat-icon>done_all</mat-icon>
+        <span>Keine weiteren Termine für heute</span>
+      </div>
+      
+      <mat-list *ngIf="_events.length > 0">
+        <mat-list-item *ngFor="let event of _events; trackBy: _trackEvent" [style.border-color]="_calendards.get(event.calendarId).color">
+          <h4 mat-line>
+            <span class="start-time" [matTooltip]="_calendards.get(event.calendarId).name">{{event.start.format('HH:mm')}}</span>
+            {{event.summary}}
+            <span class="user">- {{_users.get(event.calendarId) ? _users.get(event.calendarId).username : _calendards.get(event.calendarId).name}}</span>
+          </h4>
+          <p mat-line *ngIf="!!event.description">{{event.description}}</p>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  
+    <mat-card-actions>
+      <button mat-button>Neuer Termin</button>
+    </mat-card-actions>
+  </mat-card>

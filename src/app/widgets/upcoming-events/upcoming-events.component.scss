@@ -1,0 +1,55 @@
+:host {
+    display: block;
+}
+
+mat-list-item {
+    h4[mat-line] {
+        font-size: 90%;
+    }
+
+    p[mat-line] {
+        color: gray;
+    }
+
+    border: none;
+    border-left: 2px solid;
+    border-bottom: 1px dashed;
+
+    .start-time {
+        font-weight: lighter;
+        padding-right: 10px;
+        display: inline-block;
+    }
+
+    .user {
+        font-weight: lighter;
+        padding-left: 10px;
+        font-size: 80%;
+        display: inline-block;
+    }
+}
+
+div.no-events {
+    display: block;
+    width: 100%;
+    text-align: center;
+    
+    mat-icon {
+        font-size: 30px;
+        height: 30px;
+        width: 30px;
+        vertical-align: text-bottom;
+        margin-right: 15px;
+        color: green;
+    }
+    
+    span {
+        display: inline-block;
+        height: 30px;
+        vertical-align: super;
+    }
+}
+
+mat-card-actions {
+    text-align: right;
+}

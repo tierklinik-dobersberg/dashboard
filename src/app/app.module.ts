@@ -55,6 +55,8 @@ import { RosterTypeDialogComponent } from './dialogs/roster-type-dialog/roster-t
 import { HypnoloadComponent } from './components/hypnoload/hypnoload.component';
 import { RosterWidgetComponent } from './widgets/roster-widget/roster-widget.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { IntegrationComponent } from './settings/integration';
+import { UpcomingEventsComponent } from './widgets/upcoming-events/upcoming-events.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -88,6 +90,8 @@ registerLocaleData(localeDe, 'de');
     HypnoloadComponent,
     RosterWidgetComponent,
     DashboardComponent,
+    IntegrationComponent,
+    UpcomingEventsComponent
   ],
   imports: [
     BrowserModule,

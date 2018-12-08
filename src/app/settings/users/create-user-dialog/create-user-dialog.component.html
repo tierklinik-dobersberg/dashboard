@@ -45,6 +45,15 @@
     <mat-form-field  *ngIf="_editorIsAdmin">
       <input matInput type="number" name="hours-per-week" required [(ngModel)]="_hoursPerWeek" placeholder="Stunden pro Woche">
     </mat-form-field>
+    
+    <mat-form-field *ngIf="_canUseGoolge">
+      <mat-select placeholder="Google Kalender" name="calendar" [(ngModel)]="_calendarId">
+        <mat-option value="">Kein Kalender</mat-option>
+        <mat-option *ngFor="let option of _calendars" [value]="option.id">
+            <span [style.background-color]="option.color" class="type-color"></span>{{option.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
     <mat-form-field *ngIf="_editorIsAdmin">
       <mat-select required placeholder="Benutzertyp" name="type" [(ngModel)]="_type">

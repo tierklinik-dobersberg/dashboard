@@ -19,6 +19,7 @@ export interface User {
   lastname?: string;
   mailAddress?: string;
   phoneNumber?: string;
+  googleCalendarID?: string;
   mustChangePassword?: boolean;
 }
 
@@ -45,6 +46,7 @@ export class UsersService {
              lastname?: string,
              phone?: string,
              mail?: string,
+             googleCalendarID?: string, 
              mustChangePassword?: boolean): Observable<void> {
     return this._http.post<void>(`/api/users/${name}`, {
       role: role,
@@ -58,6 +60,7 @@ export class UsersService {
       lastname: lastname,
       phoneNumber: phone,
       mailAddress: mail,
+      googleCalendarID: googleCalendarID,
       mustChangePassword: mustChangePassword
     });
   }
@@ -72,6 +75,7 @@ export class UsersService {
              lastname?: string,
              phone?: string,
              mail?: string,
+             googleCalendarID?: string,
              mustChangePassword?: boolean): Observable<void> {
     return this._http.put<void>(`/api/users/${name}`, {
       role: role,
@@ -84,6 +88,7 @@ export class UsersService {
       lastname: lastname,
       phoneNumber: phone,
       mailAddress: mail,
+      googleCalendarID: googleCalendarID,
       mustChangePassword: mustChangePassword
     }).pipe(
       tap(result => {

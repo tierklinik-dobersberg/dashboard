@@ -28,6 +28,14 @@ mat-form-field {
     float: right;
 }
 
+span.type-color {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
 .name-with-avatar {
     display: flex;
     width: 100%;

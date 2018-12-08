@@ -1,0 +1,42 @@
+
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            <h3>Google Account</h3>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="auth-block" *ngIf="_authenticated; else: authenticate">
+            <img [src]="_profile.picture" class="user-avatar">
+            <div class="profile-name">
+                <p>{{_profile.name}}</p>
+
+                <button mat-raised-button (click)="unauthorize()" color="accent">Abmelden</button>
+            </div>
+        </div>
+        
+        <hr>
+
+        <div class="account-details">
+            <mat-list>
+                <mat-list-item>
+                    {{_calendarCount}} Kalender
+                </mat-list-item>
+            </mat-list>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<ng-template #authenticate>
+    <p>Derzeit ist kein Google Account verbunden</p>
+    <p>Klicke auf "Zugang anfordern" um einen Google-Account auszuwählen und Zugang zubekommen. Kopiere den Zugriffstoken und füge ihn unten ein</p>
+    
+    <p>
+        <a mat-button color="primary" href="{{_url}}" target="_blank">Zugang anfordern</a>
+    </p>
+
+    <mat-form-field>
+        <input matInput placeholder="Access-Code" [(ngModel)]="_code">
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="authorize()">Anmelden</button>
+</ng-template>

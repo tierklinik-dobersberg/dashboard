@@ -1,0 +1,30 @@
+.auth-block {
+    display: flex;
+    
+    img.user-avatar {
+        width: 100px;
+        height: 100px;
+        
+        margin-right: 10px;
+    }
+    
+    padding: 10px;
+    
+    .profile-name {
+        display: flex;
+        flex-direction: column;
+
+        p {
+            font-size: 16px;
+            font-weight: lighter;
+        }
+    }
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+input[matInput] {
+    width: 100%;
+}
