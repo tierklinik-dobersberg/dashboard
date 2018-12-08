@@ -27,6 +27,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MomentDateModule, MatMomentDateModule } from '@angular/material-moment-adapter';
 import { DoorComponent } from './door/door.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 
@@ -126,7 +127,9 @@ registerLocaleData(localeDe, 'de');
     MatTabsModule,
     MatSnackBarModule,
     MatStepperModule,
-    ColorPickerModule
+    ColorPickerModule,
+    MomentDateModule,
+    MatMomentDateModule
   ],
   providers: [
     {

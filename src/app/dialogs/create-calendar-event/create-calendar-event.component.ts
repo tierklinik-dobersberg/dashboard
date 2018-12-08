@@ -15,6 +15,7 @@ export class CreateCalendarEventComponent implements OnInit {
   _description: string = '';
   _from: string = '';
   _to: string = '';
+  _date: string = (new Date()).toISOString();
 
   _calendars: CalendarListEntry[] = [];
 
@@ -31,8 +32,8 @@ export class CreateCalendarEventComponent implements OnInit {
       title: this._title,
       calendarId: this._calendarId,
       description: this._description,
-      from: moment().startOf('day').add(new Time(this._from).totalMinutes, 'minutes').toDate(),
-      to: moment().startOf('day').add(new Time(this._to).totalMinutes, 'minutes').toDate(),
+      from: moment(this._date).startOf('day').add(new Time(this._from).totalMinutes, 'minutes').toDate(),
+      to: moment(this._date).startOf('day').add(new Time(this._to).totalMinutes, 'minutes').toDate(),
     });
   }
 }

@@ -7,6 +7,12 @@
         <input matInput placeholder="Titel" name="titel" required [(ngModel)]="_title">
       </mat-form-field>
     </mat-dialog-content>
+    
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" placeholder="Datum" [(ngModel)]="_date" name="date" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
 
     <div class="time-selection">
         <div class="time-frame">
