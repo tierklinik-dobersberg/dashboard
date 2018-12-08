@@ -36,7 +36,7 @@ export class CreateCalendarDialogComponent implements OnInit {
         this._accountName = res.profile.name;
         this._accountId = res.profile.id;
         
-        this._changeDetector.markForCheck();
+        this._changeDetector.detectChanges();
       });
   }
 
