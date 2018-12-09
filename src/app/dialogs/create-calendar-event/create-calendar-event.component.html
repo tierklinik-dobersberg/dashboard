@@ -29,9 +29,6 @@
       <textarea rows="5" name="description" matInput placeholder="Beschreibung" [(ngModel)]="_description"></textarea>
     </mat-form-field>
     
-    <div *ngIf="_noRoster">
-      <span class="no-roster">Es gibt noch keinen Dienstplan für diesen Tag</span>
-    </div>
 
     <mat-form-field>
       <mat-select placeholder="Kalender / Arzt" name="calendar" [(ngModel)]="_calendarId" required>
@@ -40,6 +37,8 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <span class="cal-info" *ngIf="!_noRoster">Kalendar/Artz verfügbar laut Dienstplan</span>
+    <span *ngIf="_noRoster" class="cal-info no-roster">Es gibt noch keinen Dienstplan für diesen Tag</span>
   </form>
     
     <mat-dialog-actions>

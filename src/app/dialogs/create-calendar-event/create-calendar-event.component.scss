@@ -1,5 +1,5 @@
 .create-event-container {
-    min-width: 30vw;
+    min-width: 40vw;
 }
 
 mat-form-field {
@@ -22,10 +22,16 @@ span.type-color {
     margin-right: 10px;
 }
 
+span.cal-info {
+    font-size: 90%;
+    font-weight: lighter;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
 span.no-roster {
     color: red;
-    margin-bottom: 10px;
-    display: inline-block;
 }
 
 .time-selection {

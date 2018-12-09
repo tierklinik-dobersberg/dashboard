@@ -37,6 +37,7 @@ export class CreateCalendarEventComponent implements OnInit {
     this._calendarService.listCalendars()
       .subscribe(list => {
         this._allCalendars = list;
+        this._calendars = [...this._allCalendars];
         this._getPossibleCalendars();        
       });
   }
@@ -86,6 +87,11 @@ export class CreateCalendarEventComponent implements OnInit {
 
     if (this._noRoster) {
       this._calendars = [...this._allCalendars];
+    }
+    
+    // if the selected calender isn't valid any more, clear the calendarId
+    if (!!this._calendarId && this._calendars.find(cal => cal.id === this._calendarId) == undefined) {
+      this._calendarId = '';
     }
 
     this._changeDetector.markForCheck();
