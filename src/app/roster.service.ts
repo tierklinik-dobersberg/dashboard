@@ -60,12 +60,14 @@ export class RosterService {
     // if the schedules are for the current isoWeek, load them instead
     // this allows the service worker to always cache the current roster schedules
     // without interfering with other range requests
+    /*
     const startWeek = moment(start).startOf('isoWeek');
     const endWeek = moment(end).endOf('isoWeek');
     if (startWeek.valueOf() === moment().startOf('isoWeek').valueOf()
         && endWeek.valueOf() === moment().endOf('isoWeek').valueOf()) {
       return this.getCurrentSchedules();
     }
+    */
 
     return this._http.get<RemoteRoster[]>('/api/roster/schedules', {params: {from: ''+start, to: ''+end}});
   }

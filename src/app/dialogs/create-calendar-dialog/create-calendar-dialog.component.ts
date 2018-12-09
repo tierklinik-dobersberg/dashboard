@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, ChangeDetectorRef, Optional } from '@angular
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IntegrationService } from 'src/app/integration.service';
 import { CalendarListEntry } from 'src/app/calendar.service';
+import { RosterService } from 'src/app/roster.service';
 
 @Component({
   selector: 'cl-create-calendar-dialog',

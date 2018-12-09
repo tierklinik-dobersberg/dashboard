@@ -9,7 +9,7 @@
     </mat-dialog-content>
     
     <mat-form-field>
-      <input matInput (focus)="picker.open()" [matDatepicker]="picker" placeholder="Datum" [(ngModel)]="_date" name="date" required>
+      <input matInput (focus)="picker.open()" [matDatepicker]="picker" placeholder="Datum" [(ngModel)]="_date" name="date" required (ngModelChange)="_getPossibleCalendars()">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
@@ -17,10 +17,10 @@
     <div class="time-selection">
         <div class="time-frame">
             <mat-form-field class="time">
-              <input matInput type="time" [(ngModel)]="_from" lang="de" name="fromHour" required placeholder="Von" value="00:00">
+              <input matInput type="time" [(ngModel)]="_from" lang="de" name="fromHour" required placeholder="Von" value="00:00" (ngModelChange)="_getPossibleCalendars()">
             </mat-form-field>
             <mat-form-field class="time">
-              <input matInput type="time" [(ngModel)]="_to" name="toMinute" lang="de" required placeholder="Bis" value="00:00">
+              <input matInput type="time" [(ngModel)]="_to" name="toMinute" lang="de" required placeholder="Bis" value="00:00" (ngModelChange)="_getPossibleCalendars()">
             </mat-form-field>
         </div>
       </div>
@@ -28,6 +28,10 @@
     <mat-form-field>
       <textarea rows="5" name="description" matInput placeholder="Beschreibung" [(ngModel)]="_description"></textarea>
     </mat-form-field>
+    
+    <div *ngIf="_noRoster">
+      <span class="no-roster">Es gibt noch keinen Dienstplan für diesen Tag</span>
+    </div>
 
     <mat-form-field>
         <mat-select placeholder="Google Kalender" name="calendar" [(ngModel)]="_calendarId" required>
