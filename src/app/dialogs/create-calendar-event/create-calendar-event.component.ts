@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { CalendarListEntry, CalendarService } from 'src/app/calendar.service';
 import { Time } from 'src/app/openinghours.service';
 import { RemoteRoster, RosterService } from 'src/app/roster.service';
+import { User } from 'src/app/users.service';
 
 @Component({
   selector: 'cl-create-calendar-event',
@@ -18,11 +19,13 @@ export class CreateCalendarEventComponent implements OnInit {
   _to: string = '';
   _date: string = (new Date()).toISOString();
   _noRoster: boolean = false;
+  _showUsers: boolean = false;
 
   private _lastWeekLoaded: number = -1;
   private _schedules: RemoteRoster[] = [];
   private _allCalendars: CalendarListEntry[] = [];
 
+  _usersAvailable: User[] = [];
   _calendars: CalendarListEntry[] = [];
 
   constructor(private _dialogRef: MatDialogRef<CreateCalendarEventComponent>,
@@ -44,11 +47,10 @@ export class CreateCalendarEventComponent implements OnInit {
     const startTime = new Time(this._from);
 
     if (schedules.length === 0) {
-      this._calendars = [...this._allCalendars];
       this._noRoster = true;
     } else {
-      this._noRoster = false;
-
+      this._noRoster = true;
+      const users: Set<User> = new Set();
       const calendars: Set<CalendarListEntry> = new Set();
       // TODO(ppacher): need to add the primary calendar
 
@@ -61,8 +63,12 @@ export class CreateCalendarEventComponent implements OnInit {
           if (startTime.totalMinutes < sched.start || startTime.totalMinutes > sched.end) {
             return;
           }
+          
+          this._noRoster = false;
 
           sched.users.forEach(user => {
+            users.add(user);
+
             if (!!user.googleCalendarID) {
               const cal = this._allCalendars.find(c => c.id === user.googleCalendarID);
               
@@ -74,7 +80,12 @@ export class CreateCalendarEventComponent implements OnInit {
         });
       });
 
+      this._usersAvailable = Array.from(users.values());
       this._calendars = Array.from(calendars.values());
+    }
+
+    if (this._noRoster) {
+      this._calendars = [...this._allCalendars];
     }
 
     this._changeDetector.markForCheck();

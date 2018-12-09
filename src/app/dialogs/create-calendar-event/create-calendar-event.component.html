@@ -34,12 +34,25 @@
     </div>
 
     <mat-form-field>
-        <mat-select placeholder="Google Kalender" name="calendar" [(ngModel)]="_calendarId" required>
-          <mat-option *ngFor="let option of _calendars" [value]="option.id">
-              <span [style.background-color]="option.backgroundColor" class="type-color"></span>{{option.name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <mat-select placeholder="Kalender / Arzt" name="calendar" [(ngModel)]="_calendarId" required>
+        <mat-option *ngFor="let option of _calendars" [value]="option.id">
+            <span [style.background-color]="option.backgroundColor" class="type-color"></span>{{option.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!--
+    <div>
+      <span *ngIf="!_showUsers" (click)="_showUsers = true">Personal anzeigen</span>
+      <span *ngIf="_showUsers" (click)="_showUsers = false">Personal verstecken</span>
+    </div>
+
+    <div *ngIf="_showUsers">
+      <span *ngFor="let user of _usersAvailable">
+        {{user.firstname}} {{user.lastname}}
+      </span>
+    </div>
+    -->
   </form>
     
     <mat-dialog-actions>
