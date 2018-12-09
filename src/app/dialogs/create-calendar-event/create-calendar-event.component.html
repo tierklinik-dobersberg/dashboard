@@ -1,7 +1,7 @@
 <div class ="create-event-container">
     <p mat-dialog-title>Neuer Termin</p>
     
-  <form (ngSubmit)="_save()">
+  <form (ngSubmit)="_save()" #form="ngForm">
     <mat-dialog-content>
       <mat-form-field>
         <input matInput placeholder="Titel" name="titel" required [(ngModel)]="_title">
@@ -40,23 +40,10 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-
-    <!--
-    <div>
-      <span *ngIf="!_showUsers" (click)="_showUsers = true">Personal anzeigen</span>
-      <span *ngIf="_showUsers" (click)="_showUsers = false">Personal verstecken</span>
-    </div>
-
-    <div *ngIf="_showUsers">
-      <span *ngFor="let user of _usersAvailable">
-        {{user.firstname}} {{user.lastname}}
-      </span>
-    </div>
-    -->
   </form>
     
     <mat-dialog-actions>
       <button mat-button matDialogClose>Abbrechen</button>
-      <button mat-button (click)="_save()">Speichern</button>
+      <button mat-button (click)="_save()" [disabled]="!form.valid">Speichern</button>
     </mat-dialog-actions>
   </div>

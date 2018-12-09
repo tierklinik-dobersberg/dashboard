@@ -25,7 +25,7 @@ export class CreateCalendarEventComponent implements OnInit {
   private _schedules: RemoteRoster[] = [];
   private _allCalendars: CalendarListEntry[] = [];
 
-  _usersAvailable: User[] = [];
+  _usersAvailable: string[] = [];
   _calendars: CalendarListEntry[] = [];
 
   constructor(private _dialogRef: MatDialogRef<CreateCalendarEventComponent>,
@@ -80,7 +80,7 @@ export class CreateCalendarEventComponent implements OnInit {
         });
       });
 
-      this._usersAvailable = Array.from(users.values());
+      this._usersAvailable = Array.from(users.values()).map(user => `${user.firstname} ${user.lastname}`);
       this._calendars = Array.from(calendars.values());
     }
 
