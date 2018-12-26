@@ -76,7 +76,7 @@ export class CreateRosterScheduleComponent implements OnInit {
     });
   }
 
-  private _loadUsers() {
+  _loadUsers() {
     this._userService.listUsers()
         .subscribe(users => {
           if (!!this._config.schedule) {
