@@ -61,6 +61,8 @@ import { UpcomingEventsComponent } from './widgets/upcoming-events/upcoming-even
 import { CalendarComponent } from './settings/calendar/calendar.component';
 import { CreateCalendarDialogComponent } from './dialogs/create-calendar-dialog/create-calendar-dialog.component';
 import { CreateCalendarEventComponent } from './dialogs/create-calendar-event/create-calendar-event.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeDe, 'de');
@@ -129,7 +131,8 @@ registerLocaleData(localeDe, 'de');
     MatStepperModule,
     ColorPickerModule,
     MomentDateModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
     {

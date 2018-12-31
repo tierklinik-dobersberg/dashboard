@@ -6,6 +6,7 @@ import {Subscription} from 'rxjs';
 import {DateSpan, DaySection, CalendarDay, Schedule} from './types';
 import {CalendarSource, CalendarViewer} from './calendar-source';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 /**
  * @internal
@@ -119,7 +120,15 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
    * The minimum height of a day container
    */
   private _minContainerHeight: number | null = null;
+
+  /**
+   * @internal
+   * The media query list for the {@link MediaMatcher}
+   */
+  private _mediaQuery: MediaQueryList | null = null;
   
+  private _mediaListener: () => void;
+
   /**
    * @internal
    * Returns the number of days rendered
@@ -240,14 +249,25 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
    */
   _days: Day[] = [];
   
-  constructor(private _changeDetectorRef: ChangeDetectorRef) {}
+  constructor(private _changeDetectorRef: ChangeDetectorRef,
+              private _mediaMatcher: MediaMatcher) {}
 
   ngOnInit() {
+    this._mediaQuery = this._mediaMatcher.matchMedia('(max-width: 600px)');
+
+    this._mediaListener = () => {
+      this._changeDetectorRef.detectChanges();
+    };
+
+    this._mediaQuery.addListener(this._mediaListener);
+
     this._setupCalendarSource();
     this.openTodaysWeek();
   }
   
   ngOnDestroy() {
+    this._mediaQuery!.removeListener(this._mediaListener);
+
     if (!!this._sourceSubscription) {
       this._sourceSubscription.unsubscribe();
       this._sourceSubscription = null;

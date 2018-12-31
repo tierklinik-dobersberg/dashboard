@@ -1,10 +1,9 @@
 <mat-toolbar>
   <mat-toolbar-row>
     <span class="kw-full">Kalenderwoche</span>
-    <span class="kw-handset">KW</span>
-    <span class="kw">{{calendar.currentWeek}} / {{calendar.currentYear}}</span>
+    <span class="kw-full">{{calendar.currentWeek}} / {{calendar.currentYear}}</span>
     <div class="toolbar-buttons">
-      <button mat-button (click)="calendar.openTodaysWeek()">{{calendar.currentTimeSpan}}</button>
+      <button mat-button class="current-span" (click)="calendar.openTodaysWeek()">{{calendar.currentTimeSpan}}</button>
       <button mat-icon-button (click)="calendar.openPrevWeek()"><mat-icon>keyboard_arrow_left</mat-icon></button>
       <button mat-icon-button (click)="calendar.openNextWeek()"><mat-icon>keyboard_arrow_right</mat-icon></button>
       <button mat-icon-button (click)="snav.toggle()" matTooltip="Personal anzeigen/schließen" matTooltipPosition="before"><mat-icon>settings</mat-icon></button>
@@ -63,7 +62,7 @@
               <div class="schedule-color" [style.background]="schedule.type.color"></div>
               <div class="attendees">
                 <div *ngFor="let attendee of schedule.attendees">
-                  <img class="user-avatar" [src]="attendee.data.icon" [matTooltip]="attendee.name" matTooltipPosition="after" matTooltipClass="tooltip" />
+                  <img *ngIf="!!attendee.data.icon" class="user-avatar" [src]="attendee.data.icon" [matTooltip]="attendee.name" matTooltipPosition="after" matTooltipClass="tooltip" />
                   <span class="name">{{attendee.data.firstname}} {{attendee.data.lastname}}</span>
                 </div>
               </div>

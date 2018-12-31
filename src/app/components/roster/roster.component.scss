@@ -31,6 +31,13 @@ mat-toolbar {
     .kw-handset {
         display: inline-block;
     }
+
+    .toolbar-buttons {
+        left: 20px;
+        .current-span {
+            float: left;
+        }
+    }
 }
 
 .kw-handset {

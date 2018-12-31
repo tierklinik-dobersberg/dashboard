@@ -1,5 +1,5 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild, Input, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -11,6 +11,9 @@ import { User, UsersService } from 'src/app/users.service';
 import { CalendarDay, CalendarSource, CalendarViewer, DateSpan, Schedule, TdCalendarClickEvent, TdCalendarComponent } from '../calendar';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { HypnoloadService } from '../hypnoload/hypnoload.service';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 interface DateSchedule {
   schedule: Schedule<any>;
@@ -28,6 +31,7 @@ export class RosterSource implements CalendarSource {
   constructor(private _service: OpeningHoursService,
               private _reload: Observable<void>,
               private _loader: HypnoloadService,
+              private _snackbar: MatSnackBar,
               private _schedules: (span: DateSpan) => Observable<DateSchedule[]>) {}
   
   connect(viewer: CalendarViewer): Observable<CalendarDay[]> {
@@ -71,7 +75,14 @@ export class RosterSource implements CalendarSource {
               return result;
             })
           )
-          .subscribe(result => observer.next(result));
+          .subscribe(result => {
+            observer.next(result)
+          }, err => {
+            if (!(err instanceof HttpErrorResponse)) {
+              this._snackbar.open(`Error: ${err.message || err.statusText || err.status}`, 'OK');
+            }
+            this._loader.hide();
+          });
         });
         
       return () => {
@@ -102,10 +113,13 @@ let _nextUniqueId = 100;
     ]),
   ]
 })
-export class RosterComponent implements OnInit, AfterViewInit {
+export class RosterComponent implements OnInit, OnDestroy, AfterViewInit {
   calendarSource: RosterSource;
 
   _lastClickEvent: TdCalendarClickEvent | null = null;
+
+  private _mediaQuery: MediaQueryList | null = null;
+  private _mediaListener: () => void | null = null;
 
   @ViewChild('editOrNewMenu', {read: TemplateRef})
   _editOrNewMenu: TemplateRef<any>;
@@ -147,9 +161,32 @@ export class RosterComponent implements OnInit, AfterViewInit {
               private _loader: HypnoloadService,
               private _changeDetectorRef: ChangeDetectorRef,
               private _rosterService: RosterService,
+              private _mediaMatcher: MediaMatcher,
+              private _snackbar: MatSnackBar,
               private _dialog: MatDialog) { }
 
+  ngOnDestroy() {
+    this._mediaQuery.removeListener(this._mediaListener);
+  }
+
   ngOnInit() {
+    this._mediaQuery = this._mediaMatcher.matchMedia('(max-width: 600px)');
+
+    this._mediaListener = () => {
+      if (this._mediaQuery.matches) {
+        this._sideNavOpen = false;
+        console.log(`Closing sidebar on handset`);
+      }
+      this._changeDetectorRef.detectChanges();
+    };
+
+    this._mediaQuery.addListener(this._mediaListener);
+
+    if (this._mediaQuery.matches) {
+      this._showSideBar = false;
+      this.sideNavOpen = false;
+    }
+
     const load = (span: DateSpan) => {
       return this._rosterService.getRemoteSchedules(span.startDate.getTime(), span.endDate.getTime())
         .pipe(
@@ -158,14 +195,23 @@ export class RosterComponent implements OnInit, AfterViewInit {
 
             rosters.forEach(roster => {
               roster.schedules.forEach(schedule => {
+                
                 schedules.push({
                   date: moment(roster.startDate).add(schedule.weekDay - 1, 'days').toDate(),
                   schedule: {
-                    attendees: (schedule.users || []).map(user => ({
-                      name: user.username,
-                      data: user,
-                      icon: user.icon,
-                    })),
+                    attendees: (schedule.users || []).map(user => {
+                      const u = this._users.find(u => u.username === user.username);
+                      if (!u) {
+                        console.warn(`Failed to find user cached user object for username ${user.username}`)
+                      }
+                      return {
+                        name: user.username,
+                        data: {
+                          ...user,
+                          icon: !!u ? u.icon : null,
+                        }
+                      };
+                    }),
                     start: new Time(schedule.start),
                     end: new Time(schedule.end),
                     id: schedule.id,
@@ -184,7 +230,7 @@ export class RosterComponent implements OnInit, AfterViewInit {
         )
     }
     
-    this.calendarSource = new RosterSource(this._openingHourService, this._reload, this._loader, load);
+    this.calendarSource = new RosterSource(this._openingHourService, this._reload, this._loader,  this._snackbar, load);
       
     this._rosterService.getTypes()
       .subscribe(types => this._types = types);
