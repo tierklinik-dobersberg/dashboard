@@ -3,7 +3,7 @@
 
 <button mat-button [matMenuTriggerFor]="userMenu" class="user" *ngIf="!!(_user|async)">
   <span>{{(_user|async)?.username}}</span>
-  <img class="user-avatar" [src]="(_user|async)?.icon">
+  <img class="user-avatar" [src]="'/api/users/icons/' + (_user | async)?.username">
 </button>
 
 <mat-menu #userMenu>

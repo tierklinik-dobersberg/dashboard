@@ -35,7 +35,7 @@
                   [class.selected]="_selecetedUser === user.username"
                   (mouseenter)="_highlightUser(user)" (mouseleave)="_highlightUser(null)">
       
-                  <img class="user-avatar" [src]="user.icon" mat-list-icon />
+                  <img class="user-avatar" [src]="'/api/users/icons/' + user?.username" mat-list-icon />
                   <h4 mat-line>{{user.firstname}} {{user.lastname}} <span class="hours" *ngIf="!readonly">{{(user.hours.total | number:'1.0-1')}}/{{user.hoursPerWeek}}</span></h4>
                   <p *ngIf="!readonly" class="hours-bar-container" mat-line>
                     <span *ngIf="user.hoursPerWeek >= user.hours.total" [style.width.%]="(100 / user.hoursPerWeek) * user.hours.total"
@@ -62,7 +62,7 @@
               <div class="schedule-color" [style.background]="schedule.type.color"></div>
               <div class="attendees">
                 <div *ngFor="let attendee of schedule.attendees">
-                  <img *ngIf="!!attendee.data.icon" class="user-avatar" [src]="attendee.data.icon" [matTooltip]="attendee.name" matTooltipPosition="after" matTooltipClass="tooltip" />
+                  <img class="user-avatar" [src]="'/api/users/icons/' + attendee.data.username" [matTooltip]="attendee.name" matTooltipPosition="after" matTooltipClass="tooltip" />
                   <span class="name">{{attendee.data.firstname}} {{attendee.data.lastname}}</span>
                 </div>
               </div>

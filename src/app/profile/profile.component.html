@@ -1,7 +1,7 @@
 <div class="profile-container">
   <mat-toolbar class="profile-header">
     <h3 class="username">
-      <img class="user-avatar" *ngIf="!!_user?.icon" [src]="_user?.icon">
+      <img class="user-avatar" [src]="'/api/users/icons/' + _user?.username">
       {{_user?.username}}
     </h3>
 
