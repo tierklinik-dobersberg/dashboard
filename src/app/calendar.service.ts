@@ -60,12 +60,20 @@ export class CalendarService {
     }
     
     listEvents(ids: string[], from?: Date, to?: Date): Observable<CalendarEvent[]> {
+        let params: any = {
+            calendarId: ids,
+        };
+        
+        if (!!from) {
+            params.from = '' + from.toISOString()
+        }
+        
+        if (!!to) {
+            params.to = '' + to.toISOString();
+        }
+
         return this._http.get<CalendarEvent[]>('/api/calendar/events', {
-            params: {
-                calendarId: ids,
-                from: !!from ? ''+from.toISOString() : undefined,
-                to: !!to ? ''+to.toISOString() : undefined,
-            }
+            params: params
         }).pipe(
             map(res => {
                 return res.map(event => {

@@ -21,6 +21,14 @@ export class TdDaySectionDef<T = any> {
 }
 
 @Directive({
+    selector: '[tdDayHeaderDef]',
+    exportAs: 'tdDayHeaderDef'
+})
+export class TdDayHeaderDef {
+    constructor(public readonly templateRef: TemplateRef<any>) {}
+}
+
+@Directive({
     selector: '[tdDayScheduleDef]',
     exportAs: 'tdDayScheduleDef'
 })

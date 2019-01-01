@@ -57,6 +57,14 @@
                 <span class="start-time">{{frame.start}}</span>
                 <span class="end-time">{{frame.end}}</span>
             </div>
+
+            <ng-container *tdDayHeaderDef="let day">
+              {{day.name}}
+              <span class="date" *ngIf="_getHoliday(day.date) == null; else: holiday">{{day.date.format('DD.MM')}}</span>
+              <ng-template #holiday>
+                <span class="date"><u><mat-icon>star_rate</mat-icon>{{_getHoliday(day.date)}}<mat-icon>star_rate</mat-icon></u></span>
+              </ng-template>
+            </ng-container>
         
             <div *tdDayScheduleDef="let schedule" class="schedule" [class.fade-out]="_shouldBeGray(schedule)" [class.hidden]="!_containsSelectedUserOrType(schedule)">
               <div class="schedule-color" [style.background]="schedule.type.color"></div>

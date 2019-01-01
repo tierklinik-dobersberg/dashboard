@@ -14,6 +14,7 @@ import { HypnoloadService } from '../hypnoload/hypnoload.service';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CalendarService, CalendarEvent } from 'src/app/calendar.service';
 
 interface DateSchedule {
   schedule: Schedule<any>;
@@ -156,6 +157,8 @@ export class RosterComponent implements OnInit, OnDestroy, AfterViewInit {
   
   _users: UserWithHours[] = [];
 
+  _holidays: Map<number, string> = new Map();;
+
   constructor(private _openingHourService: OpeningHoursService,
               private _userService: UsersService,
               private _loader: HypnoloadService,
@@ -163,10 +166,15 @@ export class RosterComponent implements OnInit, OnDestroy, AfterViewInit {
               private _rosterService: RosterService,
               private _mediaMatcher: MediaMatcher,
               private _snackbar: MatSnackBar,
+              private _calendarService: CalendarService,
               private _dialog: MatDialog) { }
 
   ngOnDestroy() {
     this._mediaQuery.removeListener(this._mediaListener);
+  }
+  
+  _getHoliday(date: moment.Moment): string | null {
+    return this._holidays.get(date.valueOf()) || null;
   }
 
   ngOnInit() {
@@ -188,6 +196,17 @@ export class RosterComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     const load = (span: DateSpan) => {
+      this._calendarService.listEvents(['intern:holidays'])
+        .subscribe(events => {
+          this._holidays.clear();
+          
+          events.forEach(day => {
+            this._holidays.set(day.start.valueOf(), day.id);
+          })
+
+          this._changeDetectorRef.markForCheck();
+        });
+        
       return this._rosterService.getRemoteSchedules(span.startDate.getTime(), span.endDate.getTime())
         .pipe(
           map(rosters => {

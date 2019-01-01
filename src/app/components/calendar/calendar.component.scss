@@ -46,6 +46,7 @@
         flex-grow: 1;
         height: 100%;
         text-align: center;
+        max-width: calc(100% / 7);
         position: relative;
         border-right: 1px solid rgba(0,0,0,.12);
 

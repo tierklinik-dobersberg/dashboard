@@ -1,7 +1,7 @@
-import {Component, OnInit, AfterViewInit, ViewChildren, ContentChildren, QueryList, ElementRef, ChangeDetectorRef, TemplateRef, Input, OnDestroy, AfterContentInit, AfterViewChecked, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, AfterViewInit, ViewChildren, ContentChildren, QueryList, ElementRef, ChangeDetectorRef, TemplateRef, Input, OnDestroy, AfterContentInit, AfterViewChecked, Output, EventEmitter, ViewChild, ContentChild} from '@angular/core';
 import * as moment from 'moment';
 import {WeekDay, TimeFrame} from 'src/app/openinghours.service';
-import {TdDaySectionDef, TdDayScheduleDef} from './day-section';
+import {TdDaySectionDef, TdDayScheduleDef, TdDayHeaderDef} from './day-section';
 import {Subscription} from 'rxjs';
 import {DateSpan, DaySection, CalendarDay, Schedule} from './types';
 import {CalendarSource, CalendarViewer} from './calendar-source';
@@ -214,6 +214,12 @@ export class TdCalendarComponent implements OnInit, OnDestroy, AfterViewInit, Af
    */
   @ContentChildren(TdDayScheduleDef)
   _dayScheduleDefinitions: QueryList<TdDayScheduleDef>;
+
+  @ViewChild(TdDayHeaderDef)
+  _defaultDayHeader: TdDayHeaderDef;
+
+  @ContentChild(TdDayHeaderDef)
+  _dayHeader?: TdDayHeaderDef;
 
   /**
    * The currently rendered ISO calendar week

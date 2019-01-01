@@ -43,7 +43,7 @@ import { CreateUserDialogComponent } from './settings/users/create-user-dialog/c
 import { RolePipe } from './settings/users/role.pipe';
 import { UsertypePipe } from './settings/users/usertype.pipe';
 import { ConfirmationComponent } from './dialogs/confirmation/confirmation.component';
-import { TdCalendarComponent, TdDaySectionDef, TdDayScheduleDef} from './components/calendar';
+import { TdCalendarComponent, TdDaySectionDef, TdDayScheduleDef, TdDayHeaderDef} from './components/calendar';
 import { CreateRosterScheduleComponent } from './dialogs/create-roster-schedule/create-roster-schedule.component';
 import { RosterComponent } from './components/roster/roster.component';
 import { CropImageDialogComponent } from './dialogs/crop-image-dialog/crop-image-dialog.component';
@@ -85,6 +85,7 @@ registerLocaleData(localeDe, 'de');
     TdCalendarComponent,
     TdDaySectionDef,
     TdDayScheduleDef,
+    TdDayHeaderDef,
     CreateRosterScheduleComponent,
     RosterComponent,
     CropImageDialogComponent,
